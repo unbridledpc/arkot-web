@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{% block title %}ArkOT{% endblock %} — ArkOT</title>
-<link rel="stylesheet" href="/static/style.css?v=1">
+<link rel="stylesheet" href="/static/style.css?v=2">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='0.9em' font-size='90'>⚔️</text></svg>">
 </head>
 <body>
@@ -14,13 +14,47 @@
     <input type="checkbox" id="navtoggle" hidden>
     <label class="burger" for="navtoggle" aria-label="Menu">☰</label>
     <nav>
-      <a href="/highscores">Highscores</a>
-      <a href="/online">Who's Online</a>
-      <a href="/server">Server</a>
-      <a href="/downloads">Downloads</a>
-      <a href="/rules">Rules</a>
-      <a href="/legacy/guilds.php">Guilds</a>
-      <a href="/legacy/shop.php">Shop</a>
+      <div class="menu">
+        <span class="menu-label">Community ▾</span>
+        <div class="drop">
+          <a href="/highscores">Highscores</a>
+          <a href="/online">Who's Online</a>
+          <a href="/search">Character Search</a>
+          <a href="/deaths">Latest Deaths</a>
+          <a href="/legacy/killers.php">Kill Statistics</a>
+          <a href="/legacy/guilds.php">Guilds</a>
+          <a href="/legacy/forum.php">Forum</a>
+          <a href="/legacy/houses.php">Houses</a>
+        </div>
+      </div>
+      <div class="menu">
+        <span class="menu-label">Library ▾</span>
+        <div class="drop">
+          <a href="/server">Server Info</a>
+          <a href="/downloads">Downloads</a>
+          <a href="/rules">Rules</a>
+          <a href="/legacy/spells.php">Spells</a>
+          <a href="/legacy/items.php">Items</a>
+          <a href="/legacy/changelog.php">Changelog</a>
+          <a href="/legacy/team.php">Team</a>
+        </div>
+      </div>
+      <div class="menu">
+        <span class="menu-label">Shop ▾</span>
+        <div class="drop">
+          <a href="/legacy/shop.php">Item Shop</a>
+          <a href="/legacy/buypoints.php">Buy Points</a>
+          <a href="/legacy/auctionChar.php">Character Auction</a>
+        </div>
+      </div>
+      <div class="menu">
+        <span class="menu-label">Support ▾</span>
+        <div class="drop">
+          <a href="/legacy/helpdesk.php">Helpdesk</a>
+          <a href="/legacy/sub.php?page=recover">Lost Account</a>
+          <a href="/rules">Server Rules</a>
+        </div>
+      </div>
       {% if account %}
         <a class="cta" href="/account">{{ account.name }}</a>
       {% else %}

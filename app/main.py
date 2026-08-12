@@ -354,6 +354,25 @@ def online(request: Request):
     return render(request, "online.html", rows=rows)
 
 
+@app.get("/search", response_class=HTMLResponse)
+def search(request: Request, name: str = ""):
+    rows = []
+    name = name.strip()
+    if len(name) >= 2:
+        rows = q("""SELECT name, level, vocation FROM players
+                    WHERE name LIKE %s AND deletion=0 ORDER BY level DESC LIMIT 50""",
+                 (f"%{name}%",))
+    return render(request, "search.html", rows=rows, query=name)
+
+
+@app.get("/deaths", response_class=HTMLResponse)
+def deaths(request: Request):
+    rows = q("""SELECT d.time, d.level, d.killed_by, d.is_player, p.name
+                FROM player_deaths d JOIN players p ON p.id = d.player_id
+                ORDER BY d.time DESC LIMIT 50""")
+    return render(request, "deaths.html", rows=rows)
+
+
 @app.get("/server", response_class=HTMLResponse)
 def server(request: Request):
     return render(request, "server.html", status=server_status(), towns=towns(),

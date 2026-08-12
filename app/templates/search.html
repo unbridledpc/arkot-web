@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}Character Search{% endblock %}
+{% block content %}
+<section class="narrow">
+  <h2 class="rune">Character Search</h2>
+  <div class="card">
+    <form method="get" action="/search" class="stack">
+      <label>Character name
+        <input name="name" value="{{ query }}" minlength="2" required autofocus>
+      </label>
+      <button class="btn" type="submit">Search</button>
+    </form>
+  </div>
+  {% if query %}
+  <div class="card">
+    {% if not rows %}<p>No characters match “{{ query }}”.</p>{% endif %}
+    <table class="tbl">
+      {% for r in rows %}
+      <tr><td><a href="/character/{{ r.name }}">{{ r.name }}</a></td>
+          <td>Level {{ r.level }}</td><td>{{ vocname(r.vocation) }}</td></tr>
+      {% endfor %}
+    </table>
+  </div>
+  {% endif %}
+</section>
+{% endblock %}

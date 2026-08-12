@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block title %}Latest Deaths{% endblock %}
+{% block content %}
+<section>
+  <h2 class="rune">Latest Deaths</h2>
+  <div class="card">
+    {% if not rows %}<p>Nobody has died yet. It won't last.</p>{% endif %}
+    <table class="tbl">
+      {% for r in rows %}
+      <tr>
+        <td><time>{{ r.time | timestamp }}</time></td>
+        <td><a href="/character/{{ r.name }}">{{ r.name }}</a> died at level {{ r.level }}
+            to {% if r.is_player %}<a href="/character/{{ r.killed_by }}">{{ r.killed_by }}</a>
+               {% else %}{{ r.killed_by }}{% endif %}</td>
+      </tr>
+      {% endfor %}
+    </table>
+  </div>
+</section>
+{% endblock %}
