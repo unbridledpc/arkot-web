@@ -64,8 +64,34 @@ code {
   text-shadow: 0 2px 3px #000;
   margin-right: auto;
 }
-.brand span { color: #fff2d0; }
 .brand:hover { text-decoration: none; }
+
+/* two-tone synchronized shimmer: Ark = gold, OT = moon-silver.
+   Same animation + duration + timeline on both spans keeps the sweep in sync. */
+.b1, .b2 {
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: brandshimmer 4s linear infinite;
+}
+.b1 {
+  background-image: linear-gradient(110deg,
+    #b3893a 0%, #b3893a 38%, #ffe9a8 50%, #b3893a 62%, #b3893a 100%);
+}
+.b2 {
+  background-image: linear-gradient(110deg,
+    #c9c4b4 0%, #c9c4b4 38%, #ffffff 50%, #c9c4b4 62%, #c9c4b4 100%);
+}
+@keyframes brandshimmer {
+  from { background-position: 200% 0; }
+  to   { background-position: 0% 0; }
+}
+/* transparent text can't carry text-shadow — glow rides the parent instead */
+.brand { filter: drop-shadow(0 2px 3px #000); text-shadow: none; }
+@media (prefers-reduced-motion: reduce) {
+  .b1, .b2 { animation: none; }
+}
 .topbar nav { display: flex; gap: 2px; align-items: center; flex-wrap: wrap; }
 .topbar nav a {
   color: var(--gold-dim);
@@ -144,7 +170,10 @@ code {
   color: var(--gold);
   text-shadow: 0 3px 0 #4b370f, 0 6px 14px #000, 0 0 34px rgba(230,197,106,.3);
 }
-.hero h1 span { color: #fff2d0; }
+.hero h1 {
+  filter: drop-shadow(0 4px 6px #000) drop-shadow(0 0 22px rgba(230,197,106,.3));
+  text-shadow: none;
+}
 .tagline { font-family: Georgia, serif; font-style: italic; font-size: 17px; margin: 6px 0 22px; }
 .hero-actions { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
 .statusline { margin-top: 20px; font-size: 13px; }
