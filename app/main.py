@@ -88,10 +88,12 @@ def account_of(request: Request):
     return q("SELECT id, name, email, creation FROM accounts WHERE id=%s", (s["aid"],), one=True)
 
 
-def csrf_token(request: Request) -> str:
-    s = get_session(request)
-    sid = s.get("sid", "anon")
+def csrf_for(sid: str) -> str:
     return hmac.new(SECRET.encode(), f"csrf:{sid}".encode(), hashlib.sha256).hexdigest()[:32]
+
+
+def csrf_token(request: Request) -> str:
+    return csrf_for(get_session(request).get("sid", "anon"))
 
 
 def csrf_ok(request: Request, token: str) -> bool:
@@ -100,7 +102,8 @@ def csrf_ok(request: Request, token: str) -> bool:
 
 def render(request: Request, template: str, **ctx):
     ctx.setdefault("account", account_of(request))
-    ctx["csrf"] = csrf_token(request)
+    csrf_sid = ctx.pop("csrf_sid", None)
+    ctx["csrf"] = csrf_for(csrf_sid) if csrf_sid else csrf_token(request)
     ctx["request"] = request
     return templates.TemplateResponse(request, template, ctx)
 
@@ -113,10 +116,17 @@ def login_response(url: str, aid: int, existing_sid=None):
     return resp
 
 
-def ensure_sid(request: Request, resp):
-    """Give anonymous visitors a session id so CSRF tokens are stable."""
-    if not get_session(request):
-        resp.set_cookie("arkot", signer.dumps({"sid": secrets.token_hex(8)}),
+def form_page(request: Request, template: str, **ctx):
+    """Render a page with a form: the CSRF token and the (possibly new) session
+    cookie must be derived from the SAME sid, so mint the sid first."""
+    s = get_session(request)
+    sid = s.get("sid")
+    is_new = sid is None
+    if is_new:
+        sid = secrets.token_hex(8)
+    resp = render(request, template, csrf_sid=sid, **ctx)
+    if is_new:
+        resp.set_cookie("arkot", signer.dumps({"sid": sid}),
                         max_age=86400, httponly=True, samesite="lax")
     return resp
 
@@ -141,13 +151,13 @@ def index(request: Request):
            FROM znote_news n LEFT JOIN players p ON p.id = n.pid
            ORDER BY n.date DESC LIMIT 6""")
     top = q("SELECT name, level, vocation FROM players WHERE group_id=1 AND deletion=0 ORDER BY experience DESC LIMIT 5")
-    return ensure_sid(request, render(request, "index.html", news=news, top=top,
-                                      status=server_status(), now=int(time.time())))
+    return form_page(request, "index.html", news=news, top=top,
+                     status=server_status(), now=int(time.time()))
 
 
 @app.get("/register", response_class=HTMLResponse)
 def register_form(request: Request):
-    return ensure_sid(request, render(request, "register.html", errors=[], form={}))
+    return form_page(request, "register.html", errors=[], form={})
 
 
 @app.post("/register", response_class=HTMLResponse)
@@ -190,7 +200,7 @@ def register(request: Request, username: str = Form(""), email: str = Form(""),
 
 @app.get("/login", response_class=HTMLResponse)
 def login_form(request: Request):
-    return ensure_sid(request, render(request, "login.html", errors=[]))
+    return form_page(request, "login.html", errors=[])
 
 
 @app.post("/login", response_class=HTMLResponse)
@@ -253,7 +263,7 @@ def change_password(request: Request, current: str = Form(""), new: str = Form("
 def create_char_form(request: Request):
     if not account_of(request):
         return RedirectResponse("/login", status_code=303)
-    return render(request, "create_character.html", errors=[], towns=towns(), form={})
+    return form_page(request, "create_character.html", errors=[], towns=towns(), form={})
 
 
 @app.post("/character/create", response_class=HTMLResponse)
