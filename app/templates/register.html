@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}Create Account{% endblock %}
+{% block content %}
+<section class="narrow">
+  <h2 class="rune">Create Account</h2>
+  <div class="card">
+    {% for e in errors %}<p class="alert bad">{{ e }}</p>{% endfor %}
+    <form method="post" action="/register" class="stack">
+      <label>Account name
+        <input name="username" value="{{ form.username or '' }}" required
+               pattern="[a-zA-Z0-9]{4,32}" title="4–32 letters/digits">
+      </label>
+      <label>Email
+        <input type="email" name="email" value="{{ form.email or '' }}" required>
+      </label>
+      <label>Password
+        <input type="password" name="password" minlength="6" maxlength="29" required>
+      </label>
+      <label>Password again
+        <input type="password" name="password2" minlength="6" maxlength="29" required>
+      </label>
+      <input type="hidden" name="token" value="{{ csrf }}">
+      <p class="fineprint">By creating an account you accept the <a href="/rules">server rules</a>.
+         You log into the game with your <strong>email</strong> and this password.</p>
+      <button class="btn big" type="submit">Create Account</button>
+    </form>
+  </div>
+</section>
+{% endblock %}

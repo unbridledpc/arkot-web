@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}Who's Online{% endblock %}
+{% block content %}
+<section>
+  <h2 class="rune">Who's Online <span class="pill on">{{ rows | length }}</span></h2>
+  <div class="card">
+    {% if not rows %}<p>The world sleeps — nobody is online right now.</p>{% endif %}
+    <table class="tbl">
+      {% for r in rows %}
+      <tr><td><a href="/character/{{ r.name }}">{{ r.name }}</a></td>
+          <td>Level {{ r.level }}</td><td>{{ vocname(r.vocation) }}</td></tr>
+      {% endfor %}
+    </table>
+  </div>
+</section>
+{% endblock %}

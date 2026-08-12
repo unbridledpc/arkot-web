@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}Login{% endblock %}
+{% block content %}
+<section class="narrow">
+  <h2 class="rune">Login</h2>
+  <div class="card">
+    {% for e in errors %}<p class="alert bad">{{ e }}</p>{% endfor %}
+    <form method="post" action="/login" class="stack">
+      <label>Account name or email
+        <input name="username" required autofocus>
+      </label>
+      <label>Password
+        <input type="password" name="password" required>
+      </label>
+      <input type="hidden" name="token" value="{{ csrf }}">
+      <button class="btn big" type="submit">Login</button>
+      <p class="fineprint">No account? <a href="/register">Create one</a>.
+         Forgot your password? <a href="/legacy/sub.php?page=recover">Recover it</a>.</p>
+    </form>
+  </div>
+</section>
+{% endblock %}

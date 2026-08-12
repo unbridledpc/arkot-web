@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{% block title %}ArkOT{% endblock %} — ArkOT</title>
+<link rel="stylesheet" href="/static/style.css?v=1">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='0.9em' font-size='90'>⚔️</text></svg>">
+</head>
+<body>
+<header class="topbar">
+  <div class="shell">
+    <a class="brand" href="/">Ark<span>OT</span></a>
+    <input type="checkbox" id="navtoggle" hidden>
+    <label class="burger" for="navtoggle" aria-label="Menu">☰</label>
+    <nav>
+      <a href="/highscores">Highscores</a>
+      <a href="/online">Who's Online</a>
+      <a href="/server">Server</a>
+      <a href="/downloads">Downloads</a>
+      <a href="/rules">Rules</a>
+      <a href="/legacy/guilds.php">Guilds</a>
+      <a href="/legacy/shop.php">Shop</a>
+      {% if account %}
+        <a class="cta" href="/account">{{ account.name }}</a>
+      {% else %}
+        <a href="/login">Login</a>
+        <a class="cta" href="/register">Create Account</a>
+      {% endif %}
+    </nav>
+  </div>
+</header>
+
+<main class="shell">
+{% block content %}{% endblock %}
+</main>
+
+<footer class="foot">
+  <div class="shell">
+    <p>© ArkOT — a free MMORPG on the 15.25 protocol.
+       <a href="/legacy/helpdesk.php">Helpdesk</a> ·
+       <a href="/legacy/">Legacy site</a> ·
+       <a href="https://github.com/arken-fall/ArkOT">Server source</a></p>
+  </div>
+</footer>
+</body>
+</html>

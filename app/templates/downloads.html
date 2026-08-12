@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}Downloads{% endblock %}
+{% block content %}
+<section class="narrow">
+  <h2 class="rune">Downloads</h2>
+  <div class="card">
+    <h3>Game client</h3>
+    <p>ArkOT uses the open-source <strong>mehah OTClient</strong> with modern 15.25 assets.</p>
+    <ol class="steps">
+      <li>Download the latest client from
+          <a href="https://github.com/mehah/otclient/releases">mehah/otclient releases</a>
+          (Windows &amp; Linux builds).</li>
+      <li>Start it once — it downloads the 15.25 assets automatically.</li>
+      <li>On the Enter Game screen enable <em>HTTP login</em> and set the server to<br>
+          <code>http://{{ game_host }}:{{ login_port }}/login</code>, client version <code>15.25</code>.</li>
+      <li>Log in with your <strong>email</strong> and account password.</li>
+    </ol>
+    <p class="fineprint">A preconfigured ArkOT client bundle is coming — until then the four steps
+       above get you in.</p>
+  </div>
+</section>
+{% endblock %}

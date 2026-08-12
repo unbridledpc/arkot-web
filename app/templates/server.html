@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}Server{% endblock %}
+{% block content %}
+<section>
+  <h2 class="rune">Server Information</h2>
+  <div class="cols">
+    <div class="col-main">
+      <div class="card">
+        <table class="tbl kv">
+          <tr><th>World</th><td>ArkOT — open PvP world, one realm</td></tr>
+          <tr><th>Client</th><td>Tibia protocol <strong>15.25</strong> (mehah OTClient)</td></tr>
+          <tr><th>Login</th><td><code>http://{{ game_host }}:{{ login_port }}/login</code></td></tr>
+          <tr><th>Game port</th><td><code>{{ game_host }}:{{ game_port }}</code></td></tr>
+          <tr><th>Engine</th><td><a href="https://github.com/arken-fall/ArkOT">ArkOT server</a> — a 15.25-only fork of BlackTek</td></tr>
+          <tr><th>Uptime</th><td>24/7, auto-restarting</td></tr>
+        </table>
+      </div>
+      <h3 class="rune small">Towns</h3>
+      <div class="card">
+        <ul class="plain cols3">
+          {% for t in towns %}<li>{{ t.name }}</li>{% endfor %}
+        </ul>
+      </div>
+    </div>
+    <aside class="col-side">
+      <h3 class="rune small">Right now</h3>
+      <div class="card tight">
+        <p><span class="dot on"></span> {{ status.online }} players online</p>
+        <p>{{ status.characters }} characters</p>
+        <p>{{ status.accounts }} accounts</p>
+      </div>
+    </aside>
+  </div>
+</section>
+{% endblock %}
