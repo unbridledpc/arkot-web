@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}{{ guild.name if guild else 'Guild' }}{% endblock %}
+{% block content %}
+{% if not guild %}
+<section class="narrow"><h2 class="rune">Guild not found</h2>
+  <div class="card"><p>No guild by that name. <a href="/guilds">Back to guilds</a>.</p></div></section>
+{% else %}
+<section>
+  <h2 class="rune">{{ guild.name }}</h2>
+  {% if guild.motd %}<p class="alert good">{{ guild.motd }}</p>{% endif %}
+  <div class="card">
+    <table class="tbl">
+      <tr><th>Rank</th><th>Member</th><th>Level</th><th>Vocation</th></tr>
+      {% for r in ranks if r.name %}
+      <tr><td>{{ r.rank_name }}</td>
+          <td><a href="/character/{{ r.name }}">{{ r.name }}</a>
+              {% if r.nick %}<span class="fineprint">“{{ r.nick }}”</span>{% endif %}</td>
+          <td>{{ r.plevel }}</td><td>{{ vocname(r.vocation) }}</td></tr>
+      {% endfor %}
+    </table>
+    <p class="fineprint">Founded {{ guild.creationdata | timestamp }} ·
+       <a href="/legacy/guilds.php">manage in the guild hall</a></p>
+  </div>
+</section>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,1914 @@
+[
+ {
+  "name": "Buzz",
+  "words": "exori infir vis",
+  "level": 1,
+  "mana": 6,
+  "category": "attack",
+  "vocations": [
+   "sorcerer"
+  ]
+ },
+ {
+  "name": "Chill Out",
+  "words": "exevo infir frigo hur",
+  "level": 1,
+  "mana": 8,
+  "category": "attack",
+  "vocations": [
+   "druid"
+  ]
+ },
+ {
+  "name": "Mud Attack",
+  "words": "exori infir tera",
+  "level": 1,
+  "mana": 6,
+  "category": "attack",
+  "vocations": [
+   "druid"
+  ]
+ },
+ {
+  "name": "Practise Fire Wave",
+  "words": "exevo dis flam hur",
+  "level": 1,
+  "mana": 5,
+  "category": "attack",
+  "vocations": [
+   "sorcerer",
+   "druid",
+   "paladin",
+   "knight"
+  ]
+ },
+ {
+  "name": "Scorch",
+  "words": "exevo infir flam hur",
+  "level": 1,
+  "mana": 8,
+  "category": "attack",
+  "vocations": [
+   "sorcerer"
+  ]
+ },
+ {
+  "name": "Apprentice's Strike",
+  "words": "exori min flam",
+  "level": 8,
+  "mana": 6,
+  "category": "attack",
+  "vocations": [
+   "druid",
+   "sorcerer"
+  ]
+ },
+ {
+  "name": "Energy Strike",
+  "words": "exori vis",
+  "level": 12,
+  "mana": 20,
+  "category": "attack",
+  "vocations": [
+   "druid",
+   "sorcerer"
+  ]
+ },
+ {
+  "name": "Terra Strike",
+  "words": "exori tera",
+  "level": 13,
+  "mana": 20,
+  "category": "attack",
+  "vocations": [
+   "druid",
+   "sorcerer"
+  ]
+ },
+ {
+  "name": "Flame Strike",
+  "words": "exori flam",
+  "level": 14,
+  "mana": 20,
+  "category": "attack",
+  "vocations": [
+   "druid",
+   "sorcerer"
+  ]
+ },
+ {
+  "name": "Ice Strike",
+  "words": "exori frigo",
+  "level": 15,
+  "mana": 20,
+  "category": "attack",
+  "vocations": [
+   "druid",
+   "sorcerer"
+  ]
+ },
+ {
+  "name": "Brutal Strike",
+  "words": "exori ico",
+  "level": 16,
+  "mana": 30,
+  "category": "attack",
+  "vocations": [
+   "knight"
+  ]
+ },
+ {
+  "name": "Death Strike",
+  "words": "exori mort",
+  "level": 16,
+  "mana": 20,
+  "category": "attack",
+  "vocations": [
+   "sorcerer"
+  ]
+ },
+ {
+  "name": "Physical Strike",
+  "words": "exori moe ico",
+  "level": 16,
+  "mana": 20,
+  "category": "attack",
+  "vocations": [
+   "druid"
+  ]
+ },
+ {
+  "name": "Fire Wave",
+  "words": "exevo flam hur",
+  "level": 18,
+  "mana": 25,
+  "category": "attack",
+  "vocations": [
+   "sorcerer"
+  ]
+ },
+ {
+  "name": "Ice Wave",
+  "words": "exevo frigo hur",
+  "level": 18,
+  "mana": 25,
+  "category": "attack",
+  "vocations": [
+   "druid"
+  ]
+ },
+ {
+  "name": "Energy Beam",
+  "words": "exevo vis lux",
+  "level": 23,
+  "mana": 40,
+  "category": "attack",
+  "vocations": [
+   "sorcerer"
+  ]
+ },
+ {
+  "name": "Ethereal Spear",
+  "words": "exori con",
+  "level": 23,
+  "mana": 25,
+  "category": "attack",
+  "vocations": [
+   "paladin"
+  ]
+ },
+ {
+  "name": "Ignite",
+  "words": "utori flam",
+  "level": 26,
+  "mana": 30,
+  "category": "attack",
+  "vocations": [
+   "sorcerer"
+  ]
+ },
+ {
+  "name": "Whirlwind Throw",
+  "words": "exori hur",
+  "level": 28,
+  "mana": 40,
+  "category": "attack",
+  "vocations": [
+   "knight"
+  ]
+ },
+ {
+  "name": "Great Energy Beam",
+  "words": "exevo gran vis lux",
+  "level": 29,
+  "mana": 110,
+  "category": "attack",
+  "vocations": [
+   "sorcerer"
+  ]
+ },
+ {
+  "name": "Groundshaker",
+  "words": "exori mas",
+  "level": 33,
+  "mana": 160,
+  "category": "attack",
+  "vocations": [
+   "knight"
+  ]
+ },
+ {
+  "name": "Electrify",
+  "words": "utori vis",
+  "level": 34,
+  "mana": 30,
+  "category": "attack",
+  "vocations": [
+   "sorcerer"
+  ]
+ },
+ {
+  "name": "Berserk",
+  "words": "exori",
+  "level": 35,
+  "mana": 115,
+  "category": "attack",
+  "vocations": [
+   "knight"
+  ]
+ },
+ {
+  "name": "Energy Wave",
+  "words": "exevo vis hur",
+  "level": 38,
+  "mana": 170,
+  "category": "attack",
+  "vocations": [
+   "sorcerer"
+  ]
+ },
+ {
+  "name": "Terra Wave",
+  "words": "exevo tera hur",
+  "level": 38,
+  "mana": 170,
+  "category": "attack",
+  "vocations": [
+   "druid"
+  ]
+ },
+ {
+  "name": "Divine Missile",
+  "words": "exori san",
+  "level": 40,
+  "mana": 20,
+  "category": "attack",
+  "vocations": [
+   "paladin"
+  ]
+ },
+ {
+  "name": "Inflict Wound",
+  "words": "utori kor",
+  "level": 40,
+  "mana": 30,
+  "category": "attack",
+  "vocations": [
+   "knight"
+  ]
+ },
+ {
+  "name": "Strong Ice Wave",
+  "words": "exevo gran frigo hur",
+  "level": 40,
+  "mana": 170,
+  "category": "attack",
+  "vocations": [
+   "druid"
+  ]
+ },
+ {
+  "name": "Divine Caldera",
+  "words": "exevo mas san",
+  "level": 50,
+  "mana": 160,
+  "category": "attack",
+  "vocations": [
+   "paladin"
+  ]
+ },
+ {
+  "name": "Envenom",
+  "words": "utori pox",
+  "level": 50,
+  "mana": 30,
+  "category": "attack",
+  "vocations": [
+   "druid"
+  ]
+ },
+ {
+  "name": "Lightning",
+  "words": "exori amp vis",
+  "level": 55,
+  "mana": 60,
+  "category": "attack",
+  "vocations": [
+   "sorcerer"
+  ]
+ },
+ {
+  "name": "Rage of the Skies",
+  "words": "exevo gran mas vis",
+  "level": 55,
+  "mana": 600,
+  "category": "attack",
+  "vocations": [
+   "sorcerer"
+  ]
+ },
+ {
+  "name": "Wrath of Nature",
+  "words": "exevo gran mas tera",
+  "level": 55,
+  "mana": 700,
+  "category": "attack",
+  "vocations": [
+   "druid"
+  ]
+ },
+ {
+  "name": "Eternal Winter",
+  "words": "exevo gran mas frigo",
+  "level": 60,
+  "mana": 1050,
+  "category": "attack",
+  "vocations": [
+   "druid"
+  ]
+ },
+ {
+  "name": "Hell's Core",
+  "words": "exevo gran mas flam",
+  "level": 60,
+  "mana": 1100,
+  "category": "attack",
+  "vocations": [
+   "sorcerer"
+  ]
+ },
+ {
+  "name": "Front Sweep",
+  "words": "exori min",
+  "level": 70,
+  "mana": 200,
+  "category": "attack",
+  "vocations": [
+   "knight"
+  ]
+ },
+ {
+  "name": "Holy Flash",
+  "words": "utori san",
+  "level": 70,
+  "mana": 30,
+  "category": "attack",
+  "vocations": [
+   "paladin"
+  ]
+ },
+ {
+  "name": "Strong Flame Strike",
+  "words": "exori gran flam",
+  "level": 70,
+  "mana": 60,
+  "category": "attack",
+  "vocations": [
+   "sorcerer"
+  ]
+ },
+ {
+  "name": "Strong Terra Strike",
+  "words": "exori gran tera",
+  "level": 70,
+  "mana": 60,
+  "category": "attack",
+  "vocations": [
+   "druid"
+  ]
+ },
+ {
+  "name": "Curse",
+  "words": "utori mort",
+  "level": 75,
+  "mana": 30,
+  "category": "attack",
+  "vocations": [
+   "sorcerer"
+  ]
+ },
+ {
+  "name": "Strong Energy Strike",
+  "words": "exori gran vis",
+  "level": 80,
+  "mana": 60,
+  "category": "attack",
+  "vocations": [
+   "sorcerer"
+  ]
+ },
+ {
+  "name": "Strong Ice Strike",
+  "words": "exori gran frigo",
+  "level": 80,
+  "mana": 60,
+  "category": "attack",
+  "vocations": [
+   "druid"
+  ]
+ },
+ {
+  "name": "Fierce Berserk",
+  "words": "exori gran",
+  "level": 90,
+  "mana": 340,
+  "category": "attack",
+  "vocations": [
+   "knight"
+  ]
+ },
+ {
+  "name": "Strong Ethereal Spear",
+  "words": "exori gran con",
+  "level": 90,
+  "mana": 55,
+  "category": "attack",
+  "vocations": [
+   "paladin"
+  ]
+ },
+ {
+  "name": "Ultimate Flame Strike",
+  "words": "exori max flam",
+  "level": 90,
+  "mana": 100,
+  "category": "attack",
+  "vocations": [
+   "sorcerer"
+  ]
+ },
+ {
+  "name": "Ultimate Terra Strike",
+  "words": "exori max tera",
+  "level": 90,
+  "mana": 100,
+  "category": "attack",
+  "vocations": [
+   "druid"
+  ]
+ },
+ {
+  "name": "Ultimate Energy Strike",
+  "words": "exori max vis",
+  "level": 100,
+  "mana": 100,
+  "category": "attack",
+  "vocations": [
+   "sorcerer"
+  ]
+ },
+ {
+  "name": "Ultimate Ice Strike",
+  "words": "exori max frigo",
+  "level": 100,
+  "mana": 100,
+  "category": "attack",
+  "vocations": [
+   "druid"
+  ]
+ },
+ {
+  "name": "Annihilation",
+  "words": "exori gran ico",
+  "level": 110,
+  "mana": 300,
+  "category": "attack",
+  "vocations": [
+   "knight"
+  ]
+ },
+ {
+  "name": "Arrow Call",
+  "words": "exevo infir con",
+  "level": 1,
+  "mana": 10,
+  "category": "conjuring",
+  "vocations": [
+   "paladin"
+  ]
+ },
+ {
+  "name": "Light Stone Shower Rune",
+  "words": "adori infir mas tera",
+  "level": 1,
+  "mana": 6,
+  "category": "conjuring",
+  "vocations": [
+   "druid",
+   "paladin",
+   "sorcerer"
+  ]
+ },
+ {
+  "name": "Lightest Missile Rune",
+  "words": "adori infir vis",
+  "level": 1,
+  "mana": 6,
+  "category": "conjuring",
+  "vocations": [
+   "druid",
+   "paladin",
+   "sorcerer"
+  ]
+ },
+ {
+  "name": "Practise Magic Missile Rune",
+  "words": "adori dis min vis",
+  "level": 1,
+  "mana": 5,
+  "category": "conjuring",
+  "vocations": [
+   "sorcerer",
+   "druid",
+   "paladin",
+   "knight"
+  ]
+ },
+ {
+  "name": "Conjure Arrow",
+  "words": "exevo con",
+  "level": 13,
+  "mana": 100,
+  "category": "conjuring",
+  "vocations": [
+   "paladin"
+  ]
+ },
+ {
+  "name": "Poison Field Rune",
+  "words": "adevo grav pox",
+  "level": 14,
+  "mana": 200,
+  "category": "conjuring",
+  "vocations": [
+   "druid",
+   "sorcerer"
+  ]
+ },
+ {
+  "name": "Cure Poison Rune",
+  "words": "adana pox",
+  "level": 15,
+  "mana": 200,
+  "category": "conjuring",
+  "vocations": [
+   "druid"
+  ]
+ },
+ {
+  "name": "Fire Field Rune",
+  "words": "adevo grav flam",
+  "level": 15,
+  "mana": 240,
+  "category": "conjuring",
+  "vocations": [
+   "druid",
+   "sorcerer"
+  ]
+ },
+ {
+  "name": "Intense Healing Rune",
+  "words": "adura gran",
+  "level": 15,
+  "mana": 120,
+  "category": "conjuring",
+  "vocations": [
+   "druid"
+  ]
+ },
+ {
+  "name": "Light Magic Missile Rune",
+  "words": "adori min vis",
+  "level": 15,
+  "mana": 120,
+  "category": "conjuring",
+  "vocations": [
+   "druid",
+   "sorcerer"
+  ]
+ },
+ {
+  "name": "Conjure Poisoned Arrow",
+  "words": "exevo con pox",
+  "level": 16,
+  "mana": 130,
+  "category": "conjuring",
+  "vocations": [
+   "paladin"
+  ]
+ },
+ {
+  "name": "Convince Creature Rune",
+  "words": "adeta sio",
+  "level": 16,
+  "mana": 200,
+  "category": "conjuring",
+  "vocations": [
+   "druid"
+  ]
+ },
+ {
+  "name": "Conjure Bolt",
+  "words": "exevo con mort",
+  "level": 17,
+  "mana": 140,
+  "category": "conjuring",
+  "vocations": [
+   "paladin"
+  ]
+ },
+ {
+  "name": "Destroy Field Rune",
+  "words": "adito grav",
+  "level": 17,
+  "mana": 120,
+  "category": "conjuring",
+  "vocations": [
+   "druid",
+   "paladin",
+   "sorcerer"
+  ]
+ },
+ {
+  "name": "Energy Field Rune",
+  "words": "adevo grav vis",
+  "level": 18,
+  "mana": 320,
+  "category": "conjuring",
+  "vocations": [
+   "druid",
+   "sorcerer"
+  ]
+ },
+ {
+  "name": "Blank Rune",
+  "words": "adori blank",
+  "level": 20,
+  "mana": 50,
+  "category": "conjuring",
+  "vocations": [
+   "druid",
+   "paladin",
+   "sorcerer"
+  ]
+ },
+ {
+  "name": "Disintegrate Rune",
+  "words": "adito tera",
+  "level": 21,
+  "mana": 200,
+  "category": "conjuring",
+  "vocations": [
+   "druid",
+   "paladin",
+   "sorcerer"
+  ]
+ },
+ {
+  "name": "Conjure Sniper Arrow",
+  "words": "exevo con hur",
+  "level": 24,
+  "mana": 160,
+  "category": "conjuring",
+  "vocations": [
+   "paladin"
+  ]
+ },
+ {
+  "name": "Stalagmite Rune",
+  "words": "adori tera",
+  "level": 24,
+  "mana": 350,
+  "category": "conjuring",
+  "vocations": [
+   "druid",
+   "sorcerer"
+  ]
+ },
+ {
+  "name": "Ultimate Healing Rune",
+  "words": "adura vita",
+  "level": 24,
+  "mana": 400,
+  "category": "conjuring",
+  "vocations": [
+   "druid"
+  ]
+ },
+ {
+  "name": "Conjure Explosive Arrow",
+  "words": "exevo con flam",
+  "level": 25,
+  "mana": 290,
+  "category": "conjuring",
+  "vocations": [
+   "paladin"
+  ]
+ },
+ {
+  "name": "Heavy Magic Missile Rune",
+  "words": "adori vis",
+  "level": 25,
+  "mana": 350,
+  "category": "conjuring",
+  "vocations": [
+   "druid",
+   "sorcerer"
+  ]
+ },
+ {
+  "name": "Poison Bomb Rune",
+  "words": "adevo mas pox",
+  "level": 25,
+  "mana": 520,
+  "category": "conjuring",
+  "vocations": [
+   "druid"
+  ]
+ },
+ {
+  "name": "Animate Dead Rune",
+  "words": "adana mort",
+  "level": 27,
+  "mana": 600,
+  "category": "conjuring",
+  "vocations": [
+   "druid",
+   "sorcerer"
+  ]
+ },
+ {
+  "name": "Chameleon Rune",
+  "words": "adevo ina",
+  "level": 27,
+  "mana": 600,
+  "category": "conjuring",
+  "vocations": [
+   "druid"
+  ]
+ },
+ {
+  "name": "Fire Bomb Rune",
+  "words": "adevo mas flam",
+  "level": 27,
+  "mana": 600,
+  "category": "conjuring",
+  "vocations": [
+   "druid",
+   "sorcerer"
+  ]
+ },
+ {
+  "name": "Fireball Rune",
+  "words": "adori flam",
+  "level": 27,
+  "mana": 460,
+  "category": "conjuring",
+  "vocations": [
+   "sorcerer"
+  ]
+ },
+ {
+  "name": "Holy Missile Rune",
+  "words": "adori san",
+  "level": 27,
+  "mana": 300,
+  "category": "conjuring",
+  "vocations": [
+   "paladin"
+  ]
+ },
+ {
+  "name": "Soulfire Rune",
+  "words": "adevo res flam",
+  "level": 27,
+  "mana": 420,
+  "category": "conjuring",
+  "vocations": [
+   "druid",
+   "sorcerer"
+  ]
+ },
+ {
+  "name": "Wild Growth Rune",
+  "words": "adevo grav vita",
+  "level": 27,
+  "mana": 600,
+  "category": "conjuring",
+  "vocations": [
+   "druid"
+  ]
+ },
+ {
+  "name": "Icicle Rune",
+  "words": "adori frigo",
+  "level": 28,
+  "mana": 460,
+  "category": "conjuring",
+  "vocations": [
+   "druid"
+  ]
+ },
+ {
+  "name": "Stone Shower Rune",
+  "words": "adori mas tera",
+  "level": 28,
+  "mana": 430,
+  "category": "conjuring",
+  "vocations": [
+   "druid"
+  ]
+ },
+ {
+  "name": "Thunderstorm Rune",
+  "words": "adori mas vis",
+  "level": 28,
+  "mana": 430,
+  "category": "conjuring",
+  "vocations": [
+   "sorcerer"
+  ]
+ },
+ {
+  "name": "Poison Wall Rune",
+  "words": "adevo mas grav pox",
+  "level": 29,
+  "mana": 640,
+  "category": "conjuring",
+  "vocations": [
+   "druid",
+   "sorcerer"
+  ]
+ },
+ {
+  "name": "Avalanche Rune",
+  "words": "adori mas frigo",
+  "level": 30,
+  "mana": 530,
+  "category": "conjuring",
+  "vocations": [
+   "druid"
+  ]
+ },
+ {
+  "name": "Great Fireball Rune",
+  "words": "adori mas flam",
+  "level": 30,
+  "mana": 530,
+  "category": "conjuring",
+  "vocations": [
+   "sorcerer"
+  ]
+ },
+ {
+  "name": "Explosion Rune",
+  "words": "adevo mas hur",
+  "level": 31,
+  "mana": 570,
+  "category": "conjuring",
+  "vocations": [
+   "druid",
+   "sorcerer"
+  ]
+ },
+ {
+  "name": "Magic Wall Rune",
+  "words": "adevo grav tera",
+  "level": 32,
+  "mana": 750,
+  "category": "conjuring",
+  "vocations": [
+   "sorcerer"
+  ]
+ },
+ {
+  "name": "Conjure Piercing Bolt",
+  "words": "exevo con grav",
+  "level": 33,
+  "mana": 180,
+  "category": "conjuring",
+  "vocations": [
+   "paladin"
+  ]
+ },
+ {
+  "name": "Fire Wall Rune",
+  "words": "adevo mas grav flam",
+  "level": 33,
+  "mana": 780,
+  "category": "conjuring",
+  "vocations": [
+   "druid",
+   "sorcerer"
+  ]
+ },
+ {
+  "name": "Energy Bomb Rune",
+  "words": "adevo mas vis",
+  "level": 37,
+  "mana": 880,
+  "category": "conjuring",
+  "vocations": [
+   "sorcerer"
+  ]
+ },
+ {
+  "name": "Conjure Wand of Darkness",
+  "words": "exevo gran mort",
+  "level": 41,
+  "mana": 250,
+  "category": "conjuring",
+  "vocations": [
+   "sorcerer",
+   "druid",
+   "paladin",
+   "knight"
+  ]
+ },
+ {
+  "name": "Energy Wall Rune",
+  "words": "adevo mas grav vis",
+  "level": 41,
+  "mana": 1000,
+  "category": "conjuring",
+  "vocations": [
+   "druid",
+   "sorcerer"
+  ]
+ },
+ {
+  "name": "Enchant Spear",
+  "words": "exeta con",
+  "level": 45,
+  "mana": 350,
+  "category": "conjuring",
+  "vocations": [
+   "paladin"
+  ]
+ },
+ {
+  "name": "Sudden Death Rune",
+  "words": "adori gran mort",
+  "level": 45,
+  "mana": 985,
+  "category": "conjuring",
+  "vocations": [
+   "sorcerer"
+  ]
+ },
+ {
+  "name": "Paralyze Rune",
+  "words": "adana ani",
+  "level": 54,
+  "mana": 1400,
+  "category": "conjuring",
+  "vocations": [
+   "druid"
+  ]
+ },
+ {
+  "name": "Conjure Power Bolt",
+  "words": "exevo con vis",
+  "level": 59,
+  "mana": 700,
+  "category": "conjuring",
+  "vocations": [
+   "sorcerer",
+   "druid",
+   "paladin",
+   "knight"
+  ]
+ },
+ {
+  "name": "Bruise Bane",
+  "words": "exura infir ico",
+  "level": 1,
+  "mana": 10,
+  "category": "healing",
+  "vocations": [
+   "knight"
+  ]
+ },
+ {
+  "name": "Magic Patch",
+  "words": "exura infir",
+  "level": 1,
+  "mana": 6,
+  "category": "healing",
+  "vocations": [
+   "druid",
+   "paladin",
+   "sorcerer"
+  ]
+ },
+ {
+  "name": "Practise Healing",
+  "words": "exura dis",
+  "level": 1,
+  "mana": 5,
+  "category": "healing",
+  "vocations": [
+   "sorcerer",
+   "druid",
+   "paladin",
+   "knight"
+  ]
+ },
+ {
+  "name": "Light Healing",
+  "words": "exura",
+  "level": 8,
+  "mana": 20,
+  "category": "healing",
+  "vocations": [
+   "druid",
+   "paladin",
+   "sorcerer"
+  ]
+ },
+ {
+  "name": "Wound Cleansing",
+  "words": "exura ico",
+  "level": 8,
+  "mana": 40,
+  "category": "healing",
+  "vocations": [
+   "knight"
+  ]
+ },
+ {
+  "name": "Cure Poison",
+  "words": "exana pox",
+  "level": 10,
+  "mana": 30,
+  "category": "healing",
+  "vocations": [
+   "druid",
+   "knight",
+   "paladin",
+   "sorcerer"
+  ]
+ },
+ {
+  "name": "Heal Friend",
+  "words": "exura sio",
+  "level": 18,
+  "mana": 120,
+  "category": "healing",
+  "vocations": [
+   "druid"
+  ]
+ },
+ {
+  "name": "Intense Healing",
+  "words": "exura gran",
+  "level": 20,
+  "mana": 70,
+  "category": "healing",
+  "vocations": [
+   "druid",
+   "paladin",
+   "sorcerer"
+  ]
+ },
+ {
+  "name": "Cure Electrification",
+  "words": "exana vis",
+  "level": 22,
+  "mana": 30,
+  "category": "healing",
+  "vocations": [
+   "druid"
+  ]
+ },
+ {
+  "name": "Cure Burning",
+  "words": "exana flam",
+  "level": 30,
+  "mana": 30,
+  "category": "healing",
+  "vocations": [
+   "druid"
+  ]
+ },
+ {
+  "name": "Ultimate Healing",
+  "words": "exura vita",
+  "level": 30,
+  "mana": 160,
+  "category": "healing",
+  "vocations": [
+   "druid",
+   "sorcerer"
+  ]
+ },
+ {
+  "name": "Divine Healing",
+  "words": "exura san",
+  "level": 35,
+  "mana": 160,
+  "category": "healing",
+  "vocations": [
+   "paladin"
+  ]
+ },
+ {
+  "name": "Mass Healing",
+  "words": "exura gran mas res",
+  "level": 36,
+  "mana": 150,
+  "category": "healing",
+  "vocations": [
+   "druid"
+  ]
+ },
+ {
+  "name": "Cure Bleeding",
+  "words": "exana kor",
+  "level": 45,
+  "mana": 30,
+  "category": "healing",
+  "vocations": [
+   "druid",
+   "knight"
+  ]
+ },
+ {
+  "name": "Recovery",
+  "words": "utura",
+  "level": 50,
+  "mana": 75,
+  "category": "healing",
+  "vocations": [
+   "knight",
+   "paladin"
+  ]
+ },
+ {
+  "name": "Salvation",
+  "words": "exura gran san",
+  "level": 60,
+  "mana": 210,
+  "category": "healing",
+  "vocations": [
+   "paladin"
+  ]
+ },
+ {
+  "name": "Cure Curse",
+  "words": "exana mort",
+  "level": 80,
+  "mana": 40,
+  "category": "healing",
+  "vocations": [
+   "paladin"
+  ]
+ },
+ {
+  "name": "Intense Wound Cleansing",
+  "words": "exura gran ico",
+  "level": 80,
+  "mana": 200,
+  "category": "healing",
+  "vocations": [
+   "knight"
+  ]
+ },
+ {
+  "name": "Intense Recovery",
+  "words": "utura gran",
+  "level": 100,
+  "mana": 165,
+  "category": "healing",
+  "vocations": [
+   "knight",
+   "paladin"
+  ]
+ },
+ {
+  "name": "Fair Wound Cleansing",
+  "words": "exura med ico",
+  "level": 300,
+  "mana": 90,
+  "category": "healing",
+  "vocations": [
+   "knight"
+  ]
+ },
+ {
+  "name": "Nature's Embrace",
+  "words": "exura gran sio",
+  "level": 300,
+  "mana": 400,
+  "category": "healing",
+  "vocations": [
+   "druid"
+  ]
+ },
+ {
+  "name": "Restoration",
+  "words": "exura max vita",
+  "level": 300,
+  "mana": 260,
+  "category": "healing",
+  "vocations": [
+   "druid",
+   "sorcerer"
+  ]
+ },
+ {
+  "name": "Animate Dead Rune",
+  "words": "\u2014",
+  "level": 0,
+  "mana": 0,
+  "category": "runes",
+  "vocations": [
+   "sorcerer",
+   "druid",
+   "paladin",
+   "knight"
+  ]
+ },
+ {
+  "name": "Avalanche Rune",
+  "words": "\u2014",
+  "level": 0,
+  "mana": 0,
+  "category": "runes",
+  "vocations": [
+   "sorcerer",
+   "druid",
+   "paladin",
+   "knight"
+  ]
+ },
+ {
+  "name": "Chameleon Rune",
+  "words": "\u2014",
+  "level": 0,
+  "mana": 0,
+  "category": "runes",
+  "vocations": [
+   "sorcerer",
+   "druid",
+   "paladin",
+   "knight"
+  ]
+ },
+ {
+  "name": "Convince Creature Rune",
+  "words": "\u2014",
+  "level": 0,
+  "mana": 0,
+  "category": "runes",
+  "vocations": [
+   "sorcerer",
+   "druid",
+   "paladin",
+   "knight"
+  ]
+ },
+ {
+  "name": "Cure Poison Rune",
+  "words": "\u2014",
+  "level": 0,
+  "mana": 0,
+  "category": "runes",
+  "vocations": [
+   "sorcerer",
+   "druid",
+   "paladin",
+   "knight"
+  ]
+ },
+ {
+  "name": "Destroy Field Rune",
+  "words": "\u2014",
+  "level": 0,
+  "mana": 0,
+  "category": "runes",
+  "vocations": [
+   "sorcerer",
+   "druid",
+   "paladin",
+   "knight"
+  ]
+ },
+ {
+  "name": "Disintegrate Rune",
+  "words": "\u2014",
+  "level": 0,
+  "mana": 0,
+  "category": "runes",
+  "vocations": [
+   "sorcerer",
+   "druid",
+   "paladin",
+   "knight"
+  ]
+ },
+ {
+  "name": "Energy Bomb Rune",
+  "words": "\u2014",
+  "level": 0,
+  "mana": 0,
+  "category": "runes",
+  "vocations": [
+   "sorcerer",
+   "druid",
+   "paladin",
+   "knight"
+  ]
+ },
+ {
+  "name": "Energy Field Rune",
+  "words": "\u2014",
+  "level": 0,
+  "mana": 0,
+  "category": "runes",
+  "vocations": [
+   "sorcerer",
+   "druid",
+   "paladin",
+   "knight"
+  ]
+ },
+ {
+  "name": "Energy Wall Rune",
+  "words": "\u2014",
+  "level": 0,
+  "mana": 0,
+  "category": "runes",
+  "vocations": [
+   "sorcerer",
+   "druid",
+   "paladin",
+   "knight"
+  ]
+ },
+ {
+  "name": "Explosion Rune",
+  "words": "\u2014",
+  "level": 0,
+  "mana": 0,
+  "category": "runes",
+  "vocations": [
+   "sorcerer",
+   "druid",
+   "paladin",
+   "knight"
+  ]
+ },
+ {
+  "name": "Fire Bomb Rune",
+  "words": "\u2014",
+  "level": 0,
+  "mana": 0,
+  "category": "runes",
+  "vocations": [
+   "sorcerer",
+   "druid",
+   "paladin",
+   "knight"
+  ]
+ },
+ {
+  "name": "Fire Field Rune",
+  "words": "\u2014",
+  "level": 0,
+  "mana": 0,
+  "category": "runes",
+  "vocations": [
+   "sorcerer",
+   "druid",
+   "paladin",
+   "knight"
+  ]
+ },
+ {
+  "name": "Fire Wall Rune",
+  "words": "\u2014",
+  "level": 0,
+  "mana": 0,
+  "category": "runes",
+  "vocations": [
+   "sorcerer",
+   "druid",
+   "paladin",
+   "knight"
+  ]
+ },
+ {
+  "name": "Fireball Rune",
+  "words": "\u2014",
+  "level": 0,
+  "mana": 0,
+  "category": "runes",
+  "vocations": [
+   "sorcerer",
+   "druid",
+   "paladin",
+   "knight"
+  ]
+ },
+ {
+  "name": "Great Fireball Rune",
+  "words": "\u2014",
+  "level": 0,
+  "mana": 0,
+  "category": "runes",
+  "vocations": [
+   "sorcerer",
+   "druid",
+   "paladin",
+   "knight"
+  ]
+ },
+ {
+  "name": "Heavy Magic Missile Rune",
+  "words": "\u2014",
+  "level": 0,
+  "mana": 0,
+  "category": "runes",
+  "vocations": [
+   "sorcerer",
+   "druid",
+   "paladin",
+   "knight"
+  ]
+ },
+ {
+  "name": "Holy Missile Rune",
+  "words": "\u2014",
+  "level": 0,
+  "mana": 0,
+  "category": "runes",
+  "vocations": [
+   "paladin"
+  ]
+ },
+ {
+  "name": "Icicle Rune",
+  "words": "\u2014",
+  "level": 0,
+  "mana": 0,
+  "category": "runes",
+  "vocations": [
+   "sorcerer",
+   "druid",
+   "paladin",
+   "knight"
+  ]
+ },
+ {
+  "name": "Intense Healing Rune",
+  "words": "\u2014",
+  "level": 0,
+  "mana": 0,
+  "category": "runes",
+  "vocations": [
+   "sorcerer",
+   "druid",
+   "paladin",
+   "knight"
+  ]
+ },
+ {
+  "name": "Light Magic Missile Rune",
+  "words": "\u2014",
+  "level": 0,
+  "mana": 0,
+  "category": "runes",
+  "vocations": [
+   "sorcerer",
+   "druid",
+   "paladin",
+   "knight"
+  ]
+ },
+ {
+  "name": "Light Stone Shower Rune",
+  "words": "\u2014",
+  "level": 0,
+  "mana": 0,
+  "category": "runes",
+  "vocations": [
+   "sorcerer",
+   "druid",
+   "paladin",
+   "knight"
+  ]
+ },
+ {
+  "name": "Lightest Magic Missile Rune",
+  "words": "\u2014",
+  "level": 0,
+  "mana": 0,
+  "category": "runes",
+  "vocations": [
+   "sorcerer",
+   "druid",
+   "paladin",
+   "knight"
+  ]
+ },
+ {
+  "name": "Lightest Missile Rune",
+  "words": "\u2014",
+  "level": 0,
+  "mana": 0,
+  "category": "runes",
+  "vocations": [
+   "sorcerer",
+   "druid",
+   "paladin",
+   "knight"
+  ]
+ },
+ {
+  "name": "Magic Wall Rune",
+  "words": "\u2014",
+  "level": 0,
+  "mana": 0,
+  "category": "runes",
+  "vocations": [
+   "sorcerer",
+   "druid",
+   "paladin",
+   "knight"
+  ]
+ },
+ {
+  "name": "Paralyze Rune",
+  "words": "\u2014",
+  "level": 0,
+  "mana": 1400,
+  "category": "runes",
+  "vocations": [
+   "druid"
+  ]
+ },
+ {
+  "name": "Poison Bomb Rune",
+  "words": "\u2014",
+  "level": 0,
+  "mana": 0,
+  "category": "runes",
+  "vocations": [
+   "sorcerer",
+   "druid",
+   "paladin",
+   "knight"
+  ]
+ },
+ {
+  "name": "Poison Field Rune",
+  "words": "\u2014",
+  "level": 0,
+  "mana": 0,
+  "category": "runes",
+  "vocations": [
+   "sorcerer",
+   "druid",
+   "paladin",
+   "knight"
+  ]
+ },
+ {
+  "name": "Poison Wall Rune",
+  "words": "\u2014",
+  "level": 0,
+  "mana": 0,
+  "category": "runes",
+  "vocations": [
+   "sorcerer",
+   "druid",
+   "paladin",
+   "knight"
+  ]
+ },
+ {
+  "name": "Soulfire Rune",
+  "words": "\u2014",
+  "level": 0,
+  "mana": 0,
+  "category": "runes",
+  "vocations": [
+   "sorcerer",
+   "druid",
+   "paladin",
+   "knight"
+  ]
+ },
+ {
+  "name": "Stalagmite Rune",
+  "words": "\u2014",
+  "level": 0,
+  "mana": 0,
+  "category": "runes",
+  "vocations": [
+   "sorcerer",
+   "druid",
+   "paladin",
+   "knight"
+  ]
+ },
+ {
+  "name": "Stone Shower Rune",
+  "words": "\u2014",
+  "level": 0,
+  "mana": 0,
+  "category": "runes",
+  "vocations": [
+   "sorcerer",
+   "druid",
+   "paladin",
+   "knight"
+  ]
+ },
+ {
+  "name": "Sudden Death Rune",
+  "words": "\u2014",
+  "level": 0,
+  "mana": 0,
+  "category": "runes",
+  "vocations": [
+   "sorcerer",
+   "druid",
+   "paladin",
+   "knight"
+  ]
+ },
+ {
+  "name": "Thunderstorm Rune",
+  "words": "\u2014",
+  "level": 0,
+  "mana": 0,
+  "category": "runes",
+  "vocations": [
+   "sorcerer",
+   "druid",
+   "paladin",
+   "knight"
+  ]
+ },
+ {
+  "name": "Ultimate Healing Rune",
+  "words": "\u2014",
+  "level": 0,
+  "mana": 0,
+  "category": "runes",
+  "vocations": [
+   "sorcerer",
+   "druid",
+   "paladin",
+   "knight"
+  ]
+ },
+ {
+  "name": "Wild Growth Rune",
+  "words": "\u2014",
+  "level": 0,
+  "mana": 0,
+  "category": "runes",
+  "vocations": [
+   "druid"
+  ]
+ },
+ {
+  "name": "Find Person",
+  "words": "exiva",
+  "level": 8,
+  "mana": 20,
+  "category": "support",
+  "vocations": [
+   "druid",
+   "knight",
+   "paladin",
+   "sorcerer"
+  ]
+ },
+ {
+  "name": "Light",
+  "words": "utevo lux",
+  "level": 8,
+  "mana": 20,
+  "category": "support",
+  "vocations": [
+   "druid",
+   "knight",
+   "paladin",
+   "sorcerer"
+  ]
+ },
+ {
+  "name": "Magic Rope",
+  "words": "exani tera",
+  "level": 9,
+  "mana": 20,
+  "category": "support",
+  "vocations": [
+   "druid",
+   "knight",
+   "paladin",
+   "sorcerer"
+  ]
+ },
+ {
+  "name": "Levitate",
+  "words": "exani hur",
+  "level": 12,
+  "mana": 50,
+  "category": "support",
+  "vocations": [
+   "druid",
+   "knight",
+   "paladin",
+   "sorcerer"
+  ]
+ },
+ {
+  "name": "Great Light",
+  "words": "utevo gran lux",
+  "level": 13,
+  "mana": 60,
+  "category": "support",
+  "vocations": [
+   "druid",
+   "knight",
+   "paladin",
+   "sorcerer"
+  ]
+ },
+ {
+  "name": "Food",
+  "words": "exevo pan",
+  "level": 14,
+  "mana": 120,
+  "category": "support",
+  "vocations": [
+   "druid"
+  ]
+ },
+ {
+  "name": "Haste",
+  "words": "utani hur",
+  "level": 14,
+  "mana": 60,
+  "category": "support",
+  "vocations": [
+   "druid",
+   "knight",
+   "paladin",
+   "sorcerer"
+  ]
+ },
+ {
+  "name": "Challenge",
+  "words": "exeta res",
+  "level": 20,
+  "mana": 40,
+  "category": "support",
+  "vocations": [
+   "sorcerer",
+   "druid",
+   "paladin",
+   "knight"
+  ]
+ },
+ {
+  "name": "Strong Haste",
+  "words": "utani gran hur",
+  "level": 20,
+  "mana": 100,
+  "category": "support",
+  "vocations": [
+   "druid",
+   "sorcerer"
+  ]
+ },
+ {
+  "name": "Creature Illusion",
+  "words": "utevo res ina",
+  "level": 23,
+  "mana": 100,
+  "category": "support",
+  "vocations": [
+   "druid",
+   "sorcerer"
+  ]
+ },
+ {
+  "name": "Charge",
+  "words": "utani tempo hur",
+  "level": 25,
+  "mana": 100,
+  "category": "support",
+  "vocations": [
+   "knight"
+  ]
+ },
+ {
+  "name": "Summon Creature",
+  "words": "utevo res",
+  "level": 25,
+  "mana": 0,
+  "category": "support",
+  "vocations": [
+   "druid",
+   "sorcerer"
+  ]
+ },
+ {
+  "name": "Cancel Invisibility",
+  "words": "exana ina",
+  "level": 26,
+  "mana": 200,
+  "category": "support",
+  "vocations": [
+   "paladin"
+  ]
+ },
+ {
+  "name": "Ultimate Light",
+  "words": "utevo vis lux",
+  "level": 26,
+  "mana": 140,
+  "category": "support",
+  "vocations": [
+   "druid",
+   "sorcerer"
+  ]
+ },
+ {
+  "name": "Invisibility",
+  "words": "utana vid",
+  "level": 35,
+  "mana": 440,
+  "category": "support",
+  "vocations": [
+   "druid",
+   "sorcerer"
+  ]
+ },
+ {
+  "name": "Protector",
+  "words": "utamo tempo",
+  "level": 55,
+  "mana": 200,
+  "category": "support",
+  "vocations": [
+   "knight"
+  ]
+ },
+ {
+  "name": "Swift Foot",
+  "words": "utamo tempo san",
+  "level": 55,
+  "mana": 400,
+  "category": "support",
+  "vocations": [
+   "paladin"
+  ]
+ },
+ {
+  "name": "Blood Rage",
+  "words": "utito tempo",
+  "level": 60,
+  "mana": 290,
+  "category": "support",
+  "vocations": [
+   "knight"
+  ]
+ },
+ {
+  "name": "Sharpshooter",
+  "words": "utito tempo san",
+  "level": 60,
+  "mana": 450,
+  "category": "support",
+  "vocations": [
+   "paladin"
+  ]
+ }
+]

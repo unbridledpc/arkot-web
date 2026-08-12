@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}Changelog{% endblock %}
+{% block content %}
+<section class="narrow">
+  <h2 class="rune">Changelog</h2>
+  <div class="card">
+    {% if not rows %}<p>No changes logged yet.</p>{% endif %}
+    <table class="tbl">
+      {% for c in rows %}
+      <tr><td><time>{{ c.time | timestamp }}</time></td><td>{{ c.text }}</td></tr>
+      {% endfor %}
+    </table>
+  </div>
+</section>
+{% endblock %}

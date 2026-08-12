@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %}Kill Statistics{% endblock %}
+{% block content %}
+<section>
+  <h2 class="rune">Kill Statistics</h2>
+  <div class="cols">
+    <div class="col-main">
+      <h3 class="rune small">Recent PvP kills</h3>
+      <div class="card">
+        {% if not recent %}<p>No player has slain another yet. Peace won't hold forever.</p>{% endif %}
+        <table class="tbl">
+          {% for k in recent %}
+          <tr><td><time>{{ k.time | timestamp }}</time></td>
+              <td><a href="/character/{{ k.killed_by }}">{{ k.killed_by }}</a> slew
+                  <a href="/character/{{ k.victim }}">{{ k.victim }}</a> (level {{ k.level }})</td></tr>
+          {% endfor %}
+        </table>
+      </div>
+    </div>
+    <aside class="col-side">
+      <h3 class="rune small">Most frags</h3>
+      <div class="card tight">
+        {% if not top %}<p>The board is clean.</p>{% endif %}
+        <ol class="toplist">
+          {% for k in top %}
+          <li><a href="/character/{{ k.name }}">{{ k.name }}</a><span>{{ k.frags }} frags</span></li>
+          {% endfor %}
+        </ol>
+      </div>
+    </aside>
+  </div>
+</section>
+{% endblock %}

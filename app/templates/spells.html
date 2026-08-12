@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block title %}Spells{% endblock %}
+{% block content %}
+<section>
+  <h2 class="rune">Spells <span class="pill">{{ rows | length }}</span></h2>
+  <div class="tabs">
+    <a class="tab {% if cat == 'all' %}active{% endif %}" href="/spells?voc={{ voc }}">All</a>
+    {% for c in cats %}
+    <a class="tab {% if cat == c %}active{% endif %}" href="/spells?cat={{ c }}&voc={{ voc }}">{{ c | capitalize }}</a>
+    {% endfor %}
+  </div>
+  <div class="tabs">
+    <a class="tab {% if voc == 'all' %}active{% endif %}" href="/spells?cat={{ cat }}">Every vocation</a>
+    {% for v in ['sorcerer', 'druid', 'paladin', 'knight'] %}
+    <a class="tab {% if voc == v %}active{% endif %}" href="/spells?cat={{ cat }}&voc={{ v }}">{{ v | capitalize }}s</a>
+    {% endfor %}
+  </div>
+  <div class="card">
+    <table class="tbl">
+      <tr><th>Spell</th><th>Words</th><th>Level</th><th>Mana</th><th>Type</th><th>Vocations</th></tr>
+      {% for s in rows %}
+      <tr><td>{{ s.name }}</td>
+          <td><code>{{ s.words }}</code></td>
+          <td>{{ s.level }}</td>
+          <td>{{ s.mana }}</td>
+          <td>{{ s.category | capitalize }}</td>
+          <td>{{ s.vocations | map('capitalize') | join(', ') }}</td></tr>
+      {% endfor %}
+    </table>
+  </div>
+</section>
+{% endblock %}

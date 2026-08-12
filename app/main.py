@@ -11,6 +11,9 @@ import re
 import secrets
 import time
 
+import json
+import pathlib
+
 import pymysql
 from fastapi import FastAPI, Form, Request
 from fastapi.responses import HTMLResponse, JSONResponse, RedirectResponse
@@ -36,6 +39,8 @@ GAME_PORT = 7172
 
 VOCATIONS = {0: "None", 1: "Sorcerer", 2: "Druid", 3: "Paladin", 4: "Knight",
              5: "Master Sorcerer", 6: "Elder Druid", 7: "Royal Paladin", 8: "Elite Knight"}
+SPELLS = json.loads((pathlib.Path(__file__).parent / "data" / "spells.json").read_text())
+GROUP_NAMES = {2: "Tutor", 3: "Senior Tutor", 4: "Gamemaster", 5: "Community Manager", 6: "God"}
 HIGHSCORE_CATS = {
     "experience": ("Experience", "experience", "level"),
     "maglevel": ("Magic Level", "maglevel", "maglevel"),
@@ -371,6 +376,73 @@ def deaths(request: Request):
                 FROM player_deaths d JOIN players p ON p.id = d.player_id
                 ORDER BY d.time DESC LIMIT 50""")
     return render(request, "deaths.html", rows=rows)
+
+
+@app.get("/guilds", response_class=HTMLResponse)
+def guilds(request: Request):
+    rows = q("""SELECT g.name, g.motd, p.name leader,
+                (SELECT count(*) FROM guild_membership m WHERE m.guild_id = g.id) members
+                FROM guilds g JOIN players p ON p.id = g.ownerid ORDER BY members DESC""")
+    return render(request, "guilds.html", rows=rows)
+
+
+@app.get("/guild/{name}", response_class=HTMLResponse)
+def guild(request: Request, name: str):
+    g = q("SELECT id, name, motd, creationdata, ownerid FROM guilds WHERE name=%s", (name,), one=True)
+    if not g:
+        return render(request, "guild.html", guild=None, ranks=[])
+    ranks = q("""SELECT r.name rank_name, r.level, p.name, p.level plevel, p.vocation, m.nick
+                 FROM guild_ranks r
+                 LEFT JOIN guild_membership m ON m.rank_id = r.id
+                 LEFT JOIN players p ON p.id = m.player_id
+                 WHERE r.guild_id = %s ORDER BY r.level DESC, p.level DESC""", (g["id"],))
+    return render(request, "guild.html", guild=g, ranks=ranks)
+
+
+@app.get("/houses", response_class=HTMLResponse)
+def houses(request: Request, town: int = 0):
+    where, args = "", []
+    if town:
+        where, args = "WHERE h.town_id = %s", [town]
+    rows = q(f"""SELECT h.name, h.rent, h.size, h.beds, h.town_id, t.name town_name, p.name owner_name
+                 FROM houses h LEFT JOIN towns t ON t.id = h.town_id
+                 LEFT JOIN players p ON p.id = h.owner {where}
+                 ORDER BY t.name, h.name""", args)
+    return render(request, "houses.html", rows=rows, towns=towns(), town=town)
+
+
+@app.get("/killstats", response_class=HTMLResponse)
+def killstats(request: Request):
+    top = q("""SELECT killed_by name, count(*) frags FROM player_deaths
+               WHERE is_player = 1 GROUP BY killed_by ORDER BY frags DESC LIMIT 25""")
+    recent = q("""SELECT d.time, d.level, d.killed_by, p.name victim
+                  FROM player_deaths d JOIN players p ON p.id = d.player_id
+                  WHERE d.is_player = 1 ORDER BY d.time DESC LIMIT 25""")
+    return render(request, "killstats.html", top=top, recent=recent)
+
+
+@app.get("/spells", response_class=HTMLResponse)
+def spells(request: Request, cat: str = "all", voc: str = "all"):
+    cats = sorted({s["category"] for s in SPELLS})
+    rows = [s for s in SPELLS
+            if (cat == "all" or s["category"] == cat)
+            and (voc == "all" or voc in s["vocations"])]
+    rows.sort(key=lambda s: (s["level"], s["name"]))
+    return render(request, "spells.html", rows=rows, cats=cats, cat=cat, voc=voc)
+
+
+@app.get("/changelog", response_class=HTMLResponse)
+def changelog(request: Request):
+    rows = q("SELECT text, time FROM znote_changelog ORDER BY time DESC LIMIT 50")
+    return render(request, "changelog.html", rows=rows)
+
+
+@app.get("/team", response_class=HTMLResponse)
+def team(request: Request):
+    rows = q("""SELECT name, group_id, lastlogin,
+                (SELECT count(*) FROM players_online o WHERE o.player_id = players.id) online
+                FROM players WHERE group_id > 1 AND deletion = 0 ORDER BY group_id DESC""")
+    return render(request, "team.html", rows=rows, groups=GROUP_NAMES)
 
 
 @app.get("/server", response_class=HTMLResponse)
