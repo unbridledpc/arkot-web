@@ -1,35 +1,26 @@
 {% extends "base.html" %}
+{% from "_ui.html" import box, title %}
 {% block title %}Server{% endblock %}
 {% block content %}
-<section>
-  <h2 class="rune">Server Information</h2>
-  <div class="cols">
-    <div class="col-main">
-      <div class="card">
-        <table class="tbl kv">
-          <tr><th>World</th><td>ArkOT — open PvP world, one realm</td></tr>
-          <tr><th>Client</th><td>Tibia protocol <strong>15.25</strong> (mehah OTClient)</td></tr>
-          <tr><th>Login</th><td><code>http://{{ game_host }}:{{ login_port }}/login</code></td></tr>
-          <tr><th>Game port</th><td><code>{{ game_host }}:{{ game_port }}</code></td></tr>
-          <tr><th>Engine</th><td><a href="https://github.com/arken-fall/ArkOT">ArkOT server</a> — a 15.25-only fork of BlackTek</td></tr>
-          <tr><th>Uptime</th><td>24/7, auto-restarting</td></tr>
-        </table>
-      </div>
-      <h3 class="rune small">Towns</h3>
-      <div class="card">
-        <ul class="plain cols3">
-          {% for t in towns %}<li>{{ t.name }}</li>{% endfor %}
-        </ul>
-      </div>
-    </div>
-    <aside class="col-side">
-      <h3 class="rune small">Right now</h3>
-      <div class="card tight">
-        <p><span class="dot on"></span> {{ status.online }} players online</p>
-        <p>{{ status.characters }} characters</p>
-        <p>{{ status.accounts }} accounts</p>
-      </div>
-    </aside>
-  </div>
-</section>
+{{ title('Server information') }}
+{% call box('The world') %}
+	<table class="tbl kv">
+		<tr><th>World name</th><td>{{ world_name }}, one open PvP realm</td></tr>
+		<tr><th>Map</th><td>The full real-world map with 23 cities, 1,164 houses and its complete NPC, quest and monster population</td></tr>
+		<tr><th>Client</th><td>Protocol <strong>15.25</strong>, mehah OTClient</td></tr>
+		<tr><th>Login</th><td><code>http://{{ game_host }}:{{ login_port }}/login</code></td></tr>
+		<tr><th>Game port</th><td><code>{{ game_host }}:{{ game_port }}</code></td></tr>
+		<tr><th>Engine</th><td><a href="https://github.com/arken-fall/ArkOT">ArkOT</a>, a 15.25-only fork of BlackTek Server</td></tr>
+		<tr><th>Uptime</th><td>24/7 with automatic restart; a short daily save at 10:00 UTC</td></tr>
+		<tr><th>Rates</th><td>Experience, skills, magic and loot as on the original world</td></tr>
+	</table>
+{% endcall %}
+{% call box('Cities') %}
+	<ul class="plain cols3">{% for t in towns %}<li>{{ t.name }}</li>{% endfor %}</ul>
+{% endcall %}
+{% call box('Right now') %}
+	<div class="stat"><span><span class="dot on"></span>Players online</span><b>{{ status.online }}</b></div>
+	<div class="stat"><span>Characters</span><b>{{ '{:,}'.format(status.characters) }}</b></div>
+	<div class="stat"><span>Accounts</span><b>{{ '{:,}'.format(status.accounts) }}</b></div>
+{% endcall %}
 {% endblock %}

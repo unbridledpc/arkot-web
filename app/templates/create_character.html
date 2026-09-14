@@ -1,38 +1,33 @@
 {% extends "base.html" %}
+{% from "_ui.html" import box, title, show_errors %}
 {% block title %}New Character{% endblock %}
 {% block content %}
-<section class="narrow">
-  <h2 class="rune">New Character</h2>
-  <div class="card">
-    {% for e in errors %}<p class="alert bad">{{ e }}</p>{% endfor %}
-    <form method="post" action="/character/create" class="stack">
-      <label>Name
-        <input name="name" value="{{ form.name or '' }}" required maxlength="30">
-      </label>
-      <label>Vocation
-        <select name="vocation">
-          <option value="1" {% if form.vocation == 1 %}selected{% endif %}>Sorcerer — glass cannon of raw magic</option>
-          <option value="2" {% if form.vocation == 2 %}selected{% endif %}>Druid — healer and elemental caller</option>
-          <option value="3" {% if form.vocation == 3 %}selected{% endif %}>Paladin — deadly at a distance</option>
-          <option value="4" {% if form.vocation == 4 %}selected{% endif %}>Knight — steel wall in the front line</option>
-        </select>
-      </label>
-      <label>Sex
-        <select name="sex">
-          <option value="1" {% if form.sex == 1 %}selected{% endif %}>Male</option>
-          <option value="0" {% if form.sex == 0 %}selected{% endif %}>Female</option>
-        </select>
-      </label>
-      <label>Starting town
-        <select name="town">
-          {% for t in towns %}
-          <option value="{{ t.id }}" {% if form.town == t.id %}selected{% endif %}>{{ t.name }}</option>
-          {% endfor %}
-        </select>
-      </label>
-      <input type="hidden" name="token" value="{{ csrf }}">
-      <button class="btn big" type="submit">Create Character</button>
-    </form>
-  </div>
-</section>
+{{ title('Create character') }}
+{% call box('Your new character') %}
+	{{ show_errors(errors) }}
+	<form method="post" action="/character/create" class="stack">
+		<label>Name <input name="name" value="{{ form.name or '' }}" required maxlength="30"></label>
+		<label>Vocation
+			<select name="vocation">
+				<option value="1" {% if form.vocation == 1 %}selected{% endif %}>Sorcerer — raw destructive magic</option>
+				<option value="2" {% if form.vocation == 2 %}selected{% endif %}>Druid — healing and the elements</option>
+				<option value="3" {% if form.vocation == 3 %}selected{% endif %}>Paladin — deadly at a distance</option>
+				<option value="4" {% if form.vocation == 4 %}selected{% endif %}>Knight — steel in the front line</option>
+			</select>
+		</label>
+		<label>Sex
+			<select name="sex">
+				<option value="1" {% if form.sex == 1 %}selected{% endif %}>Male</option>
+				<option value="0" {% if form.sex == 0 %}selected{% endif %}>Female</option>
+			</select>
+		</label>
+		<label>Home city
+			<select name="town">
+				{% for t in towns %}<option value="{{ t.id }}" {% if form.town == t.id %}selected{% endif %}>{{ t.name }}</option>{% endfor %}
+			</select>
+		</label>
+		<input type="hidden" name="token" value="{{ csrf }}">
+		<div><button class="btn big" type="submit">Create character</button></div>
+	</form>
+{% endcall %}
 {% endblock %}

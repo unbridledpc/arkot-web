@@ -1,30 +1,30 @@
 {% extends "base.html" %}
+{% from "_ui.html" import box, title %}
 {% block title %}Highscores{% endblock %}
 {% block content %}
-<section>
-  <h2 class="rune">Highscores — {{ label }}</h2>
-  <div class="tabs">
-    {% for key, meta in cats.items() %}
-    <a class="tab {% if key == cat %}active{% endif %}" href="/highscores?cat={{ key }}">{{ meta[0] }}</a>
-    {% endfor %}
-  </div>
-  <div class="card">
-    {% if not rows %}<p>Nobody on the board yet. First blood takes the crown.</p>{% endif %}
-    <table class="tbl">
-      <tr><th>#</th><th>Name</th><th>Vocation</th><th>{{ label }}</th></tr>
-      {% for r in rows %}
-      <tr>
-        <td>{{ page * 25 + loop.index }}</td>
-        <td><a href="/character/{{ r.name }}">{{ r.name }}</a></td>
-        <td>{{ r.level }} {{ vocname(r.vocation) }}</td>
-        <td>{{ '{:,}'.format(r.shown) }}</td>
-      </tr>
-      {% endfor %}
-    </table>
-    <div class="pager">
-      {% if page > 0 %}<a class="btn" href="/highscores?cat={{ cat }}&page={{ page - 1 }}">← Prev</a>{% endif %}
-      {% if rows | length == 25 %}<a class="btn" href="/highscores?cat={{ cat }}&page={{ page + 1 }}">Next →</a>{% endif %}
-    </div>
-  </div>
-</section>
+{{ title('Highscores') }}
+<div class="tabs">
+	{% for key, meta in cats.items() %}<a class="tab {% if key == cat %}active{% endif %}" href="/highscores?cat={{ key }}">{{ meta[0] }}</a>{% endfor %}
+</div>
+{% call box(label, 'page ' ~ (page + 1)) %}
+	{% if not rows %}<p>Nobody on the board yet. The first to climb takes the crown.</p>{% endif %}
+	{% if rows %}
+	<table class="tbl">
+		<tr><th>Rank</th><th>Name</th><th>Vocation</th><th>Level</th><th class="num">{{ label }}</th></tr>
+		{% for r in rows %}
+		<tr>
+			<td class="num">{{ page * 25 + loop.index }}</td>
+			<td><a href="/character/{{ r.name }}">{{ r.name }}</a></td>
+			<td>{{ vocname(r.vocation) }}</td>
+			<td class="num">{{ r.level }}</td>
+			<td class="num">{{ '{:,}'.format(r.shown) }}</td>
+		</tr>
+		{% endfor %}
+	</table>
+	{% endif %}
+	<div class="pager">
+		<span>{% if page > 0 %}<a class="btn ghost" href="/highscores?cat={{ cat }}&page={{ page - 1 }}">Previous</a>{% endif %}</span>
+		<span>{% if rows | length == 25 %}<a class="btn ghost" href="/highscores?cat={{ cat }}&page={{ page + 1 }}">Next</a>{% endif %}</span>
+	</div>
+{% endcall %}
 {% endblock %}

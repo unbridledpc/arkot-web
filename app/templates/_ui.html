@@ -1,0 +1,15 @@
+{# Shared pieces: a titled parchment box and a page heading. #}
+{% macro box(title, meta='') -%}
+<div class="box">
+	<div class="box-head">{{ title }}{% if meta %}<span class="meta">{{ meta }}</span>{% endif %}</div>
+	<div class="box-body">{{ caller() }}</div>
+</div>
+{%- endmacro %}
+
+{% macro title(text, pill='', on=false) -%}
+<h1 class="page-title">{{ text }}{% if pill %}<span class="pill {% if on %}on{% endif %}">{{ pill }}</span>{% endif %}</h1>
+{%- endmacro %}
+
+{% macro show_errors(list) -%}
+{% for e in list %}<p class="alert bad">{{ e }}</p>{% endfor %}
+{%- endmacro %}

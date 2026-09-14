@@ -1,28 +1,22 @@
 {% extends "base.html" %}
+{% from "_ui.html" import box, title %}
 {% block title %}Houses{% endblock %}
 {% block content %}
-<section>
-  <h2 class="rune">Houses</h2>
-  <div class="tabs">
-    <a class="tab {% if not town %}active{% endif %}" href="/houses">All towns</a>
-    {% for t in towns %}
-    <a class="tab {% if town == t.id %}active{% endif %}" href="/houses?town={{ t.id }}">{{ t.name }}</a>
-    {% endfor %}
-  </div>
-  <div class="card">
-    {% if not rows %}<p>No houses in this town.</p>{% endif %}
-    <table class="tbl">
-      {% if rows %}<tr><th>House</th><th>Town</th><th>Size</th><th>Beds</th><th>Rent</th><th>Owner</th></tr>{% endif %}
-      {% for h in rows %}
-      <tr><td>{{ h.name }}</td>
-          <td>{{ h.town_name or '?' }}</td>
-          <td>{{ h.size }} sqm</td>
-          <td>{{ h.beds }}</td>
-          <td>{{ '{:,}'.format(h.rent) }} gold</td>
-          <td>{% if h.owner_name %}<a href="/character/{{ h.owner_name }}">{{ h.owner_name }}</a>
-              {% else %}<em>available</em>{% endif %}</td></tr>
-      {% endfor %}
-    </table>
-  </div>
-</section>
+{{ title('Houses') }}
+<div class="tabs">
+	<a class="tab {% if not town %}active{% endif %}" href="/houses">All cities</a>
+	{% for t in towns %}<a class="tab {% if town == t.id %}active{% endif %}" href="/houses?town={{ t.id }}">{{ t.name }}</a>{% endfor %}
+</div>
+{% call box('Houses and guildhalls', rows | length ~ ' listed') %}
+	{% if not rows %}<p>No houses in this city.</p>{% endif %}
+	{% if rows %}
+	<table class="tbl">
+		<tr><th>House</th><th>City</th><th class="num">Size</th><th class="num">Beds</th><th class="num">Rent</th><th>Owner</th></tr>
+		{% for h in rows %}
+		<tr><td>{{ h.name }}</td><td>{{ h.town_name or '?' }}</td><td class="num">{{ h.size }} sqm</td><td class="num">{{ h.beds }}</td><td class="num">{{ '{:,}'.format(h.rent) }} gold</td>
+			<td>{% if h.owner_name %}<a href="/character/{{ h.owner_name }}">{{ h.owner_name }}</a>{% else %}<em>available</em>{% endif %}</td></tr>
+		{% endfor %}
+	</table>
+	{% endif %}
+{% endcall %}
 {% endblock %}

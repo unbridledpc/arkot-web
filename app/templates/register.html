@@ -1,29 +1,25 @@
 {% extends "base.html" %}
+{% from "_ui.html" import box, title, show_errors %}
 {% block title %}Create Account{% endblock %}
 {% block content %}
-<section class="narrow">
-  <h2 class="rune">Create Account</h2>
-  <div class="card">
-    {% for e in errors %}<p class="alert bad">{{ e }}</p>{% endfor %}
-    <form method="post" action="/register" class="stack">
-      <label>Account name
-        <input name="username" value="{{ form.username or '' }}" required
-               pattern="[a-zA-Z0-9]{4,32}" title="4–32 letters/digits">
-      </label>
-      <label>Email
-        <input type="email" name="email" value="{{ form.email or '' }}" required>
-      </label>
-      <label>Password
-        <input type="password" name="password" minlength="6" maxlength="29" required>
-      </label>
-      <label>Password again
-        <input type="password" name="password2" minlength="6" maxlength="29" required>
-      </label>
-      <input type="hidden" name="token" value="{{ csrf }}">
-      <p class="fineprint">By creating an account you accept the <a href="/rules">server rules</a>.
-         You log into the game with your <strong>email</strong> and this password.</p>
-      <button class="btn big" type="submit">Create Account</button>
-    </form>
-  </div>
-</section>
+{{ title('Create account') }}
+{% call box('Your account') %}
+	{{ show_errors(errors) }}
+	<form method="post" action="/register" class="stack">
+		<label>Account name <input name="username" value="{{ form.username or '' }}" required pattern="[a-zA-Z0-9]{4,32}" title="4 to 32 letters or digits"></label>
+		<label>Email <input type="email" name="email" value="{{ form.email or '' }}" required></label>
+		<label>Password <input type="password" name="password" minlength="6" maxlength="29" required></label>
+		<label>Password again <input type="password" name="password2" minlength="6" maxlength="29" required></label>
+		<input type="hidden" name="token" value="{{ csrf }}">
+		<p class="fineprint">By creating an account you accept the <a href="/rules">rules</a>. In the game client you log in with your <strong>email</strong> and this password.</p>
+		<div><button class="btn big" type="submit">Create account</button></div>
+	</form>
+{% endcall %}
+{% call box('What happens next') %}
+	<ol class="steps" style="margin:0">
+		<li>Create your first character and choose a vocation and home city.</li>
+		<li><a href="/downloads">Download the client</a> and point it at Arkenfall.</li>
+		<li>Log in with your email and password. Welcome to the world.</li>
+	</ol>
+{% endcall %}
 {% endblock %}

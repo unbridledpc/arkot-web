@@ -1,58 +1,45 @@
 {% extends "base.html" %}
-{% block title %}Home{% endblock %}
+{% from "_ui.html" import box %}
+{% block title %}Latest News{% endblock %}
 {% block content %}
-<section class="hero">
-  <h1><span class="b1">Ark</span><span class="b2">OT</span></h1>
-  <p class="tagline">A free MMORPG — modern 15.25 client, classic soul.</p>
-  <div class="hero-actions">
-    <a class="btn big" href="/register">Create Account</a>
-    <a class="btn big ghost" href="/downloads">Get the Client</a>
-  </div>
-  <div class="statusline">
-    <span class="dot on"></span> {{ status.online }} online ·
-    {{ status.characters }} characters · {{ status.accounts }} accounts
-  </div>
-</section>
+{% call box('News ticker') %}
+	{% if not news %}<p>The chronicles are still blank. The world has just opened; the first stories are yours to write.</p>{% endif %}
+	<ul class="ticker">
+	{% for n in news %}
+		<li><time>{{ n.date | int | timestamp }}</time><a href="/news#news-{{ loop.index }}">{{ n.title }}</a></li>
+	{% endfor %}
+	</ul>
+{% endcall %}
 
-<div class="cols">
-  <section class="col-main">
-    <h2 class="rune">Latest News</h2>
-    {% if not news %}
-      <article class="card"><p>No news yet — the world is young. Be part of its first stories.</p></article>
-    {% endif %}
-    {% for n in news %}
-    <article class="card">
-      <header class="card-head">
-        <h3>{{ n.title }}</h3>
-        <time>{{ n.date | int | timestamp }}</time>
-      </header>
-      <div class="newsbody">{{ n.text | safe }}</div>
-      <p class="byline">— {{ n.author }}</p>
-    </article>
-    {% endfor %}
-  </section>
+{% for n in news %}
+<article class="box article" id="news-{{ loop.index }}">
+	<div class="box-head"><span><span class="seal">{{ n.title[:1] | upper }}</span>{{ n.title }}</span><span class="meta">{{ n.date | int | timestamp }}</span></div>
+	<div class="box-body">
+		{{ n.text | safe }}
+		<p class="byline">— {{ n.author }}</p>
+	</div>
+</article>
+{% endfor %}
 
-  <aside class="col-side">
-    <h2 class="rune">Top Players</h2>
-    <div class="card tight">
-      {% if not top %}<p>No heroes yet. The throne is empty.</p>{% endif %}
-      <ol class="toplist">
-        {% for p in top %}
-        <li><a href="/character/{{ p.name }}">{{ p.name }}</a>
-            <span>{{ p.level }} {{ vocname(p.vocation) }}</span></li>
-        {% endfor %}
-      </ol>
-      <a class="minor" href="/highscores">Full highscores →</a>
-    </div>
+{% call box('Welcome to Arkenfall') %}
+	<p>Arkenfall is a free online role-playing game played on the modern 15.25 client. A full living world
+	with more than a dozen cities, thousands of hunting grounds, hundreds of quests, guilds, houses and open
+	PvP awaits. Create an account, pick a vocation, and step off the boat.</p>
+	<p style="margin-bottom:0"><a class="btn" href="/register">Create account</a> &nbsp; <a class="btn ghost" href="/downloads">Get the client</a></p>
+{% endcall %}
+{% endblock %}
 
-    <h2 class="rune">Quick Start</h2>
-    <div class="card tight">
-      <ol class="steps">
-        <li><a href="/register">Create an account</a></li>
-        <li><a href="/downloads">Download the client</a></li>
-        <li>Connect to <code>bt.tibtool.com</code></li>
-      </ol>
-    </div>
-  </aside>
+{% block side %}
+<div class="box">
+	<div class="box-head">Top players</div>
+	<div class="box-body">
+		{% if not top %}<p>No heroes yet. The throne is empty.</p>{% endif %}
+		<ol class="toplist">
+		{% for p in top %}
+			<li><a href="/character/{{ p.name }}">{{ p.name }}</a><span>Level {{ p.level }} {{ vocname(p.vocation) }}</span></li>
+		{% endfor %}
+		</ol>
+		<p class="fineprint" style="margin:8px 0 0"><a href="/highscores">Full highscores</a></p>
+	</div>
 </div>
 {% endblock %}

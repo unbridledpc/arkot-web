@@ -1,4 +1,4 @@
-"""ArkOT website — modern player-facing site for the BlackTek 15.25 server.
+"""Arkenfall website — the player-facing site for the BlackTek 15.25 server.
 
 Shares the live game database with the game server, the login webservice and
 the legacy Znote AAC (mounted under /legacy). Every write is Znote- and
@@ -23,6 +23,7 @@ from itsdangerous import BadSignature, URLSafeSerializer
 
 DB = dict(
     host=os.environ.get("DB_HOST", "btdb"),
+    port=int(os.environ.get("DB_PORT", "3306")),
     user=os.environ.get("DB_USER", "forgottenserver"),
     password=os.environ["DB_PASS"],
     database=os.environ.get("DB_NAME", "blacktek"),
@@ -33,7 +34,9 @@ DB = dict(
 SECRET = os.environ["APP_SECRET"]
 signer = URLSafeSerializer(SECRET, salt="arkot-session")
 
-GAME_HOST = "bt.tibtool.com"
+SITE_NAME = "Arkenfall"
+WORLD_NAME = os.environ.get("WORLD_NAME", "Arkenfall")
+GAME_HOST = os.environ.get("GAME_HOST", "bt.tibtool.com")
 LOGIN_PORT = 7171
 GAME_PORT = 7172
 
@@ -53,10 +56,36 @@ HIGHSCORE_CATS = {
     "fishing": ("Fishing", "skill_fishing", "skill_fishing"),
 }
 
-app = FastAPI(title="ArkOT")
+# The left-hand menu: (key, label, glyph, [(name, href), ...]).
+MENU = [
+    ("news", "News", "N", [("Latest news", "/"), ("News archive", "/news"), ("Changelog", "/changelog")]),
+    ("community", "Community", "C", [
+        ("Highscores", "/highscores"), ("Who is online", "/online"), ("Character search", "/search"),
+        ("Latest deaths", "/deaths"), ("Kill statistics", "/killstats"), ("Guilds", "/guilds"),
+        ("Houses", "/houses"), ("Team", "/team"), ("Forum", "/legacy/forum.php")]),
+    ("library", "Library", "L", [("Server information", "/server"), ("Spells", "/spells"), ("Rules", "/rules")]),
+    ("support", "Support", "S", [("Helpdesk", "/legacy/helpdesk.php"), ("Lost account", "/legacy/sub.php?page=recover"), ("Rules", "/rules")]),
+    ("account", "Account", "A", [("Account management", "/account"), ("Create account", "/register"), ("Create character", "/character/create"), ("Log in", "/login")]),
+    ("download", "Download", "D", [("Get the client", "/downloads")]),
+]
+SECTION_OF = {href.split("?")[0]: key for key, _, _, items in MENU for _, href in items}
+SECTION_OF["/"] = "news"
+
+
+def active_section(path: str) -> str:
+    if path in SECTION_OF:
+        return SECTION_OF[path]
+    for prefix, key in (("/character/", "community"), ("/guild/", "community"), ("/account", "account"), ("/news", "news")):
+        if path.startswith(prefix):
+            return key
+    return "news"
+
+
+app = FastAPI(title=SITE_NAME)
 app.mount("/static", StaticFiles(directory="app/static"), name="static")
 templates = Jinja2Templates(directory="app/templates")
-templates.env.globals.update(vocname=lambda v: VOCATIONS.get(v, "?"))
+templates.env.globals.update(vocname=lambda v: VOCATIONS.get(v, "?"), menu=MENU,
+                             active_section=active_section, world_name=WORLD_NAME, site_name=SITE_NAME)
 templates.env.filters["timestamp"] = (
     lambda t: time.strftime("%b %d, %Y", time.localtime(int(t))) if t else "never")
 
@@ -107,6 +136,7 @@ def csrf_ok(request: Request, token: str) -> bool:
 
 def render(request: Request, template: str, **ctx):
     ctx.setdefault("account", account_of(request))
+    ctx.setdefault("status", server_status())
     csrf_sid = ctx.pop("csrf_sid", None)
     ctx["csrf"] = csrf_for(csrf_sid) if csrf_sid else csrf_token(request)
     ctx["request"] = request
@@ -158,6 +188,15 @@ def index(request: Request):
     top = q("SELECT name, level, vocation FROM players WHERE group_id=1 AND deletion=0 ORDER BY experience DESC LIMIT 5")
     return form_page(request, "index.html", news=news, top=top,
                      status=server_status(), now=int(time.time()))
+
+
+@app.get("/news", response_class=HTMLResponse)
+def news_archive(request: Request):
+    news = q(
+        """SELECT n.title, n.text, n.date, COALESCE(p.name, 'Staff') author
+           FROM znote_news n LEFT JOIN players p ON p.id = n.pid
+           ORDER BY n.date DESC LIMIT 100""")
+    return form_page(request, "news.html", news=news)
 
 
 @app.get("/register", response_class=HTMLResponse)
@@ -463,6 +502,6 @@ def rules(request: Request):
 
 @app.get("/api/status")
 def api_status():
-    return JSONResponse({**server_status(), "world": "ArkOT",
+    return JSONResponse({**server_status(), "world": WORLD_NAME,
                          "host": GAME_HOST, "login": LOGIN_PORT, "game": GAME_PORT,
                          "protocol": "15.25"})

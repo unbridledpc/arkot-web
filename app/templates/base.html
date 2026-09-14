@@ -3,78 +3,113 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>{% block title %}ArkOT{% endblock %} — ArkOT</title>
-<link rel="stylesheet" href="/static/style.css?v=3">
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='0.9em' font-size='90'>⚔️</text></svg>">
+<title>{% block title %}Home{% endblock %} — Arkenfall</title>
+<meta name="description" content="Arkenfall is a free online role-playing game on the modern 15.25 client: a full living world, open PvP, guilds, houses and hundreds of quests.">
+<link rel="stylesheet" href="/static/style.css?v=10">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><circle cx='32' cy='32' r='30' fill='%23201a13' stroke='%23d9b45a' stroke-width='3'/><text x='32' y='44' font-family='Georgia,serif' font-weight='bold' font-size='34' text-anchor='middle' fill='%23f0d27a'>A</text></svg>">
 </head>
 <body>
-<header class="topbar">
-  <div class="shell">
-    <a class="brand" href="/"><span class="b1">Ark</span><span class="b2">OT</span></a>
-    <input type="checkbox" id="navtoggle" hidden>
-    <label class="burger" for="navtoggle" aria-label="Menu">☰</label>
-    <nav>
-      <div class="menu">
-        <span class="menu-label">Community ▾</span>
-        <div class="drop">
-          <a href="/highscores">Highscores</a>
-          <a href="/online">Who's Online</a>
-          <a href="/search">Character Search</a>
-          <a href="/deaths">Latest Deaths</a>
-          <a href="/killstats">Kill Statistics</a>
-          <a href="/guilds">Guilds</a>
-          <a href="/houses">Houses</a>
-          <a href="/legacy/forum.php">Forum</a>
-        </div>
-      </div>
-      <div class="menu">
-        <span class="menu-label">Library ▾</span>
-        <div class="drop">
-          <a href="/server">Server Info</a>
-          <a href="/downloads">Downloads</a>
-          <a href="/rules">Rules</a>
-          <a href="/spells">Spells</a>
-          <a href="/changelog">Changelog</a>
-          <a href="/team">Team</a>
-        </div>
-      </div>
-      <div class="menu">
-        <span class="menu-label">Shop ▾</span>
-        <div class="drop">
-          <a href="/legacy/shop.php">Item Shop</a>
-          <a href="/legacy/buypoints.php">Buy Points</a>
-          <a href="/legacy/auctionChar.php">Character Auction</a>
-        </div>
-      </div>
-      <div class="menu">
-        <span class="menu-label">Support ▾</span>
-        <div class="drop">
-          <a href="/legacy/helpdesk.php">Helpdesk</a>
-          <a href="/legacy/sub.php?page=recover">Lost Account</a>
-          <a href="/rules">Server Rules</a>
-        </div>
-      </div>
-      {% if account %}
-        <a class="cta" href="/account">{{ account.name }}</a>
-      {% else %}
-        <a href="/login">Login</a>
-        <a class="cta" href="/register">Create Account</a>
-      {% endif %}
-    </nav>
-  </div>
+{% set section = active_section(request.url.path) %}
+{% set here = request.url.path %}
+<div class="sheet">
+
+<header class="banner">
+	<a class="logo" href="/">
+		<span class="crest">A</span>
+		<span>
+			<span class="wordmark">ARKENFALL</span>
+			<span class="tagline">A free online role-playing world</span>
+		</span>
+	</a>
+	<div class="worldline">
+		<div>World <strong>{{ world_name }}</strong> · client <strong>15.25</strong></div>
+		<div><span class="dot on"></span>{{ status.online }} player{{ '' if status.online == 1 else 's' }} online</div>
+	</div>
 </header>
 
-<main class="shell">
+<div class="columns">
+
+<nav class="menu">
+	<a class="cta" href="/downloads">Play now</a>
+	<a class="cta secondary" href="/register">Create account</a>
+
+	{% for key, label, glyph, items in menu %}
+	<div class="menu-section {% if section == key %}active{% endif %}">
+		<a class="menu-head" href="{{ items[0][1] }}"><span class="glyph">{{ glyph }}</span>{{ label }}</a>
+		{% if section == key %}
+		<ul class="menu-items">
+			{% for name, href in items %}
+			<li class="{% if here == href %}current{% endif %}"><a href="{{ href }}">{{ name }}</a></li>
+			{% endfor %}
+		</ul>
+		{% endif %}
+	</div>
+	{% endfor %}
+</nav>
+
+<main class="content">
 {% block content %}{% endblock %}
 </main>
 
+<aside class="side">
+	<div class="box">
+		<div class="box-head">Account</div>
+		<div class="box-body">
+			{% if account %}
+				<p>Signed in as <strong>{{ account.name }}</strong>.</p>
+				<ul class="plain">
+					<li><a href="/account">Manage account</a></li>
+					<li><a href="/character/create">Create character</a></li>
+					<li><a href="/logout">Log out</a></li>
+				</ul>
+			{% else %}
+				<form method="post" action="/login" class="stack">
+					<label>Account or email <input name="username" required></label>
+					<label>Password <input type="password" name="password" required></label>
+					<input type="hidden" name="token" value="{{ csrf }}">
+					<button class="btn" type="submit">Log in</button>
+				</form>
+				<p class="fineprint" style="margin-bottom:0">
+					<a href="/register">Create an account</a> ·
+					<a href="/legacy/sub.php?page=recover">Lost password</a>
+				</p>
+			{% endif %}
+		</div>
+	</div>
+
+	{% block side %}{% endblock %}
+
+	<div class="box">
+		<div class="box-head">World status</div>
+		<div class="box-body">
+			<div class="stat"><span><span class="dot on"></span>Online</span><b>{{ status.online }}</b></div>
+			<div class="stat"><span>Characters</span><b>{{ '{:,}'.format(status.characters) }}</b></div>
+			<div class="stat"><span>Accounts</span><b>{{ '{:,}'.format(status.accounts) }}</b></div>
+			<div class="stat"><span>Rule set</span><b>Open PvP</b></div>
+			<p class="fineprint" style="margin:8px 0 0"><a href="/online">Who is online</a> · <a href="/server">Server details</a></p>
+		</div>
+	</div>
+
+	<div class="box">
+		<div class="box-head">Get the client</div>
+		<div class="box-body">
+			<p>Arkenfall runs on the free open-source client with the modern 15.25 graphics.</p>
+			<a class="btn" href="/downloads" style="display:block;text-align:center">Download</a>
+		</div>
+	</div>
+</aside>
+
+</div>
+
 <footer class="foot">
-  <div class="shell">
-    <p>© ArkOT — a free MMORPG on the 15.25 protocol.
-       <a href="/legacy/helpdesk.php">Helpdesk</a> ·
-       <a href="/legacy/">Legacy site</a> ·
-       <a href="https://github.com/arken-fall/ArkOT">Server source</a></p>
-  </div>
+	<p style="margin:0">© 2026 Arkenfall · a free fan-made online game, not affiliated with CipSoft GmbH ·
+		<a href="/rules">Rules</a> ·
+		<a href="/legacy/helpdesk.php">Helpdesk</a> ·
+		<a href="/legacy/">Legacy site</a> ·
+		<a href="https://github.com/arken-fall/ArkOT">Server source</a> ·
+		<a href="https://github.com/arken-fall/arkot-web">Site source</a></p>
 </footer>
+
+</div>
 </body>
 </html>

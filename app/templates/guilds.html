@@ -1,21 +1,16 @@
 {% extends "base.html" %}
+{% from "_ui.html" import box, title %}
 {% block title %}Guilds{% endblock %}
 {% block content %}
-<section>
-  <h2 class="rune">Guilds</h2>
-  <div class="card">
-    {% if not rows %}<p>No guilds have been founded yet.
-      <a href="/legacy/guilds.php">Found the first</a>.</p>{% endif %}
-    <table class="tbl">
-      {% if rows %}<tr><th>Guild</th><th>Leader</th><th>Members</th></tr>{% endif %}
-      {% for g in rows %}
-      <tr><td><a href="/guild/{{ g.name }}">{{ g.name }}</a></td>
-          <td><a href="/character/{{ g.leader }}">{{ g.leader }}</a></td>
-          <td>{{ g.members }}</td></tr>
-      {% endfor %}
-    </table>
-    <p class="fineprint">Create or manage your guild in the
-       <a href="/legacy/guilds.php">guild hall</a>.</p>
-  </div>
-</section>
+{{ title('Guilds') }}
+{% call box('Active guilds') %}
+	{% if not rows %}<p>No guilds have been founded yet. <a href="/legacy/guilds.php">Found the first</a>.</p>{% endif %}
+	{% if rows %}
+	<table class="tbl">
+		<tr><th>Guild</th><th>Leader</th><th class="num">Members</th></tr>
+		{% for g in rows %}<tr><td><a href="/guild/{{ g.name }}">{{ g.name }}</a></td><td><a href="/character/{{ g.leader }}">{{ g.leader }}</a></td><td class="num">{{ g.members }}</td></tr>{% endfor %}
+	</table>
+	{% endif %}
+	<p class="fineprint" style="margin:10px 0 0">Create or manage a guild in the <a href="/legacy/guilds.php">guild hall</a>.</p>
+{% endcall %}
 {% endblock %}

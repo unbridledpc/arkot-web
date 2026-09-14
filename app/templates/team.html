@@ -1,19 +1,15 @@
 {% extends "base.html" %}
+{% from "_ui.html" import box, title %}
 {% block title %}Team{% endblock %}
 {% block content %}
-<section class="narrow">
-  <h2 class="rune">Server Team</h2>
-  <div class="card">
-    {% if not rows %}<p>The staff walk among you unseen.</p>{% endif %}
-    <table class="tbl">
-      {% if rows %}<tr><th>Name</th><th>Position</th><th>Last seen</th></tr>{% endif %}
-      {% for r in rows %}
-      <tr><td><a href="/character/{{ r.name }}">{{ r.name }}</a>
-              {% if r.online %}<span class="dot on" title="online"></span>{% endif %}</td>
-          <td>{{ groups.get(r.group_id, 'Staff') }}</td>
-          <td>{{ r.lastlogin | timestamp }}</td></tr>
-      {% endfor %}
-    </table>
-  </div>
-</section>
+{{ title('The team') }}
+{% call box('Staff') %}
+	{% if not rows %}<p>The staff walk among you unseen.</p>{% endif %}
+	{% if rows %}
+	<table class="tbl">
+		<tr><th>Name</th><th>Position</th><th>Last seen</th></tr>
+		{% for r in rows %}<tr><td><a href="/character/{{ r.name }}">{{ r.name }}</a>{% if r.online %} <span class="dot on" title="online"></span>{% endif %}</td><td>{{ groups.get(r.group_id, 'Staff') }}</td><td>{{ r.lastlogin | timestamp }}</td></tr>{% endfor %}
+	</table>
+	{% endif %}
+{% endcall %}
 {% endblock %}

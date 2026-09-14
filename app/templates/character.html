@@ -1,57 +1,42 @@
 {% extends "base.html" %}
+{% from "_ui.html" import box, title %}
 {% block title %}{{ player.name if player else 'Character' }}{% endblock %}
 {% block content %}
 {% if not player %}
-<section class="narrow"><h2 class="rune">Character not found</h2>
-  <div class="card"><p>No character by that name walks this world.
-     <a href="/highscores">Browse the highscores</a> instead.</p></div></section>
+{{ title('Character not found') }}
+{% call box('No such character') %}<p>No character by that name walks this world. <a href="/search">Search again</a> or <a href="/highscores">browse the highscores</a>.</p>{% endcall %}
 {% else %}
-<section>
-  <h2 class="rune">{{ player.name }}
-    {% if player.online %}<span class="pill on">Online</span>
-    {% else %}<span class="pill">Offline</span>{% endif %}
-  </h2>
-  <div class="cols">
-    <div class="col-main">
-      <div class="card">
-        <table class="tbl kv">
-          <tr><th>Level</th><td>{{ player.level }}</td></tr>
-          <tr><th>Vocation</th><td>{{ vocname(player.vocation) }}</td></tr>
-          <tr><th>Sex</th><td>{{ 'Male' if player.sex == 1 else 'Female' }}</td></tr>
-          <tr><th>Residence</th><td>{{ player.town_name or '?' }}</td></tr>
-          <tr><th>Magic level</th><td>{{ player.maglevel }}</td></tr>
-          <tr><th>Last login</th><td>{{ player.lastlogin | timestamp }}</td></tr>
-        </table>
-      </div>
-
-      <h3 class="rune small">Recent deaths</h3>
-      <div class="card">
-        {% if not deaths %}<p>Still unbroken — no recorded deaths.</p>{% endif %}
-        <table class="tbl">
-          {% for d in deaths %}
-          <tr><td>{{ d.time | timestamp }}</td>
-              <td>Died at level {{ d.level }} to
-                  {% if d.is_player %}<a href="/character/{{ d.killed_by }}">{{ d.killed_by }}</a>
-                  {% else %}{{ d.killed_by }}{% endif %}</td></tr>
-          {% endfor %}
-        </table>
-      </div>
-    </div>
-
-    <aside class="col-side">
-      {% if siblings %}
-      <h3 class="rune small">Same account</h3>
-      <div class="card tight">
-        <ul class="plain">
-          {% for s in siblings %}
-          <li><a href="/character/{{ s.name }}">{{ s.name }}</a>
-              <span>{{ s.level }} {{ vocname(s.vocation) }}</span></li>
-          {% endfor %}
-        </ul>
-      </div>
-      {% endif %}
-    </aside>
-  </div>
-</section>
+{{ title(player.name, 'Online' if player.online else 'Offline', player.online) }}
+{% call box('Character information') %}
+	<table class="tbl kv">
+		<tr><th>Name</th><td>{{ player.name }}</td></tr>
+		<tr><th>Sex</th><td>{{ 'Male' if player.sex == 1 else 'Female' }}</td></tr>
+		<tr><th>Vocation</th><td>{{ vocname(player.vocation) }}</td></tr>
+		<tr><th>Level</th><td>{{ player.level }}</td></tr>
+		<tr><th>Magic level</th><td>{{ player.maglevel }}</td></tr>
+		<tr><th>Residence</th><td>{{ player.town_name or '?' }}</td></tr>
+		<tr><th>Last login</th><td>{{ player.lastlogin | timestamp }}</td></tr>
+		<tr><th>Account status</th><td>Free account</td></tr>
+	</table>
+{% endcall %}
+{% call box('Character deaths') %}
+	{% if not deaths %}<p>Still unbroken. No recorded deaths.</p>{% endif %}
+	{% if deaths %}
+	<table class="tbl">
+		{% for d in deaths %}
+		<tr><td style="white-space:nowrap">{{ d.time | timestamp }}</td>
+			<td>Died at level {{ d.level }} by {% if d.is_player %}<a href="/character/{{ d.killed_by }}">{{ d.killed_by }}</a>{% else %}{{ d.killed_by }}{% endif %}.</td></tr>
+		{% endfor %}
+	</table>
+	{% endif %}
+{% endcall %}
+{% if siblings %}
+{% call box('Characters on this account') %}
+	<table class="tbl">
+		<tr><th>Name</th><th>Level</th><th>Vocation</th></tr>
+		{% for s in siblings %}<tr><td><a href="/character/{{ s.name }}">{{ s.name }}</a></td><td class="num">{{ s.level }}</td><td>{{ vocname(s.vocation) }}</td></tr>{% endfor %}
+	</table>
+{% endcall %}
+{% endif %}
 {% endif %}
 {% endblock %}

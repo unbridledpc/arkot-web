@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% from "_ui.html" import box, title %}
+{% block title %}News Archive{% endblock %}
+{% block content %}
+{{ title('News archive') }}
+{% if not news %}{% call box('Nothing yet') %}<p>No news has been posted.</p>{% endcall %}{% endif %}
+{% for n in news %}
+<article class="box article" id="news-{{ loop.index }}">
+	<div class="box-head"><span><span class="seal">{{ n.title[:1] | upper }}</span>{{ n.title }}</span><span class="meta">{{ n.date | int | timestamp }}</span></div>
+	<div class="box-body">{{ n.text | safe }}<p class="byline">— {{ n.author }}</p></div>
+</article>
+{% endfor %}
+{% endblock %}
