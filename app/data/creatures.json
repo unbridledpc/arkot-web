@@ -1,0 +1,1838 @@
+[
+{
+"raceid": 2,
+"name": "Orc Warlord"
+},
+{
+"raceid": 3,
+"name": "War Wolf"
+},
+{
+"raceid": 4,
+"name": "Orc Rider"
+},
+{
+"raceid": 5,
+"name": "Orc"
+},
+{
+"raceid": 6,
+"name": "Orc Shaman"
+},
+{
+"raceid": 7,
+"name": "Orc Warrior"
+},
+{
+"raceid": 8,
+"name": "Orc Berserker"
+},
+{
+"raceid": 9,
+"name": "Necromancer"
+},
+{
+"raceid": 10,
+"name": "Warlock"
+},
+{
+"raceid": 11,
+"name": "Hunter"
+},
+{
+"raceid": 12,
+"name": "Valkyrie"
+},
+{
+"raceid": 13,
+"name": "Black Sheep"
+},
+{
+"raceid": 14,
+"name": "Sheep"
+},
+{
+"raceid": 15,
+"name": "Troll"
+},
+{
+"raceid": 16,
+"name": "Bear"
+},
+{
+"raceid": 17,
+"name": "Bonelord"
+},
+{
+"raceid": 18,
+"name": "Ghoul"
+},
+{
+"raceid": 19,
+"name": "Slime"
+},
+{
+"raceid": 20,
+"name": "Squidgy Slime"
+},
+{
+"raceid": 21,
+"name": "Rat"
+},
+{
+"raceid": 22,
+"name": "Cyclops"
+},
+{
+"raceid": 23,
+"name": "Minotaur Mage"
+},
+{
+"raceid": 24,
+"name": "Minotaur Archer"
+},
+{
+"raceid": 25,
+"name": "Minotaur"
+},
+{
+"raceid": 26,
+"name": "Rotworm"
+},
+{
+"raceid": 27,
+"name": "Wolf"
+},
+{
+"raceid": 28,
+"name": "Snake"
+},
+{
+"raceid": 29,
+"name": "Minotaur Guard"
+},
+{
+"raceid": 30,
+"name": "Spider"
+},
+{
+"raceid": 31,
+"name": "Deer"
+},
+{
+"raceid": 32,
+"name": "Dog"
+},
+{
+"raceid": 33,
+"name": "Skeleton"
+},
+{
+"raceid": 34,
+"name": "Dragon"
+},
+{
+"raceid": 35,
+"name": "Demon"
+},
+{
+"raceid": 36,
+"name": "Poison Spider"
+},
+{
+"raceid": 37,
+"name": "Demon Skeleton"
+},
+{
+"raceid": 38,
+"name": "Giant Spider"
+},
+{
+"raceid": 38,
+"name": "Giant Spider"
+},
+{
+"raceid": 39,
+"name": "Dragon Lord"
+},
+{
+"raceid": 40,
+"name": "Fire Devil"
+},
+{
+"raceid": 41,
+"name": "Lion"
+},
+{
+"raceid": 42,
+"name": "Polar Bear"
+},
+{
+"raceid": 43,
+"name": "Scorpion"
+},
+{
+"raceid": 44,
+"name": "Wasp"
+},
+{
+"raceid": 45,
+"name": "Bug"
+},
+{
+"raceid": 47,
+"name": "Wild Warrior"
+},
+{
+"raceid": 48,
+"name": "Ghost"
+},
+{
+"raceid": 49,
+"name": "Fire Elemental"
+},
+{
+"raceid": 50,
+"name": "Orc Spearman"
+},
+{
+"raceid": 51,
+"name": "Green Djinn"
+},
+{
+"raceid": 52,
+"name": "Winter Wolf"
+},
+{
+"raceid": 53,
+"name": "Frost Troll"
+},
+{
+"raceid": 54,
+"name": "Witch"
+},
+{
+"raceid": 55,
+"name": "Behemoth"
+},
+{
+"raceid": 56,
+"name": "Cave Rat"
+},
+{
+"raceid": 57,
+"name": "Monk"
+},
+{
+"raceid": 58,
+"name": "Priestess"
+},
+{
+"raceid": 59,
+"name": "Orc Leader"
+},
+{
+"raceid": 60,
+"name": "Pig"
+},
+{
+"raceid": 61,
+"name": "Goblin"
+},
+{
+"raceid": 62,
+"name": "Elf"
+},
+{
+"raceid": 63,
+"name": "Elf Arcanist"
+},
+{
+"raceid": 64,
+"name": "Elf Scout"
+},
+{
+"raceid": 65,
+"name": "Mummy"
+},
+{
+"raceid": 66,
+"name": "Dwarf Geomancer"
+},
+{
+"raceid": 67,
+"name": "Stone Golem"
+},
+{
+"raceid": 68,
+"name": "Vampire"
+},
+{
+"raceid": 69,
+"name": "Dwarf"
+},
+{
+"raceid": 70,
+"name": "Dwarf Guard"
+},
+{
+"raceid": 71,
+"name": "Dwarf Soldier"
+},
+{
+"raceid": 72,
+"name": "Stalker"
+},
+{
+"raceid": 73,
+"name": "Hero"
+},
+{
+"raceid": 74,
+"name": "Rabbit"
+},
+{
+"raceid": 76,
+"name": "Swamp Troll"
+},
+{
+"raceid": 77,
+"name": "Amazon"
+},
+{
+"raceid": 78,
+"name": "Banshee"
+},
+{
+"raceid": 79,
+"name": "Ancient Scarab"
+},
+{
+"raceid": 80,
+"name": "Blue Djinn"
+},
+{
+"raceid": 81,
+"name": "Cobra"
+},
+{
+"raceid": 82,
+"name": "Larva"
+},
+{
+"raceid": 83,
+"name": "Scarab"
+},
+{
+"raceid": 94,
+"name": "Hyaena"
+},
+{
+"raceid": 95,
+"name": "Gargoyle"
+},
+{
+"raceid": 99,
+"name": "Lich"
+},
+{
+"raceid": 100,
+"name": "Crypt Shambler"
+},
+{
+"raceid": 101,
+"name": "Bonebeast"
+},
+{
+"raceid": 103,
+"name": "Efreet"
+},
+{
+"raceid": 104,
+"name": "Marid"
+},
+{
+"raceid": 105,
+"name": "Badger"
+},
+{
+"raceid": 106,
+"name": "Skunk"
+},
+{
+"raceid": 108,
+"name": "Elder Bonelord"
+},
+{
+"raceid": 109,
+"name": "Gazer"
+},
+{
+"raceid": 110,
+"name": "Yeti"
+},
+{
+"raceid": 111,
+"name": "Chicken"
+},
+{
+"raceid": 112,
+"name": "Crab"
+},
+{
+"raceid": 113,
+"name": "Lizard Templar"
+},
+{
+"raceid": 114,
+"name": "Lizard Sentinel"
+},
+{
+"raceid": 115,
+"name": "Lizard Snakecharmer"
+},
+{
+"raceid": 116,
+"name": "Kongra"
+},
+{
+"raceid": 117,
+"name": "Merlkin"
+},
+{
+"raceid": 118,
+"name": "Sibang"
+},
+{
+"raceid": 119,
+"name": "Crocodile"
+},
+{
+"raceid": 120,
+"name": "Carniphila"
+},
+{
+"raceid": 121,
+"name": "Hydra"
+},
+{
+"raceid": 122,
+"name": "Bat"
+},
+{
+"raceid": 123,
+"name": "Panda"
+},
+{
+"raceid": 124,
+"name": "Centipede"
+},
+{
+"raceid": 125,
+"name": "Tiger"
+},
+{
+"raceid": 211,
+"name": "Elephant"
+},
+{
+"raceid": 212,
+"name": "Flamingo"
+},
+{
+"raceid": 214,
+"name": "Dworc Voodoomaster"
+},
+{
+"raceid": 215,
+"name": "Dworc Fleshhunter"
+},
+{
+"raceid": 216,
+"name": "Dworc Venomsniper"
+},
+{
+"raceid": 217,
+"name": "Parrot"
+},
+{
+"raceid": 218,
+"name": "Terror Bird"
+},
+{
+"raceid": 219,
+"name": "Tarantula"
+},
+{
+"raceid": 220,
+"name": "Serpent Spawn"
+},
+{
+"raceid": 221,
+"name": "Spit Nettle"
+},
+{
+"raceid": 222,
+"name": "Smuggler"
+},
+{
+"raceid": 223,
+"name": "Bandit"
+},
+{
+"raceid": 224,
+"name": "Assassin"
+},
+{
+"raceid": 225,
+"name": "Dark Monk"
+},
+{
+"raceid": 227,
+"name": "Butterfly"
+},
+{
+"raceid": 227,
+"name": "Butterfly"
+},
+{
+"raceid": 227,
+"name": "Butterfly"
+},
+{
+"raceid": 227,
+"name": "Butterfly"
+},
+{
+"raceid": 227,
+"name": "Red Butterfly"
+},
+{
+"raceid": 227,
+"name": "Blue Butterfly"
+},
+{
+"raceid": 227,
+"name": "Yellow Butterfly"
+},
+{
+"raceid": 236,
+"name": "Water Elemental"
+},
+{
+"raceid": 237,
+"name": "Quara Predator"
+},
+{
+"raceid": 238,
+"name": "Quara Predator Scout"
+},
+{
+"raceid": 239,
+"name": "Quara Constrictor"
+},
+{
+"raceid": 240,
+"name": "Quara Constrictor Scout"
+},
+{
+"raceid": 241,
+"name": "Quara Mantassin"
+},
+{
+"raceid": 242,
+"name": "Quara Mantassin Scout"
+},
+{
+"raceid": 243,
+"name": "Quara Hydromancer"
+},
+{
+"raceid": 244,
+"name": "Quara Hydromancer Scout"
+},
+{
+"raceid": 245,
+"name": "Quara Pincher"
+},
+{
+"raceid": 246,
+"name": "Quara Pincher Scout"
+},
+{
+"raceid": 247,
+"name": "Pirate Marauder"
+},
+{
+"raceid": 248,
+"name": "Pirate Cutthroat"
+},
+{
+"raceid": 249,
+"name": "Pirate Buccaneer"
+},
+{
+"raceid": 250,
+"name": "Pirate Corsair"
+},
+{
+"raceid": 251,
+"name": "Carrion Worm"
+},
+{
+"raceid": 252,
+"name": "Enlightened of the Cult"
+},
+{
+"raceid": 253,
+"name": "Acolyte of the Cult"
+},
+{
+"raceid": 254,
+"name": "Adept of the Cult"
+},
+{
+"raceid": 255,
+"name": "Novice of the Cult"
+},
+{
+"raceid": 256,
+"name": "Pirate Skeleton"
+},
+{
+"raceid": 257,
+"name": "Pirate Ghost"
+},
+{
+"raceid": 258,
+"name": "Tortoise"
+},
+{
+"raceid": 259,
+"name": "Thornback Tortoise"
+},
+{
+"raceid": 260,
+"name": "Mammoth"
+},
+{
+"raceid": 261,
+"name": "Blood Crab"
+},
+{
+"raceid": 262,
+"name": "Toad"
+},
+{
+"raceid": 264,
+"name": "Seagull"
+},
+{
+"raceid": 265,
+"name": "Son of Verminor"
+},
+{
+"raceid": 267,
+"name": "Green Frog"
+},
+{
+"raceid": 268,
+"name": "Azure Frog"
+},
+{
+"raceid": 269,
+"name": "Coral Frog"
+},
+{
+"raceid": 270,
+"name": "Crimson Frog"
+},
+{
+"raceid": 271,
+"name": "Orchid Frog"
+},
+{
+"raceid": 277,
+"name": "Island Troll"
+},
+{
+"raceid": 279,
+"name": "Massive Water Elemental"
+},
+{
+"raceid": 281,
+"name": "Hand Of Cursed Fate"
+},
+{
+"raceid": 282,
+"name": "Undead Dragon"
+},
+{
+"raceid": 283,
+"name": "Lost Soul"
+},
+{
+"raceid": 284,
+"name": "Betrayed Wraith"
+},
+{
+"raceid": 285,
+"name": "Dark Torturer"
+},
+{
+"raceid": 286,
+"name": "Spectre"
+},
+{
+"raceid": 287,
+"name": "Destroyer"
+},
+{
+"raceid": 288,
+"name": "Diabolic Imp"
+},
+{
+"raceid": 289,
+"name": "Defiler"
+},
+{
+"raceid": 290,
+"name": "Wyvern"
+},
+{
+"raceid": 291,
+"name": "Fury"
+},
+{
+"raceid": 292,
+"name": "Phantasm"
+},
+{
+"raceid": 292,
+"name": "Phantasm"
+},
+{
+"raceid": 294,
+"name": "Hellhound"
+},
+{
+"raceid": 295,
+"name": "Hellfire Fighter"
+},
+{
+"raceid": 296,
+"name": "Juggernaut"
+},
+{
+"raceid": 298,
+"name": "Blightwalker"
+},
+{
+"raceid": 299,
+"name": "Nightmare"
+},
+{
+"raceid": 310,
+"name": "Nomad"
+},
+{
+"raceid": 310,
+"name": "Nomad"
+},
+{
+"raceid": 310,
+"name": "Nomad"
+},
+{
+"raceid": 313,
+"name": "Massive Fire Elemental"
+},
+{
+"raceid": 314,
+"name": "Plaguesmith"
+},
+{
+"raceid": 317,
+"name": "Frost Dragon"
+},
+{
+"raceid": 318,
+"name": "Penguin"
+},
+{
+"raceid": 319,
+"name": "Chakoya Tribewarden"
+},
+{
+"raceid": 321,
+"name": "Braindeath"
+},
+{
+"raceid": 322,
+"name": "Barbarian Skullhunter"
+},
+{
+"raceid": 323,
+"name": "Barbarian Bloodwalker"
+},
+{
+"raceid": 324,
+"name": "Frost Giant"
+},
+{
+"raceid": 325,
+"name": "Husky"
+},
+{
+"raceid": 326,
+"name": "Ice Golem"
+},
+{
+"raceid": 327,
+"name": "Silver Rabbit"
+},
+{
+"raceid": 328,
+"name": "Chakoya Toolshaper"
+},
+{
+"raceid": 329,
+"name": "Chakoya Windcaller"
+},
+{
+"raceid": 330,
+"name": "Crystal Spider"
+},
+{
+"raceid": 331,
+"name": "Ice Witch"
+},
+{
+"raceid": 332,
+"name": "Barbarian Brutetamer"
+},
+{
+"raceid": 333,
+"name": "Barbarian Headsplitter"
+},
+{
+"raceid": 334,
+"name": "Frost Giantess"
+},
+{
+"raceid": 335,
+"name": "Dire Penguin"
+},
+{
+"raceid": 371,
+"name": "Dark Magician"
+},
+{
+"raceid": 372,
+"name": "Dark Apprentice"
+},
+{
+"raceid": 376,
+"name": "Poacher"
+},
+{
+"raceid": 377,
+"name": "Goblin Leader"
+},
+{
+"raceid": 379,
+"name": "Dwarf Henchman"
+},
+{
+"raceid": 383,
+"name": "Dryad"
+},
+{
+"raceid": 384,
+"name": "Squirrel"
+},
+{
+"raceid": 385,
+"name": "Dragon Hatchling"
+},
+{
+"raceid": 386,
+"name": "Dragon Lord Hatchling"
+},
+{
+"raceid": 387,
+"name": "Cat"
+},
+{
+"raceid": 389,
+"name": "Cyclops Smith"
+},
+{
+"raceid": 391,
+"name": "Cyclops Drone"
+},
+{
+"raceid": 392,
+"name": "Troll Champion"
+},
+{
+"raceid": 393,
+"name": "Grynch Clan Goblin"
+},
+{
+"raceid": 402,
+"name": "Frost Dragon Hatchling"
+},
+{
+"raceid": 437,
+"name": "Deepsea Blood Crab"
+},
+{
+"raceid": 438,
+"name": "Sea Serpent"
+},
+{
+"raceid": 439,
+"name": "Young Sea Serpent"
+},
+{
+"raceid": 446,
+"name": "Skeleton Warrior"
+},
+{
+"raceid": 455,
+"name": "Massive Earth Elemental"
+},
+{
+"raceid": 456,
+"name": "Massive Energy Elemental"
+},
+{
+"raceid": 457,
+"name": "Energy Elemental"
+},
+{
+"raceid": 458,
+"name": "Earth Elemental"
+},
+{
+"raceid": 460,
+"name": "Bog Raider"
+},
+{
+"raceid": 461,
+"name": "Wyrm"
+},
+{
+"raceid": 462,
+"name": "Wisp"
+},
+{
+"raceid": 463,
+"name": "Goblin Assassin"
+},
+{
+"raceid": 464,
+"name": "Goblin Scavenger"
+},
+{
+"raceid": 465,
+"name": "Grim Reaper"
+},
+{
+"raceid": 483,
+"name": "Vampire Bride"
+},
+{
+"raceid": 502,
+"name": "Mutated Rat"
+},
+{
+"raceid": 503,
+"name": "Worker Golem"
+},
+{
+"raceid": 508,
+"name": "Undead Gladiator"
+},
+{
+"raceid": 509,
+"name": "Mutated Bat"
+},
+{
+"raceid": 510,
+"name": "Werewolf"
+},
+{
+"raceid": 511,
+"name": "Haunted Treeling"
+},
+{
+"raceid": 512,
+"name": "Zombie"
+},
+{
+"raceid": 513,
+"name": "Acid Blob"
+},
+{
+"raceid": 514,
+"name": "Death Blob"
+},
+{
+"raceid": 515,
+"name": "Mercury Blob"
+},
+{
+"raceid": 516,
+"name": "Mutated Tiger"
+},
+{
+"raceid": 518,
+"name": "Nightmare Scion"
+},
+{
+"raceid": 519,
+"name": "Hellspawn"
+},
+{
+"raceid": 520,
+"name": "Nightstalker"
+},
+{
+"raceid": 521,
+"name": "Mutated Human"
+},
+{
+"raceid": 523,
+"name": "Gozzler"
+},
+{
+"raceid": 524,
+"name": "Damaged Worker Golem"
+},
+{
+"raceid": 525,
+"name": "Crazed Beggar"
+},
+{
+"raceid": 526,
+"name": "Gang Member"
+},
+{
+"raceid": 527,
+"name": "Gladiator"
+},
+{
+"raceid": 528,
+"name": "Mad Scientist"
+},
+{
+"raceid": 529,
+"name": "Infernalist"
+},
+{
+"raceid": 533,
+"name": "War Golem"
+},
+{
+"raceid": 540,
+"name": "Furious Troll"
+},
+{
+"raceid": 541,
+"name": "Troll Legionnaire"
+},
+{
+"raceid": 555,
+"name": "Evil Sheep"
+},
+{
+"raceid": 556,
+"name": "Evil Sheep Lord"
+},
+{
+"raceid": 557,
+"name": "Hot Dog"
+},
+{
+"raceid": 558,
+"name": "Vampire Pig"
+},
+{
+"raceid": 559,
+"name": "Doom Deer"
+},
+{
+"raceid": 560,
+"name": "Killer Rabbit"
+},
+{
+"raceid": 561,
+"name": "Berserker Chicken"
+},
+{
+"raceid": 562,
+"name": "Demon Parrot"
+},
+{
+"raceid": 563,
+"name": "Infernal Frog"
+},
+{
+"raceid": 570,
+"name": "Medusa"
+},
+{
+"raceid": 582,
+"name": "Shadow Hound"
+},
+{
+"raceid": 584,
+"name": "Midnight Spawn"
+},
+{
+"raceid": 586,
+"name": "Herald of Gloom"
+},
+{
+"raceid": 594,
+"name": "Undead Mine Worker"
+},
+{
+"raceid": 595,
+"name": "Undead Prospector"
+},
+{
+"raceid": 614,
+"name": "Orc Marauder"
+},
+{
+"raceid": 615,
+"name": "Eternal Guardian"
+},
+{
+"raceid": 616,
+"name": "Lizard Zaogun"
+},
+{
+"raceid": 617,
+"name": "Draken Warmaster"
+},
+{
+"raceid": 618,
+"name": "Draken Spellweaver"
+},
+{
+"raceid": 620,
+"name": "Lizard Chosen"
+},
+{
+"raceid": 621,
+"name": "Insect Swarm"
+},
+{
+"raceid": 623,
+"name": "Lizard Dragon Priest"
+},
+{
+"raceid": 624,
+"name": "Lizard Legionnaire"
+},
+{
+"raceid": 625,
+"name": "Lizard High Guard"
+},
+{
+"raceid": 627,
+"name": "Killer Caiman"
+},
+{
+"raceid": 630,
+"name": "Gnarlhound"
+},
+{
+"raceid": 631,
+"name": "Terramite"
+},
+{
+"raceid": 632,
+"name": "Wailing Widow"
+},
+{
+"raceid": 633,
+"name": "Lancer Beetle"
+},
+{
+"raceid": 641,
+"name": "Sandcrawler"
+},
+{
+"raceid": 643,
+"name": "Ghastly Dragon"
+},
+{
+"raceid": 655,
+"name": "Lizard Magistratus"
+},
+{
+"raceid": 656,
+"name": "Lizard Noble"
+},
+{
+"raceid": 672,
+"name": "Draken Elite"
+},
+{
+"raceid": 673,
+"name": "Draken Abomination"
+},
+{
+"raceid": 674,
+"name": "Brimstone Bug"
+},
+{
+"raceid": 675,
+"name": "Souleater"
+},
+{
+"raceid": 679,
+"name": "Bane Bringer"
+},
+{
+"raceid": 693,
+"name": "Boar"
+},
+{
+"raceid": 694,
+"name": "Stampor"
+},
+{
+"raceid": 695,
+"name": "Draptor"
+},
+{
+"raceid": 696,
+"name": "Undead Cavebear"
+},
+{
+"raceid": 697,
+"name": "Crustacea Gigantica"
+},
+{
+"raceid": 698,
+"name": "Midnight Panther"
+},
+{
+"raceid": 700,
+"name": "Iron Servant"
+},
+{
+"raceid": 701,
+"name": "Golden Servant"
+},
+{
+"raceid": 702,
+"name": "Diamond Servant"
+},
+{
+"raceid": 704,
+"name": "Ghoulish Hyaena"
+},
+{
+"raceid": 705,
+"name": "Sandstone Scorpion"
+},
+{
+"raceid": 706,
+"name": "Clay Guardian"
+},
+{
+"raceid": 707,
+"name": "Grave Guard"
+},
+{
+"raceid": 708,
+"name": "Tomb Servant"
+},
+{
+"raceid": 709,
+"name": "Sacred Spider"
+},
+{
+"raceid": 710,
+"name": "Death Priest"
+},
+{
+"raceid": 711,
+"name": "Elder Mummy"
+},
+{
+"raceid": 712,
+"name": "Honour Guard"
+},
+{
+"raceid": 717,
+"name": "Yielothax"
+},
+{
+"raceid": 719,
+"name": "Feverish Citizen"
+},
+{
+"raceid": 720,
+"name": "White Deer"
+},
+{
+"raceid": 723,
+"name": "Starving Wolf"
+},
+{
+"raceid": 724,
+"name": "Shaburak Demon"
+},
+{
+"raceid": 725,
+"name": "Shaburak Lord"
+},
+{
+"raceid": 726,
+"name": "Shaburak Prince"
+},
+{
+"raceid": 727,
+"name": "Askarak Demon"
+},
+{
+"raceid": 728,
+"name": "Askarak Lord"
+},
+{
+"raceid": 729,
+"name": "Askarak Prince"
+},
+{
+"raceid": 730,
+"name": "Wild Horse"
+},
+{
+"raceid": 731,
+"name": "Slug"
+},
+{
+"raceid": 732,
+"name": "Insectoid Scout"
+},
+{
+"raceid": 733,
+"name": "Dromedary"
+},
+{
+"raceid": 734,
+"name": "Deepling Scout"
+},
+{
+"raceid": 735,
+"name": "Filth Toad"
+},
+{
+"raceid": 737,
+"name": "Firestarter"
+},
+{
+"raceid": 738,
+"name": "Bog Frog"
+},
+{
+"raceid": 739,
+"name": "Thornfire Wolf"
+},
+{
+"raceid": 740,
+"name": "Crystal Wolf"
+},
+{
+"raceid": 741,
+"name": "Elf Overseer"
+},
+{
+"raceid": 745,
+"name": "Troll Guard"
+},
+{
+"raceid": 750,
+"name": "Horse"
+},
+{
+"raceid": 750,
+"name": "Horse"
+},
+{
+"raceid": 750,
+"name": "Horse"
+},
+{
+"raceid": 769,
+"name": "Deepling Warrior"
+},
+{
+"raceid": 770,
+"name": "Deepling Guard"
+},
+{
+"raceid": 771,
+"name": "Terrified Elephant"
+},
+{
+"raceid": 772,
+"name": "Deepling Spellsinger"
+},
+{
+"raceid": 778,
+"name": "Ladybug"
+},
+{
+"raceid": 779,
+"name": "Manta Ray"
+},
+{
+"raceid": 780,
+"name": "Calamary"
+},
+{
+"raceid": 781,
+"name": "Jellyfish"
+},
+{
+"raceid": 782,
+"name": "Shark"
+},
+{
+"raceid": 783,
+"name": "Northern Pike"
+},
+{
+"raceid": 784,
+"name": "Fish"
+},
+{
+"raceid": 786,
+"name": "Crawler"
+},
+{
+"raceid": 787,
+"name": "Spidris"
+},
+{
+"raceid": 788,
+"name": "Kollos"
+},
+{
+"raceid": 790,
+"name": "Swarmer"
+},
+{
+"raceid": 791,
+"name": "Spitter"
+},
+{
+"raceid": 792,
+"name": "Waspoid"
+},
+{
+"raceid": 795,
+"name": "Deepling Worker"
+},
+{
+"raceid": 796,
+"name": "Insectoid Worker"
+},
+{
+"raceid": 797,
+"name": "Spidris Elite"
+},
+{
+"raceid": 801,
+"name": "Hive Overseer"
+},
+{
+"raceid": 859,
+"name": "Deepling Brawler"
+},
+{
+"raceid": 860,
+"name": "Deepling Master Librarian"
+},
+{
+"raceid": 861,
+"name": "Deepling Tyrant"
+},
+{
+"raceid": 862,
+"name": "Deepling Elite"
+},
+{
+"raceid": 867,
+"name": "Grave Robber"
+},
+{
+"raceid": 868,
+"name": "Crypt Defiler"
+},
+{
+"raceid": 869,
+"name": "Crystalcrusher"
+},
+{
+"raceid": 870,
+"name": "Mushroom Sniffer"
+},
+{
+"raceid": 872,
+"name": "Water Buffalo"
+},
+{
+"raceid": 873,
+"name": "Enraged Crystal Golem"
+},
+{
+"raceid": 874,
+"name": "Damaged Crystal Golem"
+},
+{
+"raceid": 877,
+"name": "Modified Gnarlhound"
+},
+{
+"raceid": 878,
+"name": "Drillworm"
+},
+{
+"raceid": 879,
+"name": "Stone Devourer"
+},
+{
+"raceid": 880,
+"name": "Armadile"
+},
+{
+"raceid": 881,
+"name": "Humongous Fungus"
+},
+{
+"raceid": 882,
+"name": "Weeper"
+},
+{
+"raceid": 883,
+"name": "Orewalker"
+},
+{
+"raceid": 884,
+"name": "Lava Golem"
+},
+{
+"raceid": 885,
+"name": "Magma Crawler"
+},
+{
+"raceid": 886,
+"name": "Enslaved Dwarf"
+},
+{
+"raceid": 888,
+"name": "Lost Berserker"
+},
+{
+"raceid": 889,
+"name": "Cliff Strider"
+},
+{
+"raceid": 890,
+"name": "Ironblight"
+},
+{
+"raceid": 891,
+"name": "Hideous Fungus"
+},
+{
+"raceid": 894,
+"name": "Dragonling"
+},
+{
+"raceid": 897,
+"name": "Infected Weeper"
+},
+{
+"raceid": 898,
+"name": "Vulcongra"
+},
+{
+"raceid": 899,
+"name": "Wiggler"
+},
+{
+"raceid": 912,
+"name": "Emerald Damselfly"
+},
+{
+"raceid": 913,
+"name": "Salamander"
+},
+{
+"raceid": 914,
+"name": "Marsh Stalker"
+},
+{
+"raceid": 915,
+"name": "Pigeon"
+},
+{
+"raceid": 916,
+"name": "Corym Charlatan"
+},
+{
+"raceid": 917,
+"name": "Corym Skirmisher"
+},
+{
+"raceid": 918,
+"name": "Corym Vanguard"
+},
+{
+"raceid": 919,
+"name": "Swampling"
+},
+{
+"raceid": 920,
+"name": "Little Corym Charlatan"
+},
+{
+"raceid": 922,
+"name": "Adventurer"
+},
+{
+"raceid": 924,
+"name": "Lost Husher"
+},
+{
+"raceid": 925,
+"name": "Lost Basher"
+},
+{
+"raceid": 926,
+"name": "Lost Thrower"
+},
+{
+"raceid": 958,
+"name": "Vampire Viscount"
+},
+{
+"raceid": 959,
+"name": "Vicious Manbat"
+},
+{
+"raceid": 960,
+"name": "Shadow Pupil"
+},
+{
+"raceid": 961,
+"name": "Blood Priest"
+},
+{
+"raceid": 962,
+"name": "White Shade"
+},
+{
+"raceid": 963,
+"name": "Elder Wyrm"
+},
+{
+"raceid": 973,
+"name": "Nightfiend"
+},
+{
+"raceid": 974,
+"name": "Blood Hand"
+},
+{
+"raceid": 975,
+"name": "Gravedigger"
+},
+{
+"raceid": 976,
+"name": "Tarnished Spirit"
+},
+{
+"raceid": 978,
+"name": "Rorc"
+},
+{
+"raceid": 979,
+"name": "Leaf Golem"
+},
+{
+"raceid": 980,
+"name": "Forest Fury"
+},
+{
+"raceid": 981,
+"name": "Roaring Lion"
+},
+{
+"raceid": 982,
+"name": "Wilting Leaf Golem"
+},
+{
+"raceid": 1004,
+"name": "Shock Head"
+},
+{
+"raceid": 1012,
+"name": "Sight Of Surrender"
+},
+{
+"raceid": 1013,
+"name": "Guzzlemaw"
+},
+{
+"raceid": 1014,
+"name": "Silencer"
+},
+{
+"raceid": 1015,
+"name": "Choking Fear"
+},
+{
+"raceid": 1016,
+"name": "Terrorsleep"
+},
+{
+"raceid": 1018,
+"name": "Retching Horror"
+},
+{
+"raceid": 1019,
+"name": "Demon Outcast"
+},
+{
+"raceid": 1021,
+"name": "Feversleep"
+},
+{
+"raceid": 1022,
+"name": "Frazzlemaw"
+},
+{
+"raceid": 1038,
+"name": "Glooth Golem"
+},
+{
+"raceid": 1039,
+"name": "Metal Gargoyle"
+},
+{
+"raceid": 1040,
+"name": "Blood Beast"
+},
+{
+"raceid": 1041,
+"name": "Rustheap Golem"
+},
+{
+"raceid": 1042,
+"name": "Glooth Anemone"
+},
+{
+"raceid": 1043,
+"name": "Walker"
+},
+{
+"raceid": 1044,
+"name": "Moohtant"
+},
+{
+"raceid": 1045,
+"name": "Minotaur Amazon"
+},
+{
+"raceid": 1046,
+"name": "Execowtioner"
+},
+{
+"raceid": 1051,
+"name": "Mooh'Tah Warrior"
+},
+{
+"raceid": 1052,
+"name": "Minotaur Hunter"
+},
+{
+"raceid": 1053,
+"name": "Worm Priestess"
+},
+{
+"raceid": 1054,
+"name": "Glooth Blob"
+},
+{
+"raceid": 1055,
+"name": "Rot Elemental"
+},
+{
+"raceid": 1118,
+"name": "Noble Lion"
+},
+{
+"raceid": 1119,
+"name": "Glooth Bandit"
+},
+{
+"raceid": 1120,
+"name": "Glooth Brigand"
+},
+{
+"raceid": 1134,
+"name": "Dawnfire Asura"
+},
+{
+"raceid": 1135,
+"name": "Midnight Asura"
+},
+{
+"raceid": 1139,
+"name": "Gloom Wolf"
+},
+{
+"raceid": 1145,
+"name": "Vicious Squire"
+},
+{
+"raceid": 1146,
+"name": "Renegade Knight"
+},
+{
+"raceid": 1147,
+"name": "Vile Grandmaster"
+},
+{
+"raceid": 1148,
+"name": "Ghost Wolf"
+},
+{
+"raceid": 1161,
+"name": "Ogre Brute"
+},
+{
+"raceid": 1162,
+"name": "Ogre Savage"
+},
+{
+"raceid": 1163,
+"name": "Ogre Shaman"
+},
+{
+"raceid": 1234,
+"name": "Sparkion"
+}
+]

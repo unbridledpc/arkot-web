@@ -1,0 +1,24 @@
+[
+  {
+    "name": "Opening Week",
+    "description": "The real world has just opened. Double loot from every creature while the first adventurers find their feet.",
+    "startdate": 1789345253,
+    "enddate": 1789950053,
+    "colorlight": "#d9b45a",
+    "colordark": "#9c7a2c",
+    "isseasonal": false,
+    "specialevent": true,
+    "displaypriority": 1
+  },
+  {
+    "name": "Rapid Respawn Weekend",
+    "description": "Creatures return twice as fast all weekend long.",
+    "startdate": 1790295653,
+    "enddate": 1790468453,
+    "colorlight": "#7fb36b",
+    "colordark": "#4d6b3a",
+    "isseasonal": false,
+    "specialevent": false,
+    "displaypriority": 2
+  }
+]

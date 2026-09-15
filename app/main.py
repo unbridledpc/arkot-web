@@ -500,6 +500,56 @@ def rules(request: Request):
     return render(request, "rules.html")
 
 
+# ---- the game client's launcher webservice -------------------------------
+# The 12.x+ client posts {"type": ...} to Services.status (client init.lua)
+# from the login screen: player counts, the boosted creature and boss of the
+# day, the event calendar and the "show off" box.
+CREATURES = json.loads((pathlib.Path(__file__).parent / "data" / "creatures.json").read_text())
+EVENTS_FILE = pathlib.Path(__file__).parent / "data" / "events.json"
+
+
+def boosted_of_the_day():
+    """Deterministic pick by date so every client sees the same pair."""
+    day = int(time.time() // 86400)
+    pool = [c for c in CREATURES if c["raceid"] > 0]
+    creature = pool[day % len(pool)]
+    boss = pool[(day * 7 + 3) % len(pool)]
+    return creature, boss
+
+
+def load_events():
+    try:
+        return json.loads(EVENTS_FILE.read_text())
+    except (OSError, ValueError):
+        return []
+
+
+@app.post("/api/client")
+async def client_service(request: Request):
+    try:
+        body = await request.json()
+    except ValueError:
+        body = {}
+    kind = (body or {}).get("type", "")
+    if kind == "cacheinfo":
+        online = q("SELECT count(*) c FROM players_online", one=True)["c"]
+        return JSONResponse({"playersonline": online, "twitchstreams": 0, "twitchviewer": 0,
+                             "gamingyoutubestreams": 0, "gamingyoutubeviewer": 0,
+                             "discord_online": 0, "discord_link": "", "youtube_link": ""})
+    if kind == "boostedcreature":
+        creature, boss = boosted_of_the_day()
+        return JSONResponse({"boostedcreature": True, "creatureraceid": creature["raceid"],
+                             "bossraceid": boss["raceid"], "raceid": creature["raceid"]})
+    if kind == "eventschedule":
+        events = load_events()
+        return JSONResponse({"eventlist": events, "lastupdatetimestamp": int(EVENTS_FILE.stat().st_mtime) if EVENTS_FILE.exists() else int(time.time())})
+    if kind == "showoff":
+        return JSONResponse({"title": "The real world is open",
+                             "description": "Twenty-three cities, thousands of hunting grounds and every quest of the real world, played on the 15.25 client. Create an account at arkenfall.org and step off the boat in Thais.",
+                             "image": "https://arkenfall.org/static/store/home/banner_realworld.png"})
+    return JSONResponse({"errorCode": 3, "errorMessage": "Unknown request type."})
+
+
 @app.get("/api/status")
 def api_status():
     return JSONResponse({**server_status(), "world": WORLD_NAME,
