@@ -15,7 +15,7 @@ import json
 import pathlib
 
 import pymysql
-from fastapi import FastAPI, Form, Request
+from fastapi import FastAPI, Form, Query, Request
 from fastapi.responses import HTMLResponse, JSONResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
@@ -43,6 +43,12 @@ GAME_PORT = 7172
 VOCATIONS = {0: "None", 1: "Sorcerer", 2: "Druid", 3: "Paladin", 4: "Knight",
              5: "Master Sorcerer", 6: "Elder Druid", 7: "Royal Paladin", 8: "Elite Knight"}
 SPELLS = json.loads((pathlib.Path(__file__).parent / "data" / "spells.json").read_text())
+QUESTS = json.loads((pathlib.Path(__file__).parent / "data" / "quests.json").read_text())
+QUEST_BY_SLUG = {q["slug"]: q for q in QUESTS["quests"]}
+QUEST_TAGS = {
+    "outfit": "Outfits", "addon": "Addons", "mount": "Mounts",
+    "access": "Access", "experience": "Experience", "treasure": "Treasure",
+}
 GROUP_NAMES = {2: "Tutor", 3: "Senior Tutor", 4: "Gamemaster", 5: "Community Manager", 6: "God"}
 HIGHSCORE_CATS = {
     "experience": ("Experience", "experience", "experience"),
@@ -63,7 +69,8 @@ MENU = [
         ("Highscores", "/highscores"), ("Who is online", "/online"), ("Character search", "/search"),
         ("Latest deaths", "/deaths"), ("Kill statistics", "/killstats"), ("Guilds", "/guilds"),
         ("Houses", "/houses"), ("Team", "/team")]),
-    ("library", "Library", "L", [("Server information", "/server"), ("Spells", "/spells"), ("Rules", "/rules")]),
+    ("library", "Library", "L", [("Server information", "/server"), ("Quests", "/quests"),
+                                 ("Spells", "/spells"), ("Rules", "/rules")]),
     ("support", "Support", "S", [("Helpdesk", "/legacy/helpdesk.php"), ("Lost account", "/legacy/sub.php?page=recover"), ("Rules", "/rules")]),
     ("account", "Account", "A", [("Account management", "/account"), ("Create account", "/register"), ("Create character", "/character/create"), ("Log in", "/login")]),
     ("download", "Download", "D", [("Get the client", "/downloads")]),
@@ -75,7 +82,8 @@ SECTION_OF["/"] = "news"
 def active_section(path: str) -> str:
     if path in SECTION_OF:
         return SECTION_OF[path]
-    for prefix, key in (("/character/", "community"), ("/guild/", "community"), ("/account", "account"), ("/news", "news")):
+    for prefix, key in (("/character/", "community"), ("/guild/", "community"),
+                        ("/quest/", "library"), ("/account", "account"), ("/news", "news")):
         if path.startswith(prefix):
             return key
     return "news"
@@ -477,6 +485,48 @@ def spells(request: Request, cat: str = "all", voc: str = "all"):
             and (voc == "all" or voc in s["vocations"])]
     rows.sort(key=lambda s: (s["level"], s["name"]))
     return render(request, "spells.html", rows=rows, cats=cats, cat=cat, voc=voc)
+
+
+LEVEL_BANDS = {
+    "any": ("Any level", lambda lv: True),
+    "open": ("No level given", lambda lv: lv == 0),
+    "low": ("Level 1-50", lambda lv: 1 <= lv <= 50),
+    "mid": ("Level 51-100", lambda lv: 51 <= lv <= 100),
+    "high": ("Level 100+", lambda lv: lv > 100),
+}
+
+
+@app.get("/quests", response_class=HTMLResponse)
+def quests(request: Request, tag: str = "all", access: str = "all", band: str = "any",
+           find: str = Query("", alias="q")):
+    tag = tag if tag in QUEST_TAGS else "all"
+    band = band if band in LEVEL_BANDS else "any"
+    access = access if access in ("free", "premium", "log") else "all"
+    needle = find.strip().lower()
+    keeps = LEVEL_BANDS[band][1]
+    rows = [item for item in QUESTS["quests"]
+            if (tag == "all" or tag in item["tags"])
+            and (access == "all"
+                 or (access == "free" and not item["premium"])
+                 or (access == "premium" and item["premium"])
+                 or (access == "log" and item["in_log"]))
+            and keeps(item["level_sort"])
+            and (not needle or needle in item["name"].lower()
+                 or needle in item["location"].lower()
+                 or needle in item["reward"].lower())]
+    rows.sort(key=lambda item: (item["level_sort"], item["name"]))
+    return render(request, "quests.html", rows=rows, tag=tag, access=access, band=band,
+                  search=find.strip(), tags=QUEST_TAGS, bands=LEVEL_BANDS,
+                  total=len(QUESTS["quests"]), built=QUESTS["built"])
+
+
+@app.get("/quest/{slug}", response_class=HTMLResponse)
+def quest(request: Request, slug: str):
+    item = QUEST_BY_SLUG.get(slug)
+    if not item:
+        return RedirectResponse("/quests", status_code=303)
+    missions = sum(len(m["steps"]) for m in item["missions"])
+    return render(request, "quest.html", quest=item, steps=missions, tags=QUEST_TAGS)
 
 
 @app.get("/changelog", response_class=HTMLResponse)

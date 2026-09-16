@@ -23,6 +23,23 @@ docker run -d --name arkotweb --network <game-db-network> \
 The app listens on 8090. `Caddyfile` shows the front door used in production: the site on `/`,
 the legacy Znote pages under `/legacy/`.
 
+## The quest section
+
+`/quests` and `/quest/<slug>` are built from `app/data/quests.json`, which
+`tools/build-quests.py` assembles from two sources: the game server's own quest data
+(`data/quests/*.toml`, the in-game quest log, and `data/scripts/quests/`, what is actually
+scripted) decides which quests exist here and what their missions are, and the Tibia Wiki's
+quest infoboxes supply the facts a player wants first — starting town, level, premium, reward,
+dangers. Only facts are taken from the wiki and every quest links back to its page; the
+walkthroughs stay there. Wiki answers are cached under `build-client/`, so re-runs are free:
+
+```
+tools/build-quests.py [path-to-ArkOT-server] [--refresh]
+```
+
+A script folder earns a place on the site only if the wiki confirms it is a quest, which keeps
+area and world-change scripts out; anything in the quest log is always listed, wiki page or not.
+
 ## The client download
 
 `/downloads` hands out the game client itself. The packages are built by

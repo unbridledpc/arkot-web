@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% from "_ui.html" import box, title %}
+{% from "_quest.html" import emblem, pills %}
+{% block title %}{{ quest.name }}{% endblock %}
+{% block content %}
+{{ title(quest.name) }}
+<p class="questpills">{{ pills(quest) }}
+	{% for t in quest.tags %}<span class="tagline-pill kind">{{ emblem(t, 14) }}{{ tags[t] }}</span>{% endfor %}
+</p>
+
+{% call box('The short of it') %}
+	<table class="tbl kv">
+		{% if quest.location %}<tr><th>Starts in</th><td>{{ quest.location }}</td></tr>{% endif %}
+		<tr><th>Level</th><td>
+			{%- if quest.level %}{{ quest.level }} required{% else %}No level requirement{% endif -%}
+			{%- if quest.level_rec %} · {{ quest.level_rec }} advised{% endif -%}
+		</td></tr>
+		<tr><th>Account</th><td>{{ 'Premium' if quest.premium else 'Any account, free ones included' }}</td></tr>
+		{% if quest.reward %}<tr><th>Reward</th><td>{{ quest.reward }}</td></tr>{% endif %}
+		{% if quest.dangers %}<tr><th>Dangers</th><td>{{ quest.dangers }}</td></tr>{% endif %}
+		{% if quest.aka %}<tr><th>Also called</th><td>{{ quest.aka }}</td></tr>{% endif %}
+		<tr><th>Quest log</th><td>
+			{%- if quest.in_log -%}
+			Tracked — {{ quest.missions | length }} mission{{ '' if quest.missions | length == 1 else 's' }},
+			{{ steps }} step{{ '' if steps == 1 else 's' }} in your log
+			{%- else -%}
+			Not tracked; this one rewards you when it is done
+			{%- endif -%}
+		</td></tr>
+	</table>
+{% endcall %}
+
+{% if quest.missions %}
+{% call box('Missions', 'the log as your character reads it') %}
+	<p class="fineprint">These are the entries your quest log fills in as you go, so they give away
+	what happens. Open one only if you want to know.</p>
+	{% for m in quest.missions %}
+	<details class="mission">
+		<summary><span class="no">{{ loop.index }}</span>{{ m.name }}<span class="fineprint">{{ m.steps | length }} step{{ '' if m.steps | length == 1 else 's' }}</span></summary>
+		<ol class="steps">
+			{% for s in m.steps %}<li>{{ s }}</li>{% endfor %}
+		</ol>
+	</details>
+	{% endfor %}
+{% endcall %}
+{% endif %}
+
+{% call box('Where to read more') %}
+	<p style="margin-bottom:0">
+	{%- if quest.wiki -%}
+	The <a href="{{ quest.wiki }}" rel="noopener">Tibia Wiki page for {{ quest.name }}</a> carries the
+	full walkthrough, maps and item lists. Arkenfall runs its own server, so a detail there may differ
+	from what you meet here — the missions above are the ones this world actually hands out.
+	{%- else -%}
+	This one has no wiki page of its own; the missions above are the whole of what the server tracks.
+	{%- endif -%}
+	</p>
+	{% if quest.implemented %}<p class="fineprint" style="margin-bottom:0">Content added in game version {{ quest.implemented }}.</p>{% endif %}
+{% endcall %}
+
+<p class="pager"><a class="btn ghost" href="/quests">All quests</a></p>
+{% endblock %}

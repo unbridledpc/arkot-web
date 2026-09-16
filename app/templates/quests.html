@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% from "_ui.html" import box, title %}
+{% from "_quest.html" import emblem, pills %}
+{% block title %}Quests{% endblock %}
+{% block content %}
+{{ title('Quests', rows | length ~ ' of ' ~ total) }}
+
+<div class="tabs">
+	<a class="tab {% if tag == 'all' %}active{% endif %}" href="/quests?access={{ access }}&band={{ band }}">Every reward</a>
+	{% for key, label in tags.items() %}<a class="tab {% if tag == key %}active{% endif %}" href="/quests?tag={{ key }}&access={{ access }}&band={{ band }}">{{ label }}</a>{% endfor %}
+</div>
+<div class="tabs">
+	<a class="tab {% if access == 'all' %}active{% endif %}" href="/quests?tag={{ tag }}&band={{ band }}">Everyone</a>
+	<a class="tab {% if access == 'free' %}active{% endif %}" href="/quests?tag={{ tag }}&band={{ band }}&access=free">Free account</a>
+	<a class="tab {% if access == 'premium' %}active{% endif %}" href="/quests?tag={{ tag }}&band={{ band }}&access=premium">Premium</a>
+	<a class="tab {% if access == 'log' %}active{% endif %}" href="/quests?tag={{ tag }}&band={{ band }}&access=log">In the quest log</a>
+</div>
+<div class="tabs">
+	{% for key, meta in bands.items() %}<a class="tab {% if band == key %}active{% endif %}" href="/quests?tag={{ tag }}&access={{ access }}&band={{ key }}">{{ meta[0] }}</a>{% endfor %}
+</div>
+
+{% call box('Quest list', 'sorted by level') %}
+	<form class="questsearch" method="get" action="/quests">
+		<input type="hidden" name="tag" value="{{ tag }}">
+		<input type="hidden" name="access" value="{{ access }}">
+		<input type="hidden" name="band" value="{{ band }}">
+		<input name="q" value="{{ search }}" placeholder="Search a quest, a town or a reward" aria-label="Search quests">
+		<button class="btn" type="submit">Search</button>
+		{% if search %}<a class="btn ghost" href="/quests">Clear</a>{% endif %}
+	</form>
+
+	{% if not rows %}<p style="margin-bottom:0">No quest matches that. <a href="/quests">Show them all</a>.</p>{% endif %}
+	{% for qu in rows %}
+	<a class="questrow" href="/quest/{{ qu.slug }}">
+		<span class="questmark">{{ emblem(qu.tags[0] if qu.tags else 'treasure', 26) }}</span>
+		<span class="questbody">
+			<b>{{ qu.name }}{% if qu.premium %}<span class="star" title="Premium">&#9670;</span>{% endif %}</b>
+			<span class="fineprint">
+				{%- if qu.location %}{{ qu.location.split(',')[0] }}{% else %}Across the world{% endif -%}
+				{%- if qu.missions %} · {{ qu.missions | length }} mission{{ '' if qu.missions | length == 1 else 's' }}{% endif -%}
+				{%- if qu.reward %} · {{ qu.reward | truncate(90, true, '…') }}{% endif -%}
+			</span>
+		</span>
+		<span class="questlvl">{% if qu.level %}<b>{{ qu.level }}</b><span>level</span>{% elif qu.level_sort %}<b>{{ qu.level_sort }}+</b><span>advised</span>{% else %}<b>—</b><span>any level</span>{% endif %}</span>
+	</a>
+	{% endfor %}
+{% endcall %}
+
+{% call box('About this list') %}
+	<p>Every quest here runs on Arkenfall: the missions and their steps are read straight out of the
+	server's own quest log, so what you see is what your character sees when they press <code>Q</code>.
+	Quests marked <em>in the quest log</em> track themselves as you play; the rest are older
+	adventures that simply reward you when you finish them.</p>
+	<p class="fineprint" style="margin-bottom:0">Levels, starting towns, rewards and dangers come from the
+	<a href="https://tibia.fandom.com/wiki/Quests" rel="noopener">Tibia Wiki</a>, whose editors keep the
+	best record of these adventures; each quest links back to its page for the full walkthrough.
+	List built {{ built }}.</p>
+{% endcall %}
+{% endblock %}

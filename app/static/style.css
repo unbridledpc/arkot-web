@@ -512,6 +512,114 @@ input:focus, select:focus { outline: 2px solid rgba(217, 180, 90, 0.6); outline-
 }
 .foot a { color: var(--gold); }
 
+/* ---- quests ----------------------------------------------------------- */
+
+.emblem { fill: currentColor; vertical-align: -3px; }
+
+.questrow {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	padding: 9px 12px;
+	margin: 6px 0;
+	color: inherit;
+	text-decoration: none;
+	background: linear-gradient(180deg, var(--parch-100), var(--parch-200));
+	border: 1px solid var(--parch-400);
+	border-left: 3px solid var(--gold-dark);
+	border-radius: 3px;
+}
+.questrow:hover {
+	text-decoration: none;
+	color: inherit;
+	border-left-color: var(--blood);
+	background: linear-gradient(180deg, #fbf3e1, var(--parch-200));
+}
+.questrow .questmark {
+	flex: none;
+	width: 38px;
+	height: 38px;
+	display: grid;
+	place-items: center;
+	color: var(--wood-600);
+	background: radial-gradient(circle at 50% 35%, var(--parch-100), var(--parch-300));
+	border: 1px solid var(--gold-dark);
+	border-radius: 50%;
+}
+.questrow .questbody { flex: 1 1 auto; min-width: 0; }
+.questrow .questbody b { display: block; font: 700 15px/1.3 var(--display); letter-spacing: .3px; }
+.questrow .questbody .fineprint {
+	display: block;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+.questrow .star { color: var(--gold-dark); font-size: 10px; margin-left: 6px; vertical-align: 2px; }
+.questrow .questlvl { flex: none; width: 62px; text-align: center; line-height: 1.1; }
+.questrow .questlvl b { font: 700 17px/1 var(--display); color: var(--wood-700); }
+.questrow .questlvl span { display: block; font-size: 11px; color: var(--ink-soft); }
+
+.questsearch { display: flex; gap: 8px; margin: 0 0 12px; }
+.questsearch input {
+	flex: 1 1 auto;
+	min-width: 0;
+	padding: 7px 10px;
+	font: 14px var(--serif);
+	color: var(--ink);
+	background: var(--parch-100);
+	border: 1px solid var(--parch-400);
+	border-radius: 3px;
+}
+
+.questpills { margin: -6px 0 14px; }
+.tagline-pill {
+	display: inline-block;
+	padding: 3px 9px;
+	margin: 0 6px 6px 0;
+	font: 700 11px/1.5 var(--display);
+	letter-spacing: .6px;
+	text-transform: uppercase;
+	color: var(--parch-100);
+	background: var(--stone-700);
+	border: 1px solid var(--stone-900);
+	border-radius: 10px;
+}
+.tagline-pill.prem { color: #2a1c08; background: linear-gradient(180deg, var(--gold-bright), var(--gold)); border-color: var(--gold-dark); }
+.tagline-pill.free { color: #eef3e4; background: var(--moss); border-color: #35491f; }
+.tagline-pill.kind { color: var(--ink); background: var(--parch-300); border-color: var(--parch-400); }
+.tagline-pill.kind .emblem { margin-right: 4px; }
+
+.mission {
+	margin: 6px 0;
+	background: var(--parch-100);
+	border: 1px solid var(--parch-400);
+	border-radius: 3px;
+}
+.mission > summary {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	padding: 8px 12px;
+	font: 600 14px/1.3 var(--serif);
+	cursor: pointer;
+}
+.mission > summary::-webkit-details-marker { display: none; }
+.mission > summary .no {
+	flex: none;
+	width: 22px;
+	height: 22px;
+	display: grid;
+	place-items: center;
+	font: 700 12px/1 var(--display);
+	color: var(--parch-100);
+	background: var(--wood-600);
+	border-radius: 50%;
+}
+.mission > summary .fineprint { margin-left: auto; }
+.mission[open] > summary { border-bottom: 1px solid var(--parch-400); background: var(--parch-200); }
+.mission .steps { margin: 10px 0; padding-right: 12px; }
+.mission .steps li { padding: 2px 0; }
+
 /* ---- downloads -------------------------------------------------------- */
 
 .dl {
@@ -544,6 +652,12 @@ input:focus, select:focus { outline: 2px solid rgba(217, 180, 90, 0.6); outline-
 	.banner .worldline { text-align: center; }
 	.cols3 { columns: 2; }
 	.dl { flex-direction: column; align-items: stretch; text-align: center; }
+	.questrow .questbody .fineprint {
+		display: -webkit-box;
+		-webkit-line-clamp: 2;
+		-webkit-box-orient: vertical;
+		white-space: normal;
+	}
 }
 @media (max-width: 560px) {
 	.menu, .side { grid-template-columns: 1fr; }
