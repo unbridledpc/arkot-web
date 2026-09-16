@@ -1006,7 +1006,7 @@ async def client_service(request: Request):
     if kind == "showoff":
         return JSONResponse({"title": "The real world is open",
                              "description": "Twenty-three cities, thousands of hunting grounds and every quest of the real world, played on the 15.25 client. Create an account at arkenfall.org and step off the boat in Thais.",
-                             "image": "https://arkenfall.org/static/store/home/banner_realworld.png"})
+                             "image": "https://arkenfall.org/static/store/home/showoff_realworld.png"})
     return JSONResponse({"errorCode": 3, "errorMessage": "Unknown request type."})
 
 
