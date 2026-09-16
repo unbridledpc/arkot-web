@@ -23,6 +23,30 @@ docker run -d --name arkotweb --network <game-db-network> \
 The app listens on 8090. `Caddyfile` shows the front door used in production: the site on `/`,
 the legacy Znote pages under `/legacy/`.
 
+## Worlds and the client login
+
+`WORLDS_FILE` points at the game servers' own `config/worlds.toml` (mount the server's `config/`
+directory read-only; a single-file bind mount goes stale when the file is replaced). The site
+validates it as the server does and adds one optional key per world, `public_address`: what
+players dial. The server requires `address` to be its bind IP, often `127.0.0.1`, so set
+`public_address` whenever `address` is not reachable from outside. If `WORLDS_FILE` is unset the
+site serves one world built from `WORLD_NAME`, `GAME_HOST`, `GAME_PORT` and `DB_NAME`, and logs a
+warning. If the file is invalid, client logins and character creation are refused and the reason
+is logged.
+
+`POST /api/login` is the game client's login (OTClient HTTP login): one login lists the
+account's characters on every world and issues a session key the game server checks in
+`account_sessions`. The client posts to `http://<host>:7171/login`, so the 7171 listener must
+rewrite POSTs to `/api/login` (`/login` is the web form). Both logins share a per-process rate
+limiter, which is why uvicorn runs a single worker; `X-Forwarded-For` is only trusted from a
+private-network peer (the proxy). Changing a password, an admin password reset and a ban all
+revoke the account's client sessions.
+
+Browse pages (highscores, who is online, deaths, guilds, houses, …) still read the home schema,
+`DB_NAME`; the account page and character creation span every world.
+
+Tests need no database and no web framework: `pip install pytest` then `python -m pytest tests`.
+
 ## Staff pages
 
 `/admin` is the staff room: the world at a glance, news and changelog editing, account search,

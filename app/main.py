@@ -13,14 +13,18 @@ import time
 import urllib.parse
 
 import json
+import logging
 import pathlib
 
 import pymysql
 from fastapi import FastAPI, Form, Query, Request
+from fastapi.concurrency import run_in_threadpool
 from fastapi.responses import HTMLResponse, JSONResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from itsdangerous import BadSignature, URLSafeSerializer
+
+from app import clientlogin, ratelimit, worlds
 
 DB = dict(
     host=os.environ.get("DB_HOST", "btdb"),
@@ -48,9 +52,25 @@ WORLD_NAME = os.environ.get("WORLD_NAME", "Arkenfall")
 GAME_HOST = os.environ.get("GAME_HOST", "bt.tibtool.com")
 LOGIN_PORT = 7171
 GAME_PORT = 7172
+log = logging.getLogger("uvicorn.error.arkot")
 
-VOCATIONS = {0: "None", 1: "Sorcerer", 2: "Druid", 3: "Paladin", 4: "Knight",
-             5: "Master Sorcerer", 6: "Elder Druid", 7: "Royal Paladin", 8: "Elite Knight"}
+# Every game world, from the servers' own worlds.toml (WORLDS_FILE). The site's
+# browse pages still read the home schema, DB_NAME; the client login, the
+# account page and character creation span every world.
+WORLDS = worlds.load()
+HOME_SCHEMA = DB["database"]
+if WORLDS.ok and not any(w.schema == HOME_SCHEMA for w in WORLDS.worlds):
+    log.warning("No world in the world list uses DB_NAME (%s); the browse pages read a "
+                "schema no client can log into.", HOME_SCHEMA)
+LOGIN_LIMITER = ratelimit.LoginLimiter()
+# While the list is broken, client logins and character creation are refused;
+# the account page still shows the home world's characters.
+ACCOUNT_WORLDS = WORLDS.worlds if WORLDS.ok else worlds.load(
+    {k: v for k, v in os.environ.items() if k != "WORLDS_FILE"}).worlds
+CLIENT_LOGIN = clientlogin.ClientLogin(clientlogin.Store(lambda: db()),   # db() is defined below
+                                       WORLDS, LOGIN_LIMITER)
+
+VOCATIONS = clientlogin.VOCATIONS
 SPELLS = json.loads((pathlib.Path(__file__).parent / "data" / "spells.json").read_text())
 QUESTS = json.loads((pathlib.Path(__file__).parent / "data" / "quests.json").read_text())
 QUEST_BY_SLUG = {q["slug"]: q for q in QUESTS["quests"]}
@@ -129,6 +149,49 @@ def q(sql, args=None, one=False):
 
 def sha1(s: str) -> str:
     return hashlib.sha1(s.encode()).hexdigest()
+
+
+def request_ip(request: Request) -> str:
+    peer = request.client.host if request.client else ""
+    return ratelimit.client_ip(peer, request.headers.get("x-forwarded-for", ""))
+
+
+def revoke_sessions(aid: int):
+    """Throw away every game-client session the account holds, so a changed
+    password or a ban also shuts the door on keys already handed out."""
+    try:
+        q("DELETE FROM account_sessions WHERE account_id=%s", (aid,))
+    except pymysql.err.ProgrammingError as err:
+        if err.args and err.args[0] == 1146:      # no such table: no sessions to revoke
+            log.warning("account_sessions does not exist; no client sessions to revoke")
+            return
+        raise
+
+
+def world_or_none(wid):
+    return WORLDS.find(wid) if WORLDS.ok else None
+
+
+def account_characters(aid: int):
+    """The account's characters on every world, each tagged with its world and
+    town name. A world whose schema cannot be read is skipped and logged."""
+    chars = []
+    for w in ACCOUNT_WORLDS:
+        try:
+            town_names = {t["id"]: t["name"] for t in towns(w)}
+            rows = q(f"""SELECT name, level, vocation, town_id, lastlogin,
+                       (SELECT count(*) FROM {w.sql}.players_online o WHERE o.player_id = p.id) online
+                       FROM {w.sql}.players p WHERE account_id=%s AND deletion=0""", (aid,))
+        except pymysql.MySQLError as err:
+            log.warning("Account page: could not read world %r (schema %s): %s",
+                        w.name, w.schema, type(err).__name__)
+            continue
+        for row in rows:
+            row["world"] = w.name
+            row["town_name"] = town_names.get(row["town_id"], "?")
+        chars.extend(rows)
+    chars.sort(key=lambda c: -c["level"])
+    return chars
 
 
 # ---- sessions -------------------------------------------------------------
@@ -238,8 +301,10 @@ def server_status():
     return {"online": online, "accounts": accounts, "characters": players}
 
 
-def towns():
-    return q("SELECT id, name FROM towns ORDER BY id")
+def towns(world=None):
+    if world is None:
+        return q("SELECT id, name FROM towns ORDER BY id")
+    return q(f"SELECT id, name FROM {world.sql}.towns ORDER BY id")
 
 
 # ---- pages ----------------------------------------------------------------
@@ -316,10 +381,15 @@ def login(request: Request, username: str = Form(""), password: str = Form(""),
           token: str = Form("")):
     if not csrf_ok(request, token):
         return render(request, "login.html", errors=["Session expired — please try again."])
+    ip = request_ip(request)
+    if not LOGIN_LIMITER.allow(ip, username):
+        return render(request, "login.html", errors=[ratelimit.MESSAGE])
     acc = q("SELECT id, password FROM accounts WHERE name=%s OR email=%s",
             (username.strip(), username.strip()), one=True)
     if not acc or not hmac.compare_digest(acc["password"], sha1(password)):
+        LOGIN_LIMITER.failed(ip, username)
         return render(request, "login.html", errors=["Wrong account name/email or password."])
+    LOGIN_LIMITER.succeeded(ip, username)
     return login_response("/account", acc["id"], get_session(request).get("sid"))
 
 
@@ -335,12 +405,7 @@ def account_page(request: Request, welcome: int = 0):
     acc = account_of(request)
     if not acc:
         return RedirectResponse("/login", status_code=303)
-    chars = q("""SELECT name, level, vocation, town_id, lastlogin,
-                 (SELECT count(*) FROM players_online o WHERE o.player_id = players.id) online
-                 FROM players WHERE account_id=%s AND deletion=0 ORDER BY level DESC""",
-              (acc["id"],))
-    return render(request, "account.html", chars=chars, welcome=welcome,
-                  towns={t["id"]: t["name"] for t in towns()})
+    return render(request, "account.html", chars=account_characters(acc["id"]), welcome=welcome)
 
 
 @app.post("/account/password", response_class=HTMLResponse)
@@ -360,49 +425,101 @@ def change_password(request: Request, current: str = Form(""), new: str = Form("
     elif new != new2:
         err = "New passwords do not match."
     if err:
-        chars = q("SELECT name, level, vocation, town_id, lastlogin, 0 online FROM players WHERE account_id=%s AND deletion=0", (acc["id"],))
-        return render(request, "account.html", chars=chars, welcome=0, pw_error=err,
-                      towns={t["id"]: t["name"] for t in towns()})
+        return render(request, "account.html", chars=account_characters(acc["id"]), welcome=0,
+                      pw_error=err)
     q("UPDATE accounts SET password=%s WHERE id=%s", (sha1(new), acc["id"]))
+    revoke_sessions(acc["id"])
     return RedirectResponse("/account?pwchanged=1", status_code=303)
 
 
+def creation_worlds():
+    """The worlds a character can be made on: every world in the list, or none
+    while the list is broken (a name could not be checked on every world)."""
+    return WORLDS.worlds if WORLDS.ok else ()
+
+
+def world_towns(world):
+    if not world:
+        return []
+    try:
+        return towns(world)
+    except pymysql.MySQLError as err:
+        log.warning("Character creation: could not read towns of world %r (schema %s): %s",
+                    world.name, world.schema, type(err).__name__)
+        return []
+
+
 @app.get("/character/create", response_class=HTMLResponse)
-def create_char_form(request: Request):
+def create_char_form(request: Request, world: int = -1):
     if not account_of(request):
         return RedirectResponse("/login", status_code=303)
-    return form_page(request, "create_character.html", errors=[], towns=towns(), form={})
+    choices = creation_worlds()
+    chosen = world_or_none(world) or (choices[0] if choices else None)
+    errors = [] if choices else ["Character creation is unavailable right now. Please try again later."]
+    return form_page(request, "create_character.html", errors=errors, towns=world_towns(chosen),
+                     worlds=choices, form={"world": chosen.id if chosen else None})
 
 
 @app.post("/character/create", response_class=HTMLResponse)
 def create_char(request: Request, name: str = Form(""), vocation: int = Form(1),
-                sex: int = Form(1), town: int = Form(1), token: str = Form("")):
+                sex: int = Form(1), town: int = Form(1), world: int = Form(-1),
+                token: str = Form("")):
     acc = account_of(request)
     if not acc:
         return RedirectResponse("/login", status_code=303)
     errors = []
     name = re.sub(r"\s+", " ", name.strip()).title()
-    town_row = q("SELECT id, posx, posy, posz FROM towns WHERE id=%s", (town,), one=True)
+    choices = creation_worlds()
+    target = world_or_none(world)
+    town_row = None
+    if target:
+        try:
+            town_row = q(f"SELECT id, posx, posy, posz FROM {target.sql}.towns WHERE id=%s",
+                         (town,), one=True)
+        except pymysql.MySQLError as err:
+            log.warning("Character creation: could not read towns of world %r: %s",
+                        target.name, type(err).__name__)
+            errors.append("That world is unavailable right now. Please try again later.")
     if not csrf_ok(request, token):
         errors.append("Session expired — please try again.")
+    if not choices:
+        errors.append("Character creation is unavailable right now. Please try again later.")
+    elif not target:
+        errors.append("Pick a world.")
     if not re.fullmatch(r"[a-zA-Z][a-zA-Z ]{1,28}[a-zA-Z]", name):
         errors.append("Name must be 3–30 letters (spaces allowed in the middle).")
     if vocation not in (1, 2, 3, 4):
         errors.append("Pick a vocation.")
     if sex not in (0, 1):
         errors.append("Pick a sex.")
-    if not town_row:
+    if target and not errors and not town_row:
         errors.append("Pick a town.")
-    if not errors and q("SELECT id FROM players WHERE name=%s", (name,), one=True):
-        errors.append("That name is taken.")
-    if not errors and len(q("SELECT id FROM players WHERE account_id=%s AND deletion=0", (acc["id"],))) >= 10:
-        errors.append("Character limit reached (10).")
+    if not errors:
+        # A name is refused if ANY world has it, so /character/<name> stays
+        # unambiguous; the limit counts the account's characters on every
+        # world. A world that cannot be read fails closed.
+        try:
+            taken = any(q(f"SELECT id FROM {w.sql}.players WHERE name=%s", (name,), one=True)
+                        for w in choices)
+            owned = sum(q(f"SELECT count(*) c FROM {w.sql}.players WHERE account_id=%s AND deletion=0",
+                          (acc["id"],), one=True)["c"] for w in choices)
+        except pymysql.MySQLError as err:
+            log.warning("Character creation: could not check every world: %s", type(err).__name__)
+            errors.append("Character creation is unavailable right now. Please try again later.")
+        else:
+            if taken:
+                errors.append("That name is taken.")
+            elif owned >= 10:
+                errors.append("Character limit reached (10).")
     if errors:
-        return render(request, "create_character.html", errors=errors, towns=towns(),
-                      form={"name": name, "vocation": vocation, "sex": sex, "town": town})
+        return render(request, "create_character.html", errors=errors, towns=world_towns(target),
+                      worlds=choices,
+                      form={"name": name, "vocation": vocation, "sex": sex, "town": town,
+                            "world": target.id if target else None})
     looktype = 128 if sex == 1 else 136
     # Level-8 template mirrored from a Znote-created character verified in-game.
-    q("""INSERT INTO players
+    with db() as conn, conn.cursor() as cur:
+        cur.execute(f"""INSERT INTO {target.sql}.players
          (name, group_id, account_id, level, vocation, health, healthmax, experience,
           lookbody, lookfeet, lookhead, looklegs, looktype, lookaddons, direction,
           maglevel, mana, manamax, manaspent, soul, town_id, posx, posy, posz,
@@ -419,9 +536,13 @@ def create_char(request: Request, name: str = Form(""), vocation: int = Form(1),
                  '', 470, %s, 0, 0, 1, 0, 0, 0,
                  0, 0, 0, 0, 43200, -1, 2520,
                  10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0)""",
-      (name, acc["id"], vocation, looktype, town_row["id"],
-       town_row["posx"], town_row["posy"], town_row["posz"], sex))
-    pid = q("SELECT id FROM players WHERE name=%s", (name,), one=True)["id"]
+                    (name, acc["id"], vocation, looktype, town_row["id"],
+                     town_row["posx"], town_row["posy"], town_row["posz"], sex))
+        pid = cur.lastrowid
+    if target.schema != HOME_SCHEMA:
+        # The legacy site (znote_players) and this site's character page only
+        # know the home world, so a character elsewhere goes back to the account.
+        return RedirectResponse("/account", status_code=303)
     q("INSERT INTO znote_players (player_id, created, hide_char, comment) VALUES (%s, %s, 0, '')",
       (pid, int(time.time())))
     return RedirectResponse(f"/character/{name}", status_code=303)
@@ -878,6 +999,7 @@ def admin_password(request: Request, aid: int, password: str = Form(""), token: 
     if not 6 <= len(password) <= 29:
         return back(where, bad="A password has to be 6 to 29 characters.")
     q("UPDATE accounts SET password=%s WHERE id=%s", (sha1(password), aid))
+    revoke_sessions(aid)
     admin_log(acc, "account.password", f"account {aid}", "reset")
     return back(where, msg="Password reset. Tell the owner to change it once they are in.")
 
@@ -904,6 +1026,7 @@ def admin_ban(request: Request, aid: int, reason: str = Form(""), days: int = Fo
          ON DUPLICATE KEY UPDATE reason=VALUES(reason), banned_at=VALUES(banned_at),
                                  expires_at=VALUES(expires_at), banned_by=VALUES(banned_by)""",
       (aid, reason, now, expires, acc["id"]))
+    revoke_sessions(aid)
     admin_log(acc, "account.ban", f"account {aid}",
               f"{reason} ({'permanent' if not expires else f'{days} days'})")
     return back(where, msg="Account banned.")
@@ -990,6 +1113,11 @@ async def client_service(request: Request):
         body = await request.json()
     except ValueError:
         body = {}
+    return client_service_reply(body)
+
+
+def client_service_reply(body):
+    """The answer to one launcher request, whichever route it came in on."""
     kind = (body or {}).get("type", "")
     if kind == "cacheinfo":
         online = q("SELECT count(*) c FROM players_online", one=True)["c"]
@@ -1015,3 +1143,24 @@ def api_status():
     return JSONResponse({**server_status(), "world": WORLD_NAME,
                          "host": GAME_HOST, "login": LOGIN_PORT, "game": GAME_PORT,
                          "protocol": "15.25"})
+
+
+# ---- the game client's login ---------------------------------------------
+# The client logs in over plain HTTP (OTClient httpLogin) through a proxy on
+# port 7171 that rewrites every POST to this path; /login is the web form's.
+# Answers are always HTTP 200 JSON, errors included, as the client expects.
+@app.post("/api/login")
+async def client_login(request: Request):
+    body = bytearray()
+    async for chunk in request.stream():
+        body += chunk
+        if len(body) > clientlogin.MAX_BODY:
+            break
+    data, refused = CLIENT_LOGIN.parse(bytes(body), request.headers.get("content-type", ""))
+    if refused:
+        reply = refused
+    elif data.get("type") == "login":
+        reply = await run_in_threadpool(CLIENT_LOGIN.login, data, request_ip(request))
+    else:
+        return await run_in_threadpool(client_service_reply, data)
+    return JSONResponse(reply, headers={"Cache-Control": "no-store"})

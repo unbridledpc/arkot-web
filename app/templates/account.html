@@ -9,13 +9,14 @@
 	{% if not chars %}<p>No characters yet.</p>{% endif %}
 	{% if chars %}
 	<table class="tbl">
-		<tr><th>Name</th><th>Level</th><th>Vocation</th><th>Residence</th><th>Last login</th></tr>
+		<tr><th>Name</th><th>World</th><th>Level</th><th>Vocation</th><th>Residence</th><th>Last login</th></tr>
 		{% for c in chars %}
 		<tr>
 			<td><a href="/character/{{ c.name }}">{{ c.name }}</a>{% if c.online %} <span class="dot on" title="online"></span>{% endif %}</td>
+			<td>{{ c.world }}</td>
 			<td class="num">{{ c.level }}</td>
 			<td>{{ vocname(c.vocation) }}</td>
-			<td>{{ towns.get(c.town_id, '?') }}</td>
+			<td>{{ c.town_name }}</td>
 			<td>{{ c.lastlogin | timestamp }}</td>
 		</tr>
 		{% endfor %}

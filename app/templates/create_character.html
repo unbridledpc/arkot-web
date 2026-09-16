@@ -6,6 +6,11 @@
 {% call box('Your new character') %}
 	{{ show_errors(errors) }}
 	<form method="post" action="/character/create" class="stack">
+		<label>World
+			<select name="world" onchange="location.href = '/character/create?world=' + encodeURIComponent(this.value)">
+				{% for w in worlds %}<option value="{{ w.id }}" {% if form.world == w.id %}selected{% endif %}>{{ w.name }}</option>{% endfor %}
+			</select>
+		</label>
 		<label>Name <input name="name" value="{{ form.name or '' }}" required maxlength="30"></label>
 		<label>Vocation
 			<select name="vocation">
