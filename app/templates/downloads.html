@@ -2,24 +2,66 @@
 {% from "_ui.html" import box, title %}
 {% block title %}Download{% endblock %}
 {% block content %}
-{{ title('Download the client') }}
-{% call box('Game client') %}
-	<p>Arkenfall is played with the free, open-source <strong>mehah OTClient</strong> using the modern 15.25 graphics. It runs on Windows and Linux.</p>
-	<ol class="steps">
-		<li>Download the latest release from <a href="https://github.com/mehah/otclient/releases">mehah/otclient releases</a>.</li>
-		<li>Start it once; it fetches the 15.25 assets on its own.</li>
-		<li>On the Enter Game screen enable <em>HTTP login</em>, set the server to <code>http://{{ game_host }}:{{ login_port }}/login</code> and the client version to <code>15.25</code>.</li>
-		<li>Log in with your <strong>email</strong> and account password.</li>
-	</ol>
-	<p class="fineprint" style="margin-bottom:0">A preconfigured Arkenfall client bundle is in preparation. Until then these four steps get you in.</p>
+{{ title('Download the client', 'version ' ~ client.version if client.version else '') }}
+
+{% call box('Arkenfall client', client.base ~ ' · protocol ' ~ client.protocol if client.base else '') %}
+	<p>Everything you need to play is in one folder: unpack it, run it, log in. There is
+	nothing to install and nothing to configure — the client already knows where Arkenfall is.</p>
+	{% for p in client.packages %}
+	<div class="dl">
+		<div>
+			<b>{{ p.platform }}</b>
+			<span class="fineprint">{{ p.requires }} · {{ p.bytes | megabytes }}</span>
+		</div>
+		{% if p.ready %}
+		<a class="btn big" href="/files/{{ p.file }}">Download</a>
+		{% else %}
+		<span class="btn big ghost" aria-disabled="true">Preparing</span>
+		{% endif %}
+	</div>
+	{% else %}
+	<p class="alert bad" style="margin-bottom:0">The client packages are being rebuilt. Check back shortly.</p>
+	{% endfor %}
+	<p class="fineprint" style="margin-bottom:0">Released {{ client.released }}. The download is the game client only:
+	the graphics and sounds (about 250 MB) are fetched by the client itself the first time you start it.</p>
 {% endcall %}
+
+{% call box('Getting started') %}
+	<ol class="steps">
+		<li><a href="/register">Create an account</a>, then <a href="/character/create">create a character</a>.</li>
+		<li>Unpack the download into a folder of your own — not inside the archive, and not in Program Files.</li>
+		<li>Start <code>Arkenfall.exe</code> (Windows) or <code>./arkenfall</code> (Linux). The first start
+			asks to download the game graphics; say yes and wait for the bar to fill.</li>
+		<li>On the Enter Game screen the server is already selected. Log in with your
+			<strong>e-mail address</strong> and your account password.</li>
+	</ol>
+	<p class="fineprint" style="margin-bottom:0">Setting it up by hand instead? HTTP login,
+	server <code>http://{{ game_host }}:{{ login_port }}/login</code>, client version <code>15.25</code>.</p>
+{% endcall %}
+
 {% call box('System requirements') %}
 	<table class="tbl kv">
-		<tr><th>Operating system</th><td>Windows 10 or newer, or a current Linux distribution</td></tr>
+		<tr><th>Operating system</th><td>Windows 10 or newer, or a current 64-bit Linux desktop</td></tr>
 		<tr><th>Graphics</th><td>OpenGL 2.0 capable card</td></tr>
 		<tr><th>Memory</th><td>2 GB RAM</td></tr>
-		<tr><th>Disk space</th><td>About 1 GB including assets</td></tr>
+		<tr><th>Disk space</th><td>About 400 MB once the graphics are downloaded</td></tr>
 		<tr><th>Connection</th><td>Any broadband connection</td></tr>
 	</table>
+{% endcall %}
+
+{% call box('What you are downloading') %}
+	<p>The Arkenfall client is a build of <strong>OTClient</strong>, the free open-source game client,
+	under the MIT licence — the licence and credits ship inside the folder. Arkenfall brands it,
+	fills in the server, and carries a handful of interface fixes. It ships <strong>no bot module</strong>:
+	<a href="/rules">the rules</a> ban automation, so the official download does not hand you one.</p>
+	{% if client.packages %}
+	<table class="tbl kv">
+		{% for p in client.packages %}
+		<tr><th>{{ p.file }}</th><td class="hash">SHA-256 {{ p.sha256 }}</td></tr>
+		{% endfor %}
+	</table>
+	<p class="fineprint" style="margin-bottom:0">Check a download before you run it —
+	<code>certutil -hashfile &lt;file&gt; SHA256</code> on Windows, <code>sha256sum &lt;file&gt;</code> on Linux.</p>
+	{% endif %}
 {% endcall %}
 {% endblock %}

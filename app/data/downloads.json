@@ -1,0 +1,22 @@
+{
+  "version": "1.0",
+  "base": "OTClient 4.1",
+  "protocol": "15.25",
+  "released": "2026-09-15",
+  "packages": [
+    {
+      "platform": "Windows",
+      "file": "arkenfall-client-1.0-windows-x64.zip",
+      "bytes": 45009149,
+      "sha256": "9013476a5a4ce55b1ddefb0ed06db2d0164c9a6db7f49a09203d4d0ee8c71e6d",
+      "requires": "Windows 10 or newer, 64-bit"
+    },
+    {
+      "platform": "Linux",
+      "file": "arkenfall-client-1.0-linux-x64.tar.gz",
+      "bytes": 43792185,
+      "sha256": "233a2e68999fecbe65b56bb248a21ff70c1de79c2945f7068529c3227155be77",
+      "requires": "64-bit Linux desktop with OpenGL 2.0"
+    }
+  ]
+}

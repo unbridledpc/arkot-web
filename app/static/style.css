@@ -512,6 +512,26 @@ input:focus, select:focus { outline: 2px solid rgba(217, 180, 90, 0.6); outline-
 }
 .foot a { color: var(--gold); }
 
+/* ---- downloads -------------------------------------------------------- */
+
+.dl {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 14px;
+	padding: 12px 14px;
+	margin: 10px 0;
+	background: linear-gradient(180deg, var(--parch-100), var(--parch-200));
+	border: 1px solid var(--parch-400);
+	border-left: 4px solid var(--gold-dark);
+	border-radius: 3px;
+}
+.dl b { display: block; font: 700 16px/1.2 var(--display); letter-spacing: .5px; }
+.dl .fineprint { display: block; margin-top: 2px; }
+.dl .btn.ghost { cursor: default; opacity: .75; }
+
+.hash { font-family: ui-monospace, 'DejaVu Sans Mono', monospace; font-size: 12px; word-break: break-all; }
+
 /* ---- responsive ------------------------------------------------------- */
 
 @media (max-width: 900px) {
@@ -523,6 +543,7 @@ input:focus, select:focus { outline: 2px solid rgba(217, 180, 90, 0.6); outline-
 	.banner { flex-direction: column; text-align: center; }
 	.banner .worldline { text-align: center; }
 	.cols3 { columns: 2; }
+	.dl { flex-direction: column; align-items: stretch; text-align: center; }
 }
 @media (max-width: 560px) {
 	.menu, .side { grid-template-columns: 1fr; }

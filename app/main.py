@@ -45,7 +45,7 @@ VOCATIONS = {0: "None", 1: "Sorcerer", 2: "Druid", 3: "Paladin", 4: "Knight",
 SPELLS = json.loads((pathlib.Path(__file__).parent / "data" / "spells.json").read_text())
 GROUP_NAMES = {2: "Tutor", 3: "Senior Tutor", 4: "Gamemaster", 5: "Community Manager", 6: "God"}
 HIGHSCORE_CATS = {
-    "experience": ("Experience", "experience", "level"),
+    "experience": ("Experience", "experience", "experience"),
     "maglevel": ("Magic Level", "maglevel", "maglevel"),
     "sword": ("Sword Fighting", "skill_sword", "skill_sword"),
     "axe": ("Axe Fighting", "skill_axe", "skill_axe"),
@@ -62,7 +62,7 @@ MENU = [
     ("community", "Community", "C", [
         ("Highscores", "/highscores"), ("Who is online", "/online"), ("Character search", "/search"),
         ("Latest deaths", "/deaths"), ("Kill statistics", "/killstats"), ("Guilds", "/guilds"),
-        ("Houses", "/houses"), ("Team", "/team"), ("Forum", "/legacy/forum.php")]),
+        ("Houses", "/houses"), ("Team", "/team")]),
     ("library", "Library", "L", [("Server information", "/server"), ("Spells", "/spells"), ("Rules", "/rules")]),
     ("support", "Support", "S", [("Helpdesk", "/legacy/helpdesk.php"), ("Lost account", "/legacy/sub.php?page=recover"), ("Rules", "/rules")]),
     ("account", "Account", "A", [("Account management", "/account"), ("Create account", "/register"), ("Create character", "/character/create"), ("Log in", "/login")]),
@@ -81,11 +81,20 @@ def active_section(path: str) -> str:
     return "news"
 
 
+# Client packages: too large for git, so they sit beside the app and are served
+# straight off disk. DOWNLOADS_DIR is the deploy's copy; the manifest that
+# describes them ships with the code.
+DOWNLOADS_DIR = pathlib.Path(os.environ.get("DOWNLOADS_DIR", "downloads"))
+DOWNLOADS_DIR.mkdir(parents=True, exist_ok=True)
+DOWNLOADS_FILE = pathlib.Path(__file__).parent / "data" / "downloads.json"
+
 app = FastAPI(title=SITE_NAME)
 app.mount("/static", StaticFiles(directory="app/static"), name="static")
+app.mount("/files", StaticFiles(directory=DOWNLOADS_DIR), name="files")
 templates = Jinja2Templates(directory="app/templates")
 templates.env.globals.update(vocname=lambda v: VOCATIONS.get(v, "?"), menu=MENU,
                              active_section=active_section, world_name=WORLD_NAME, site_name=SITE_NAME)
+templates.env.filters["megabytes"] = lambda n: ("%.0f MB" % (n / 1048576)) if n else "—"
 templates.env.filters["timestamp"] = (
     lambda t: time.strftime("%b %d, %Y", time.localtime(int(t))) if t else "never")
 
@@ -490,9 +499,31 @@ def server(request: Request):
                   game_host=GAME_HOST, login_port=LOGIN_PORT, game_port=GAME_PORT)
 
 
+def client_packages():
+    """The manifest, checked against what is actually on disk.
+
+    A package whose file is missing is still listed, marked as unavailable, so a
+    half-finished upload reads as "not ready yet" instead of a broken link.
+    """
+    try:
+        manifest = json.loads(DOWNLOADS_FILE.read_text())
+    except (OSError, ValueError):
+        return {"version": "", "base": "", "packages": []}
+    for pkg in manifest.get("packages", []):
+        path = DOWNLOADS_DIR / pkg["file"]
+        try:
+            pkg["bytes"] = path.stat().st_size
+            pkg["ready"] = True
+        except OSError:
+            pkg["bytes"] = pkg.get("bytes", 0)
+            pkg["ready"] = False
+    return manifest
+
+
 @app.get("/downloads", response_class=HTMLResponse)
 def downloads(request: Request):
-    return render(request, "downloads.html", game_host=GAME_HOST, login_port=LOGIN_PORT)
+    return render(request, "downloads.html", client=client_packages(),
+                  game_host=GAME_HOST, login_port=LOGIN_PORT)
 
 
 @app.get("/rules", response_class=HTMLResponse)

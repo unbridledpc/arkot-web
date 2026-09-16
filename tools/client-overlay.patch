@@ -1,0 +1,366 @@
+--- a/init.lua
++++ b/init.lua
+@@ -4,7 +4,7 @@
+ -- updater
+ Services = {
+     --updater = "http://localhost/api/updater.php", --./updater
+-    --status = "http://localhost/login.php", --./client_entergame | ./client_topmenu
++    status = "https://arkenfall.org/api/client", --./client_entergame | ./client_topmenu
+     --websites = "http://localhost/?subtopic=accountmanagement", --./client_entergame "Forgot password and/or email"
+     --createAccount = "http://localhost/clientcreateaccount.php", --./client_entergame -- createAccount.lua
+     --getCoinsUrl = "http://localhost/?subtopic=shop&step=terms", --./game_market
+@@ -17,9 +17,12 @@
+         allowMissingPackedRawFallback = true,
+         preferArchive = true,
+         fallbackToArchiveOnManifestFailure = false,
+-        installArchiveExtras = true,
++        -- The asset archive also carries the official client's own bin/ folder,
++        -- 400 MB that this client never loads. Arkenfall takes the graphics and
++        -- the sounds and leaves the rest on the shelf.
++        installArchiveExtras = false,
+         archiveExtraPrefixes = { "bin" },
+-        installPackagedFiles = true
++        installPackagedFiles = false
+     }, -- ./client_assets
+ }
+ 
+@@ -63,43 +66,20 @@
+     --
+     Servers_init = {
+ 
+-        -- Local login server
+-        ---
+-        -- Configuration for local login server.
+-        -- @class table
+-        -- @name local_login
+-        -- @field port Port used for HTTP connection
+-        -- @field protocol Protocol identifier used by the application
+-        -- @field httpLogin Enables HTTP-based login on the server
+-        -- @field useAuthenticator Enables additional authentication layer
+-        --
+-        ["http://127.0.0.1/login.php"] = {
+-            port = 80,
+-            protocol = 1511,
++        -- Arkenfall. The login webservice answers over HTTP on 7171 and hands the
++        -- client the game host and port (7172); nothing here needs editing to play.
++        ["http://bt.tibtool.com:7171/login"] = {
++            port = 7172,
++            protocol = 1525,
+             httpLogin = true,
+             useAuthenticator = false
+-        },
+-
+-        -- External server
+-        ---
+-        -- Configuration for external server ip.net.
+-        -- @class table
+-        -- @name ip_net
+-        -- @field port TCP port used for connection
+-        -- @field protocol Protocol identifier used by the server
+-        -- @field httpLogin Indicates if the server allows HTTP login
+-        --
+-        ["ip.net"] = {
+-            port = 7171,
+-            protocol = 860,
+-            httpLogin = false
+         }
+     }
+ end
+ 
+-g_app.setName("OTClient - Redemption");
+-g_app.setCompactName("otclient");
+-g_app.setOrganizationName("otcr");
++g_app.setName("Arkenfall");
++g_app.setCompactName("arkenfall");
++g_app.setOrganizationName("arkenfall");
+ 
+ g_app.hasUpdater = function()
+     return (Services.updater and Services.updater ~= "" and g_modules.getModule("updater"))
+--- a/modules/game_cyclopedia/tab/bestiary/bestiary.lua
++++ b/modules/game_cyclopedia/tab/bestiary/bestiary.lua
+@@ -121,7 +121,7 @@
+ end
+ 
+ function showBestiary()
+-    UI = g_ui.loadUI("bestiary", contentContainer)
++    UI = g_ui.loadUI("/game_cyclopedia/tab/bestiary/bestiary", contentContainer)
+     UI:show()
+ 
+     UI.ListBase.CategoryList:setVisible(true)
+--- a/modules/game_cyclopedia/tab/boss_slots/boss_slots.lua
++++ b/modules/game_cyclopedia/tab/boss_slots/boss_slots.lua
+@@ -1,7 +1,7 @@
+ local UI = nil
+ 
+ function showBossSlot()
+-    UI = g_ui.loadUI("boss_slots", contentContainer)
++    UI = g_ui.loadUI("/game_cyclopedia/tab/boss_slots/boss_slots", contentContainer)
+     UI:show()
+     UI.RightBase.LockLabel:setText("Unlocks at 1500 Boss Points")
+     g_game.requestBossSlootInfo()
+--- a/modules/game_cyclopedia/tab/bosstiary/bosstiary.lua
++++ b/modules/game_cyclopedia/tab/bosstiary/bosstiary.lua
+@@ -1,6 +1,6 @@
+ local UI = nil
+ function showBosstiary()
+-    UI = g_ui.loadUI("bosstiary", contentContainer)
++    UI = g_ui.loadUI("/game_cyclopedia/tab/bosstiary/bosstiary", contentContainer)
+     UI:show()
+     Cyclopedia.Bosstiary.Page = 1
+     g_game.requestBosstiaryInfo()
+--- a/modules/game_cyclopedia/tab/character/character.lua
++++ b/modules/game_cyclopedia/tab/character/character.lua
+@@ -58,7 +58,7 @@
+ end
+ 
+ function showCharacter()
+-    characterPanel = g_ui.loadUI("character", contentContainer)
++    characterPanel = g_ui.loadUI("/game_cyclopedia/tab/character/character", contentContainer)
+     UI = characterPanel
+     characterPanel:show()
+     UI.selectedOption = "InfoBase"
+--- a/modules/game_cyclopedia/tab/charms/charms.lua
++++ b/modules/game_cyclopedia/tab/charms/charms.lua
+@@ -265,7 +265,7 @@
+ local isModernUI = false
+ function showCharms()
+     isModernUI = g_game.getClientVersion() >= 1410
+-    local UIUX = isModernUI and "charms1410" or "charms"
++    local UIUX = isModernUI and "/game_cyclopedia/tab/charms/charms1410" or "/game_cyclopedia/tab/charms/charms"
+     UI = g_ui.loadUI(UIUX, contentContainer)
+     UI:show()
+     g_game.requestBestiary()
+--- a/modules/game_cyclopedia/tab/house/house.lua
++++ b/modules/game_cyclopedia/tab/house/house.lua
+@@ -1,7 +1,7 @@
+ local UI = nil
+ 
+ function showHouse()
+-    UI = g_ui.loadUI("house", contentContainer)
++    UI = g_ui.loadUI("/game_cyclopedia/tab/house/house", contentContainer)
+     UI:show()
+     UI.LateralBase.LayerScrollbar.decrementButton:setVisible(false)
+     UI.LateralBase.LayerScrollbar.incrementButton:setVisible(false)
+--- a/modules/game_cyclopedia/tab/items/items.lua
++++ b/modules/game_cyclopedia/tab/items/items.lua
+@@ -617,7 +617,7 @@
+ end
+ 
+ function showItems()
+-    UI = g_ui.loadUI("items", contentContainer)
++    UI = g_ui.loadUI("/game_cyclopedia/tab/items/items", contentContainer)
+     UI:show()
+     Cyclopedia.Items.VocFilter = false
+     Cyclopedia.Items.LevelFilter = false
+--- a/modules/game_cyclopedia/tab/map/map.lua
++++ b/modules/game_cyclopedia/tab/map/map.lua
+@@ -77,7 +77,7 @@
+ 
+ function showMap()
+     g_minimap.saveOtmm('/minimap.otmm')
+-    UI = g_ui.loadUI("map", contentContainer)
++    UI = g_ui.loadUI("/game_cyclopedia/tab/map/map", contentContainer)
+     UI:show()
+     controllerCyclopedia:registerEvents(LocalPlayer, {
+         onPositionChange = Cyclopedia.onUpdateCameraPosition
+--- a/modules/game_outfit/outfit.lua
++++ b/modules/game_outfit/outfit.lua
+@@ -335,7 +335,7 @@
+ 
+     }
+ 
+-    window = g_ui.displayUI("outfitwindow")
++    window = g_ui.displayUI("/game_outfit/outfitwindow")
+ 
+     floor = window.preview.panel.floor
+     for i = 1, floorTiles * floorTiles do
+--- a/modules/game_shop/game_shop.lua
++++ b/modules/game_shop/game_shop.lua
+@@ -90,7 +90,7 @@
+     if gameShopWindow then
+         return
+     end
+-    gameShopWindow = g_ui.displayUI("game_shop")
++    gameShopWindow = g_ui.displayUI("/game_shop/game_shop")
+     gameShopWindow:hide()
+ 
+     local protocolGame = g_game.getProtocolGame()
+@@ -663,7 +663,7 @@
+         return
+     end
+ 
+-    changeNameWindow = g_ui.displayUI("changename")
++    changeNameWindow = g_ui.displayUI("/game_shop/changename")
+ end
+ 
+ function confirmChangeName()
+@@ -788,7 +788,7 @@
+ 
+ function createTransferWindow()
+     if not transferWindow then
+-        transferWindow = g_ui.displayUI("giftcoins")
++        transferWindow = g_ui.displayUI("/game_shop/giftcoins")
+         transferWindow:hide()
+     end
+ end
+--- a/modules/game_stash/game_stash.lua
++++ b/modules/game_stash/game_stash.lua
+@@ -657,7 +657,7 @@
+     if version < 1180 then
+         return
+     end
+-    g_ui.importStyle('game_stash')
++    g_ui.importStyle('/game_stash/game_stash')
+     stashController:registerEvents(g_game, {
+         onSupplyStashEnter = onSupplyStashEnter
+     })
+--- a/modules/client_entergame/characterlist.lua
++++ b/modules/client_entergame/characterlist.lua
+@@ -473,7 +473,7 @@
+ local function onLoginWait(message, time)
+     CharacterList.destroyLoadBox()
+ 
+-    waitingWindow = g_ui.displayUI('waitinglist')
++    waitingWindow = g_ui.displayUI('/client_entergame/waitinglist')
+ 
+     local label = waitingWindow:getChildById('infoLabel')
+     label:setText(message)
+@@ -679,8 +679,11 @@
+ end
+ 
+ function CharacterList.create(characters, account, otui)
++    -- absolute paths: a bare name can resolve against '/' while the render thread is busy
+     if not otui then
+-        otui = 'characterlist'
++        otui = '/client_entergame/characterlist'
++    elseif not otui:find('/', 1, true) then
++        otui = '/client_entergame/' .. otui
+     end
+ 
+     if charactersWindow then
+--- a/modules/client_entergame/entergame.lua
++++ b/modules/client_entergame/entergame.lua
+@@ -346,7 +346,7 @@
+         if g_modules.getModule("client_bottommenu"):isLoaded()  then
+             EnterGame.postCacheInfo()
+             EnterGame.postEventScheduler()
+-            -- EnterGame.postShowOff() -- myacc/znote no send login.php
++            EnterGame.postShowOff()
+             EnterGame.postShowCreatureBoost()
+         end
+     end
+--- a/modules/game_containers/containers.lua
++++ b/modules/game_containers/containers.lua
+@@ -1163,8 +1163,17 @@
+     end
+     local itemWidget = container.itemsPanel:getChildById('item' .. slot)
+     itemWidget:setItem(item)
+-    ItemsDatabase.setRarityItem(itemWidget, item)
+-    ItemsDatabase.setTier(itemWidget, item)
++    -- the rarity frame and tier badge belong to the item that was there; refresh or clear them
++    if item then
++        ItemsDatabase.setRarityItem(itemWidget, item)
++        ItemsDatabase.setTier(itemWidget, item)
++    else
++        itemWidget:setImageSource('/images/ui/item')
++        itemWidget:setImageClip(torect('0 0 0 0'))
++        if itemWidget.tier then
++            itemWidget.tier:setVisible(false)
++        end
++    end
+     itemWidget:setShowDuration(g_game.getFeature(GameThingClock) and modules.client_options.getOption('showExpiryInContainers'))
+     itemWidget:setShowCharges(g_game.getFeature(GameThingCounter) and modules.client_options.getOption('showExpiryInContainers'))
+     
+--- a/modules/game_interface/interface.otmod
++++ b/modules/game_interface/interface.otmod
+@@ -51,7 +51,7 @@
+     - game_quickloot
+     - game_cyclopedia
+     - game_creatureinformation
+-    - game_rewardwall
++  # - game_rewardwall  # no daily rewards on the server yet
+     - game_forge
+     - game_tutorial
+     - game_inspect
+--- a/modules/client_background/background.lua
++++ b/modules/client_background/background.lua
+@@ -11,10 +11,7 @@
+     background:lower()
+ 
+     clientVersionLabel = background:getChildById('clientVersionLabel')
+-    clientVersionLabel:setText(g_app.getName() .. ' ' .. g_app.getVersion() .. '\n' .. 'Rev  ' ..
+-                                   g_app.getBuildRevision() .. ' (' .. g_app.getBuildCommit() .. ')\n' .. 'Built on ' ..
+-                                   g_app.getBuildDate() .. '\n' .. g_app.getBuildCompiler() .. ' - ' ..
+-                                   g_app.getBuildArch())
++    clientVersionLabel:setText('')
+ 
+     if not g_game.isOnline() then
+         addEvent(function()
+@@ -28,7 +25,6 @@
+     connect(g_game, {
+         onGameEnd = show
+     })
+-    startBackgroundEffectLoop() -- start the background effect loop
+ end
+ 
+ function terminate()
+@@ -60,7 +56,6 @@
+ 
+ function show()
+     background:show()
+-    startBackgroundEffectLoop()
+ end
+ 
+ function hideVersionLabel()
+--- a/modules/client_background/background.otui
++++ b/modules/client_background/background.otui
+@@ -22,8 +22,3 @@
+     color: #ffffff
+     font: verdana-11px-monochrome
+ 
+-  UIParticles
+-    id: particles
+-    effect: background-effect
+-    anchors.fill: parent
+-    phantom: true
+\ No newline at end of file
+--- a/modules/client_bottommenu/bottommenu.otui
++++ b/modules/client_bottommenu/bottommenu.otui
+@@ -47,7 +47,7 @@
+     text-auto-resize: true
+     color: #c0c0c0ff
+     margin-bottom: 110
+-    text: OTClient Redemption
++    text: Arkenfall
+     ttf-font: martel
+     ttf-font-size: 90
+     stroke: 2 black
+--- a/modules/gamelib/player.lua
++++ b/modules/gamelib/player.lua
+@@ -156,7 +156,7 @@
+         visibleBar = true,
+         tooltipBar = tr('You are drunk'),
+         tooltip = tr(
+-            "Taverns in RubinOT are popular gathering places where many\nadventurers enjoy relaxing after their wearisome travels with a\npint of cool beer. However, RubinOT's beer is quite strong, so don't be\nsurprised if your character has trouble walking in a straight line for\na while."
++            "Taverns in Arkenfall are popular gathering places where many\nadventurers enjoy relaxing after their wearisome travels with a\npint of cool beer. However, Arkenfall's beer is quite strong, so don't be\nsurprised if your character has trouble walking in a straight line for\na while."
+         )
+     },
+     [10] = {
+@@ -221,7 +221,7 @@
+         visibleBar = true,
+         tooltipBar = tr('You are drowning'),
+         tooltip = tr(
+-            "RubinOT features a special underwater area. Since no one can survive\nwithout fresh air, characters will take damage if they walk\nunderwater without the proper equipment. The only way to survive\nis to leave the water quickly or equip a life-saving diving helmet."
++            "Arkenfall features a special underwater area. Since no one can survive\nwithout fresh air, characters will take damage if they walk\nunderwater without the proper equipment. The only way to survive\nis to leave the water quickly or equip a life-saving diving helmet."
+         )
+     },
+     [15] = {
+@@ -485,7 +485,7 @@
+         visibleBar = true,
+         tooltipBar = tr('You are hungry'),
+         tooltip = tr(
+-            "Characters who are hungry do not regenerate mana or health. To\nfill up your character's stomach, look for something edible, such as\nan apple, bread, or ham. There are plenty of things in RubinOT that\nyour character can eat. Check out stores, search bushes, bake your\nown bread or cake, or defeat creatures to find some delicacies."
++            "Characters who are hungry do not regenerate mana or health. To\nfill up your character's stomach, look for something edible, such as\nan apple, bread, or ham. There are plenty of things in Arkenfall that\nyour character can eat. Check out stores, search bushes, bake your\nown bread or cake, or defeat creatures to find some delicacies."
+         )
+     },
+     -- Hidden entries for specific states not in top 35
