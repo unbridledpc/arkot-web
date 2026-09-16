@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% from "_ui.html" import box, title %}
+{% from "_admin.html" import adminnav, flash, premium_line %}
+{% block title %}Staff · accounts{% endblock %}
+{% block content %}
+{{ title('Accounts', rows | length ~ ' shown') }}
+{{ adminnav('/admin/accounts') }}
+{{ flash(msg, bad) }}
+
+{% call box('Find an account', 'by account name, e-mail or character') %}
+	<form class="questsearch" method="get" action="/admin/accounts">
+		<input name="q" value="{{ search }}" placeholder="arkot, someone@example.com, Arken" autofocus>
+		<button class="btn" type="submit">Search</button>
+		{% if search %}<a class="btn ghost" href="/admin/accounts">Clear</a>{% endif %}
+	</form>
+	{% if not rows %}<p style="margin-bottom:0">Nothing matches that.</p>{% endif %}
+	{% if rows %}
+	<div style="overflow-x:auto">
+	<table class="tbl">
+		<tr><th>Account</th><th>E-mail</th><th>Rank</th><th>Premium</th><th class="num">Coins</th><th class="num">Joined</th></tr>
+		{% for a in rows %}
+		<tr>
+			<td><a href="/admin/account/{{ a.id }}">{{ a.name }}</a></td>
+			<td class="fineprint">{{ a.email }}</td>
+			<td>{{ types.get(a.type, a.type) }}</td>
+			<td>{{ premium_line(a.premium_ends_at, now) }}</td>
+			<td class="num">{{ a.coins }}</td>
+			<td class="num">{{ a.creation | timestamp }}</td>
+		</tr>
+		{% endfor %}
+	</table>
+	</div>
+	{% endif %}
+	{% if not search %}<p class="fineprint" style="margin-bottom:0">Showing the newest accounts. Search to find any other.</p>{% endif %}
+{% endcall %}
+{% endblock %}

@@ -512,6 +512,67 @@ input:focus, select:focus { outline: 2px solid rgba(217, 180, 90, 0.6); outline-
 }
 .foot a { color: var(--gold); }
 
+/* ---- staff pages ------------------------------------------------------ */
+
+.adminnav { margin-bottom: 14px; }
+
+.adminstats {
+	display: grid;
+	grid-template-columns: repeat(4, 1fr);
+	gap: 10px;
+	margin-bottom: 12px;
+}
+.adminstats div {
+	padding: 8px 10px;
+	text-align: center;
+	background: linear-gradient(180deg, var(--parch-100), var(--parch-200));
+	border: 1px solid var(--parch-400);
+	border-radius: 3px;
+}
+.adminstats b { display: block; font: 700 20px/1.1 var(--display); color: var(--wood-700); }
+.adminstats span { font-size: 12px; color: var(--ink-soft); }
+
+.admincols { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.admincols .box { margin-bottom: 0; }
+
+.admingrid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+
+.adminrow {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 12px;
+	padding: 8px 12px;
+	margin: 6px 0;
+	background: var(--parch-100);
+	border: 1px solid var(--parch-400);
+	border-left: 3px solid var(--gold-dark);
+	border-radius: 3px;
+}
+.adminrow b { font: 700 14px/1.3 var(--display); letter-spacing: .3px; }
+.adminrow .fineprint { display: block; }
+.adminrow .adminacts { display: flex; align-items: center; gap: 6px; flex: none; }
+.adminrow .adminacts form { display: flex; align-items: center; gap: 6px; margin: 0; }
+.adminrow .tagline-pill { margin-left: 6px; vertical-align: 1px; }
+
+.logline {
+	padding: 6px 10px;
+	margin: 4px 0;
+	font-size: 13.5px;
+	background: var(--parch-100);
+	border: 1px solid var(--parch-300);
+	border-radius: 3px;
+}
+.logline .what {
+	font-family: ui-monospace, 'DejaVu Sans Mono', monospace;
+	font-size: 12px;
+	color: var(--blood);
+}
+.logline time { float: right; font-size: 12px; color: var(--ink-soft); }
+.logline .fineprint { margin-left: 4px; }
+
+.nowrap { white-space: nowrap; }
+
 /* ---- quests ----------------------------------------------------------- */
 
 .emblem { fill: currentColor; vertical-align: -3px; }
@@ -651,6 +712,9 @@ input:focus, select:focus { outline: 2px solid rgba(217, 180, 90, 0.6); outline-
 	.banner { flex-direction: column; text-align: center; }
 	.banner .worldline { text-align: center; }
 	.cols3 { columns: 2; }
+	.admincols, .admingrid { grid-template-columns: 1fr; }
+	.adminstats { grid-template-columns: repeat(2, 1fr); }
+	.adminrow { flex-direction: column; align-items: stretch; }
 	.dl { flex-direction: column; align-items: stretch; text-align: center; }
 	.questrow .questbody .fineprint {
 		display: -webkit-box;

@@ -10,6 +10,7 @@ import os
 import re
 import secrets
 import time
+import urllib.parse
 
 import json
 import pathlib
@@ -33,6 +34,14 @@ DB = dict(
 )
 SECRET = os.environ["APP_SECRET"]
 signer = URLSafeSerializer(SECRET, salt="arkot-session")
+
+# The site's own staff list, so a mistyped account type can never lock the owner
+# out of his own game; anything the game itself calls a god or a community
+# manager is staff here too.
+ADMIN_EMAILS = {e.strip().lower() for e in
+                os.environ.get("ADMIN_EMAILS", "joshwall488@gmail.com").split(",") if e.strip()}
+ADMIN_ACCOUNT_TYPE = 5
+ADMIN_LOG = pathlib.Path(os.environ.get("ADMIN_LOG", "var/admin-log.jsonl"))
 
 SITE_NAME = "Arkenfall"
 WORLD_NAME = os.environ.get("WORLD_NAME", "Arkenfall")
@@ -83,7 +92,8 @@ def active_section(path: str) -> str:
     if path in SECTION_OF:
         return SECTION_OF[path]
     for prefix, key in (("/character/", "community"), ("/guild/", "community"),
-                        ("/quest/", "library"), ("/account", "account"), ("/news", "news")):
+                        ("/quest/", "library"), ("/account", "account"),
+                        ("/admin", "account"), ("/news", "news")):
         if path.startswith(prefix):
             return key
     return "news"
@@ -136,7 +146,44 @@ def account_of(request: Request):
     s = get_session(request)
     if not s.get("aid"):
         return None
-    return q("SELECT id, name, email, creation FROM accounts WHERE id=%s", (s["aid"],), one=True)
+    acc = q("SELECT id, name, email, creation, type, coins FROM accounts WHERE id=%s",
+            (s["aid"],), one=True)
+    if acc:
+        acc["is_admin"] = is_admin(acc)
+    return acc
+
+
+def is_admin(acc) -> bool:
+    return bool(acc) and (acc.get("type", 1) >= ADMIN_ACCOUNT_TYPE
+                          or (acc.get("email") or "").lower() in ADMIN_EMAILS)
+
+
+def admin_of(request: Request):
+    """The signed-in account, but only if it is allowed to run the place."""
+    acc = account_of(request)
+    return acc if is_admin(acc) else None
+
+
+def admin_log(acc, action: str, target: str = "", detail: str = ""):
+    """Every staff action lands in a file beside the app: who, what, when."""
+    ADMIN_LOG.parent.mkdir(parents=True, exist_ok=True)
+    with ADMIN_LOG.open("a") as fh:
+        fh.write(json.dumps({"at": int(time.time()), "by": acc["name"],
+                             "action": action, "target": target, "detail": detail}) + "\n")
+
+
+def admin_history(limit: int = 200):
+    try:
+        lines = ADMIN_LOG.read_text().splitlines()
+    except OSError:
+        return []
+    out = []
+    for line in reversed(lines[-limit:]):
+        try:
+            out.append(json.loads(line))
+        except ValueError:
+            continue
+    return out
 
 
 def csrf_for(sid: str) -> str:
@@ -579,6 +626,338 @@ def downloads(request: Request):
 @app.get("/rules", response_class=HTMLResponse)
 def rules(request: Request):
     return render(request, "rules.html")
+
+
+# ---- staff pages ----------------------------------------------------------
+# Everything under /admin is gated on admin_of(); a signed-in player who is not
+# staff is sent back to their own account page, and a stranger to the login form.
+ACCOUNT_TYPES = {1: "Player", 2: "Tutor", 3: "Senior tutor", 4: "Gamemaster",
+                 5: "Community manager", 6: "God"}
+PLAYER_GROUPS = {1: "Player", 2: "Tutor", 3: "Senior tutor", 4: "Gamemaster",
+                 5: "Community manager", 6: "God"}
+NEWS_TITLE_MAX = 30       # znote_news.title is varchar(30)
+
+
+def deny(request: Request):
+    """Where a non-admin goes: signed in, back to their account; otherwise log in."""
+    return RedirectResponse("/account" if account_of(request) else "/login", status_code=303)
+
+
+def admin_page(request: Request, template: str, **ctx):
+    ctx.setdefault("msg", "")
+    ctx.setdefault("bad", "")
+    return render(request, template, **ctx)
+
+
+def back(where: str, msg: str = "", bad: str = ""):
+    sep = "&" if "?" in where else "?"
+    if msg:
+        where += f"{sep}msg={urllib.parse.quote(msg)}"
+    elif bad:
+        where += f"{sep}bad={urllib.parse.quote(bad)}"
+    return RedirectResponse(where, status_code=303)
+
+
+@app.get("/admin", response_class=HTMLResponse)
+def admin_home(request: Request, msg: str = "", bad: str = ""):
+    acc = admin_of(request)
+    if not acc:
+        return deny(request)
+    counts = q("""SELECT (SELECT count(*) FROM accounts) accounts,
+                         (SELECT count(*) FROM players WHERE deletion=0) characters,
+                         (SELECT count(*) FROM players_online) online,
+                         (SELECT count(*) FROM account_bans) bans,
+                         (SELECT count(*) FROM znote_news) news""", one=True)
+    online = q("""SELECT p.id, p.name, p.level, p.vocation, p.group_id
+                  FROM players_online o JOIN players p ON p.id = o.player_id
+                  ORDER BY p.level DESC""")
+    newest = q("""SELECT id, name, email, creation, type FROM accounts
+                  ORDER BY creation DESC LIMIT 8""")
+    chars = q("""SELECT id, name, level, vocation, account_id FROM players
+                 WHERE deletion=0 ORDER BY id DESC LIMIT 8""")
+    bans = q("""SELECT b.account_id, a.name, b.reason, b.expires_at
+                FROM account_bans b LEFT JOIN accounts a ON a.id = b.account_id
+                ORDER BY b.banned_at DESC LIMIT 8""")
+    return admin_page(request, "admin.html", counts=counts, online=online, newest=newest,
+                      chars=chars, bans=bans, recent=admin_history(8), msg=msg, bad=bad,
+                      types=ACCOUNT_TYPES, now=int(time.time()))
+
+
+# ---- news and changelog ---------------------------------------------------
+@app.get("/admin/news", response_class=HTMLResponse)
+def admin_news(request: Request, edit: int = 0, msg: str = "", bad: str = ""):
+    acc = admin_of(request)
+    if not acc:
+        return deny(request)
+    news = q("""SELECT n.id, n.title, n.text, n.date, n.pid, COALESCE(p.name, 'Staff') author
+                FROM znote_news n LEFT JOIN players p ON p.id = n.pid
+                ORDER BY n.date DESC LIMIT 50""")
+    log = q("SELECT id, text, time FROM znote_changelog ORDER BY time DESC LIMIT 30")
+    authors = q("""SELECT id, name FROM players WHERE account_id=%s AND deletion=0
+                   ORDER BY level DESC""", (acc["id"],))
+    editing = next((n for n in news if n["id"] == edit), None)
+    return admin_page(request, "admin_news.html", news=news, log=log, authors=authors,
+                      editing=editing, msg=msg, bad=bad, title_max=NEWS_TITLE_MAX)
+
+
+@app.post("/admin/news")
+def admin_news_save(request: Request, id: int = Form(0), title: str = Form(""),
+                    text: str = Form(""), pid: int = Form(0), token: str = Form("")):
+    acc = admin_of(request)
+    if not acc:
+        return deny(request)
+    title, text = title.strip(), text.strip()
+    if not csrf_ok(request, token):
+        return back("/admin/news", bad="Session expired — please try again.")
+    if not title or not text:
+        return back("/admin/news", bad="A news post needs a title and a body.")
+    if len(title) > NEWS_TITLE_MAX:
+        return back("/admin/news", bad=f"The title has to fit in {NEWS_TITLE_MAX} characters.")
+    if id:
+        q("UPDATE znote_news SET title=%s, text=%s WHERE id=%s", (title, text, id))
+        admin_log(acc, "news.edit", f"news {id}", title)
+        return back("/admin/news", msg="News post updated.")
+    q("INSERT INTO znote_news (title, text, date, pid) VALUES (%s, %s, %s, %s)",
+      (title, text, int(time.time()), pid or 0))
+    admin_log(acc, "news.post", "", title)
+    return back("/admin/news", msg="News posted — it is on the front page now.")
+
+
+@app.post("/admin/news/{id}/delete")
+def admin_news_delete(request: Request, id: int, token: str = Form("")):
+    acc = admin_of(request)
+    if not acc:
+        return deny(request)
+    if not csrf_ok(request, token):
+        return back("/admin/news", bad="Session expired — please try again.")
+    row = q("SELECT title FROM znote_news WHERE id=%s", (id,), one=True)
+    q("DELETE FROM znote_news WHERE id=%s", (id,))
+    admin_log(acc, "news.delete", f"news {id}", (row or {}).get("title", ""))
+    return back("/admin/news", msg="News post deleted.")
+
+
+@app.post("/admin/changelog")
+def admin_changelog_add(request: Request, text: str = Form(""), token: str = Form("")):
+    acc = admin_of(request)
+    if not acc:
+        return deny(request)
+    text = text.strip()
+    if not csrf_ok(request, token):
+        return back("/admin/news", bad="Session expired — please try again.")
+    if not text:
+        return back("/admin/news", bad="A changelog line needs some text.")
+    q("INSERT INTO znote_changelog (text, time, report_id, status) VALUES (%s, %s, 0, 0)",
+      (text[:255], int(time.time())))
+    admin_log(acc, "changelog.add", "", text[:80])
+    return back("/admin/news", msg="Changelog line added.")
+
+
+@app.post("/admin/changelog/{id}/delete")
+def admin_changelog_delete(request: Request, id: int, token: str = Form("")):
+    acc = admin_of(request)
+    if not acc:
+        return deny(request)
+    if not csrf_ok(request, token):
+        return back("/admin/news", bad="Session expired — please try again.")
+    q("DELETE FROM znote_changelog WHERE id=%s", (id,))
+    admin_log(acc, "changelog.delete", f"entry {id}")
+    return back("/admin/news", msg="Changelog line removed.")
+
+
+# ---- accounts and characters ----------------------------------------------
+@app.get("/admin/accounts", response_class=HTMLResponse)
+def admin_accounts(request: Request, find: str = Query("", alias="q"),
+                   msg: str = "", bad: str = ""):
+    acc = admin_of(request)
+    if not acc:
+        return deny(request)
+    needle = find.strip()
+    if needle:
+        like = f"%{needle}%"
+        rows = q("""SELECT DISTINCT a.id, a.name, a.email, a.type, a.creation,
+                           a.premium_ends_at, a.coins
+                    FROM accounts a LEFT JOIN players p ON p.account_id = a.id
+                    WHERE a.name LIKE %s OR a.email LIKE %s OR p.name LIKE %s
+                    ORDER BY a.id LIMIT 50""", (like, like, like))
+    else:
+        rows = q("""SELECT id, name, email, type, creation, premium_ends_at, coins
+                    FROM accounts ORDER BY creation DESC LIMIT 25""")
+    return admin_page(request, "admin_accounts.html", rows=rows, search=needle,
+                      types=ACCOUNT_TYPES, msg=msg, bad=bad, now=int(time.time()))
+
+
+@app.get("/admin/account/{aid}", response_class=HTMLResponse)
+def admin_account(request: Request, aid: int, msg: str = "", bad: str = ""):
+    acc = admin_of(request)
+    if not acc:
+        return deny(request)
+    target = q("""SELECT id, name, email, type, creation, premium_ends_at, coins,
+                         coins_transferable FROM accounts WHERE id=%s""", (aid,), one=True)
+    if not target:
+        return back("/admin/accounts", bad="No such account.")
+    chars = q("""SELECT p.id, p.name, p.level, p.vocation, p.group_id, p.lastlogin,
+                        p.deletion, (SELECT count(*) FROM players_online o
+                                     WHERE o.player_id = p.id) online
+                 FROM players p WHERE p.account_id=%s ORDER BY p.level DESC""", (aid,))
+    ban = q("""SELECT b.reason, b.banned_at, b.expires_at, a.name banned_by
+               FROM account_bans b LEFT JOIN accounts a ON a.id = b.banned_by
+               WHERE b.account_id=%s""", (aid,), one=True)
+    history = q("""SELECT h.reason, h.banned_at, h.expired_at, a.name banned_by
+                   FROM account_ban_history h LEFT JOIN accounts a ON a.id = h.banned_by
+                   WHERE h.account_id=%s ORDER BY h.banned_at DESC LIMIT 10""", (aid,))
+    return admin_page(request, "admin_account.html", target=target, chars=chars, ban=ban,
+                      history=history, types=ACCOUNT_TYPES, groups=PLAYER_GROUPS,
+                      msg=msg, bad=bad, now=int(time.time()), self_id=acc["id"])
+
+
+@app.post("/admin/account/{aid}/premium")
+def admin_premium(request: Request, aid: int, days: int = Form(0), token: str = Form("")):
+    acc = admin_of(request)
+    if not acc:
+        return deny(request)
+    where = f"/admin/account/{aid}"
+    if not csrf_ok(request, token):
+        return back(where, bad="Session expired — please try again.")
+    row = q("SELECT premium_ends_at FROM accounts WHERE id=%s", (aid,), one=True)
+    if not row:
+        return back("/admin/accounts", bad="No such account.")
+    now = int(time.time())
+    if days == 0:
+        ends = 0
+    else:
+        base = max(row["premium_ends_at"], now)
+        ends = max(0, base + days * 86400)
+        if ends <= now:
+            ends = 0
+    q("UPDATE accounts SET premium_ends_at=%s WHERE id=%s", (ends, aid))
+    admin_log(acc, "account.premium", f"account {aid}",
+              "cleared" if not ends else f"{days:+d} days")
+    return back(where, msg="Premium cleared." if not ends else f"Premium changed by {days:+d} days.")
+
+
+@app.post("/admin/account/{aid}/coins")
+def admin_coins(request: Request, aid: int, coins: int = Form(0), token: str = Form("")):
+    acc = admin_of(request)
+    if not acc:
+        return deny(request)
+    where = f"/admin/account/{aid}"
+    if not csrf_ok(request, token):
+        return back(where, bad="Session expired — please try again.")
+    row = q("SELECT coins FROM accounts WHERE id=%s", (aid,), one=True)
+    if not row:
+        return back("/admin/accounts", bad="No such account.")
+    total = max(0, row["coins"] + coins)
+    q("UPDATE accounts SET coins=%s WHERE id=%s", (total, aid))
+    admin_log(acc, "account.coins", f"account {aid}", f"{coins:+d} (now {total})")
+    return back(where, msg=f"Coins changed by {coins:+d}; the account now holds {total}.")
+
+
+@app.post("/admin/account/{aid}/type")
+def admin_account_type(request: Request, aid: int, type: int = Form(1), token: str = Form("")):
+    acc = admin_of(request)
+    if not acc:
+        return deny(request)
+    where = f"/admin/account/{aid}"
+    if not csrf_ok(request, token):
+        return back(where, bad="Session expired — please try again.")
+    if type not in ACCOUNT_TYPES:
+        return back(where, bad="That is not an account type.")
+    q("UPDATE accounts SET type=%s WHERE id=%s", (type, aid))
+    admin_log(acc, "account.type", f"account {aid}", ACCOUNT_TYPES[type])
+    return back(where, msg=f"Account is now a {ACCOUNT_TYPES[type].lower()} account.")
+
+
+@app.post("/admin/account/{aid}/password")
+def admin_password(request: Request, aid: int, password: str = Form(""), token: str = Form("")):
+    acc = admin_of(request)
+    if not acc:
+        return deny(request)
+    where = f"/admin/account/{aid}"
+    if not csrf_ok(request, token):
+        return back(where, bad="Session expired — please try again.")
+    if not 6 <= len(password) <= 29:
+        return back(where, bad="A password has to be 6 to 29 characters.")
+    q("UPDATE accounts SET password=%s WHERE id=%s", (sha1(password), aid))
+    admin_log(acc, "account.password", f"account {aid}", "reset")
+    return back(where, msg="Password reset. Tell the owner to change it once they are in.")
+
+
+@app.post("/admin/account/{aid}/ban")
+def admin_ban(request: Request, aid: int, reason: str = Form(""), days: int = Form(0),
+              token: str = Form("")):
+    acc = admin_of(request)
+    if not acc:
+        return deny(request)
+    where = f"/admin/account/{aid}"
+    if not csrf_ok(request, token):
+        return back(where, bad="Session expired — please try again.")
+    if aid == acc["id"]:
+        return back(where, bad="Banning yourself is not one of the duties.")
+    target = q("SELECT type FROM accounts WHERE id=%s", (aid,), one=True)
+    if not target:
+        return back("/admin/accounts", bad="No such account.")
+    reason = (reason.strip() or "No reason given")[:255]
+    now = int(time.time())
+    expires = now + days * 86400 if days > 0 else 0      # 0 = until it is lifted
+    q("""INSERT INTO account_bans (account_id, reason, banned_at, expires_at, banned_by)
+         VALUES (%s, %s, %s, %s, %s)
+         ON DUPLICATE KEY UPDATE reason=VALUES(reason), banned_at=VALUES(banned_at),
+                                 expires_at=VALUES(expires_at), banned_by=VALUES(banned_by)""",
+      (aid, reason, now, expires, acc["id"]))
+    admin_log(acc, "account.ban", f"account {aid}",
+              f"{reason} ({'permanent' if not expires else f'{days} days'})")
+    return back(where, msg="Account banned.")
+
+
+@app.post("/admin/account/{aid}/unban")
+def admin_unban(request: Request, aid: int, token: str = Form("")):
+    acc = admin_of(request)
+    if not acc:
+        return deny(request)
+    where = f"/admin/account/{aid}"
+    if not csrf_ok(request, token):
+        return back(where, bad="Session expired — please try again.")
+    row = q("SELECT reason, banned_at, banned_by FROM account_bans WHERE account_id=%s",
+            (aid,), one=True)
+    if not row:
+        return back(where, bad="That account is not banned.")
+    q("""INSERT INTO account_ban_history (account_id, reason, banned_at, expired_at, banned_by)
+         VALUES (%s, %s, %s, %s, %s)""",
+      (aid, row["reason"], row["banned_at"], int(time.time()), row["banned_by"]))
+    q("DELETE FROM account_bans WHERE account_id=%s", (aid,))
+    admin_log(acc, "account.unban", f"account {aid}", row["reason"])
+    return back(where, msg="Ban lifted.")
+
+
+@app.post("/admin/player/{pid}/group")
+def admin_player_group(request: Request, pid: int, group: int = Form(1), token: str = Form("")):
+    acc = admin_of(request)
+    if not acc:
+        return deny(request)
+    player = q("""SELECT p.name, p.account_id,
+                         (SELECT count(*) FROM players_online o WHERE o.player_id = p.id) online
+                  FROM players p WHERE p.id=%s""", (pid,), one=True)
+    if not player:
+        return back("/admin/accounts", bad="No such character.")
+    where = f"/admin/account/{player['account_id']}"
+    if not csrf_ok(request, token):
+        return back(where, bad="Session expired — please try again.")
+    if group not in PLAYER_GROUPS:
+        return back(where, bad="That is not a group.")
+    if player["online"]:
+        return back(where, bad=f"{player['name']} is online — the server would write the old "
+                               "group back on its next save. Ask them to log out first.")
+    q("UPDATE players SET group_id=%s WHERE id=%s", (group, pid))
+    admin_log(acc, "player.group", player["name"], PLAYER_GROUPS[group])
+    return back(where, msg=f"{player['name']} is now a {PLAYER_GROUPS[group].lower()}.")
+
+
+@app.get("/admin/log", response_class=HTMLResponse)
+def admin_log_page(request: Request, msg: str = "", bad: str = ""):
+    acc = admin_of(request)
+    if not acc:
+        return deny(request)
+    return admin_page(request, "admin_log.html", rows=admin_history(200), msg=msg, bad=bad)
 
 
 # ---- the game client's launcher webservice -------------------------------

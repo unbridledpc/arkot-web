@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+{% from "_ui.html" import box, title %}
+{% from "_admin.html" import adminnav, flash %}
+{% block title %}Staff · news{% endblock %}
+{% block content %}
+{{ title('News and changelog') }}
+{{ adminnav('/admin/news') }}
+{{ flash(msg, bad) }}
+
+{% call box(('Edit "' ~ editing.title ~ '"') if editing else 'Write a news post') %}
+	<form method="post" action="/admin/news" class="stack">
+		<input type="hidden" name="token" value="{{ csrf }}">
+		<input type="hidden" name="id" value="{{ editing.id if editing else 0 }}">
+		<label>Title <span class="fineprint">at most {{ title_max }} characters — the game database says so</span>
+			<input name="title" maxlength="{{ title_max }}" required value="{{ editing.title if editing else '' }}"></label>
+		<label>Post <span class="fineprint">plain text; blank lines start a new paragraph</span>
+			<textarea name="text" rows="7" required>{{ editing.text if editing else '' }}</textarea></label>
+		{% if authors %}
+		<label>Signed by
+			<select name="pid">
+				{% for a in authors %}<option value="{{ a.id }}" {% if editing and editing.pid == a.id %}selected{% endif %}>{{ a.name }}</option>{% endfor %}
+				<option value="0" {% if editing and not editing.pid %}selected{% endif %}>Staff</option>
+			</select></label>
+		{% endif %}
+		<div>
+			<button class="btn" type="submit">{{ 'Save changes' if editing else 'Post it' }}</button>
+			{% if editing %}<a class="btn ghost" href="/admin/news">Cancel</a>{% endif %}
+		</div>
+	</form>
+{% endcall %}
+
+{% call box('Posted news', news | length ~ ' posts') %}
+	{% for n in news %}
+	<div class="adminrow">
+		<div>
+			<b>{{ n.title }}</b>
+			<span class="fineprint">{{ n.date | timestamp }} · {{ n.author }}</span>
+		</div>
+		<div class="adminacts">
+			<a class="btn ghost" href="/admin/news?edit={{ n.id }}">Edit</a>
+			<form method="post" action="/admin/news/{{ n.id }}/delete"
+			      onsubmit="return confirm('Delete “{{ n.title }}”?')">
+				<input type="hidden" name="token" value="{{ csrf }}">
+				<button class="btn ghost" type="submit">Delete</button>
+			</form>
+		</div>
+	</div>
+	{% endfor %}
+{% endcall %}
+
+{% call box('Changelog') %}
+	<form method="post" action="/admin/changelog" class="questsearch">
+		<input type="hidden" name="token" value="{{ csrf }}">
+		<input name="text" maxlength="255" placeholder="What changed on the server?" required>
+		<button class="btn" type="submit">Add</button>
+	</form>
+	{% for c in log %}
+	<div class="adminrow">
+		<div><b>{{ c.text }}</b><span class="fineprint">{{ c.time | timestamp }}</span></div>
+		<div class="adminacts">
+			<form method="post" action="/admin/changelog/{{ c.id }}/delete">
+				<input type="hidden" name="token" value="{{ csrf }}">
+				<button class="btn ghost" type="submit">Remove</button>
+			</form>
+		</div>
+	</div>
+	{% endfor %}
+{% endcall %}
+{% endblock %}

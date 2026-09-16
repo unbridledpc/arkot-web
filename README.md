@@ -23,6 +23,20 @@ docker run -d --name arkotweb --network <game-db-network> \
 The app listens on 8090. `Caddyfile` shows the front door used in production: the site on `/`,
 the legacy Znote pages under `/legacy/`.
 
+## Staff pages
+
+`/admin` is the staff room: the world at a glance, news and changelog editing, account search,
+and per-account actions (premium, store coins, account rank, password reset, bans, and a
+character's group). It is gated on `is_admin()`, which accepts an account the *game* calls a
+community manager or god (`accounts.type >= 5`) **or** an address in `ADMIN_EMAILS`
+(default `joshwall488@gmail.com`) — the allowlist means a mistyped account type can never lock
+the owner out of his own site. Non-staff are redirected, never shown a page.
+
+Every action is a POST carrying the site's CSRF token, and every one that changes something
+appends a line to `ADMIN_LOG` (default `var/admin-log.jsonl`, out of git), shown at `/admin/log`.
+A character that is online cannot have its group changed: the server holds it in memory and would
+write the old value back on its next save.
+
 ## The quest section
 
 `/quests` and `/quest/<slug>` are built from `app/data/quests.json`, which

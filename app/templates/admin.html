@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+{% from "_ui.html" import box, title %}
+{% from "_admin.html" import adminnav, flash %}
+{% block title %}Staff{% endblock %}
+{% block content %}
+{{ title('Staff room', account.name) }}
+{{ adminnav('/admin') }}
+{{ flash(msg, bad) }}
+
+{% call box('The world right now') %}
+	<div class="adminstats">
+		<div><b>{{ '{:,}'.format(counts.accounts) }}</b><span>accounts</span></div>
+		<div><b>{{ '{:,}'.format(counts.characters) }}</b><span>characters</span></div>
+		<div><b>{{ counts.online }}</b><span>online</span></div>
+		<div><b>{{ counts.bans }}</b><span>bans</span></div>
+	</div>
+	{% if online %}
+	<table class="tbl">
+		<tr><th>Online</th><th>Vocation</th><th class="num">Level</th><th>Group</th></tr>
+		{% for p in online %}
+		<tr>
+			<td><a href="/character/{{ p.name }}">{{ p.name }}</a></td>
+			<td>{{ vocname(p.vocation) }}</td>
+			<td class="num">{{ p.level }}</td>
+			<td>{{ 'Player' if p.group_id == 1 else 'Staff' }}</td>
+		</tr>
+		{% endfor %}
+	</table>
+	{% else %}<p style="margin-bottom:0">Nobody is in the world at the moment.</p>{% endif %}
+{% endcall %}
+
+<div class="admincols">
+{% call box('Newest accounts') %}
+	<table class="tbl">
+		{% for a in newest %}
+		<tr>
+			<td><a href="/admin/account/{{ a.id }}">{{ a.name }}</a>
+				<span class="fineprint">{{ a.email }}</span></td>
+			<td class="num nowrap">{{ a.creation | timestamp }}</td>
+		</tr>
+		{% endfor %}
+	</table>
+{% endcall %}
+
+{% call box('Newest characters') %}
+	<table class="tbl">
+		{% for c in chars %}
+		<tr>
+			<td><a href="/character/{{ c.name }}">{{ c.name }}</a>
+				<span class="fineprint">{{ vocname(c.vocation) }}</span></td>
+			<td class="num">level {{ c.level }}</td>
+			<td class="num"><a href="/admin/account/{{ c.account_id }}">account</a></td>
+		</tr>
+		{% endfor %}
+	</table>
+{% endcall %}
+</div>
+
+{% if bans %}
+{% call box('Standing bans') %}
+	<table class="tbl">
+		<tr><th>Account</th><th>Reason</th><th class="num">Until</th></tr>
+		{% for b in bans %}
+		<tr>
+			<td><a href="/admin/account/{{ b.account_id }}">{{ b.name or b.account_id }}</a></td>
+			<td>{{ b.reason }}</td>
+			<td class="num">{{ 'lifted by hand' if not b.expires_at else b.expires_at | timestamp }}</td>
+		</tr>
+		{% endfor %}
+	</table>
+{% endcall %}
+{% endif %}
+
+{% call box('Last staff actions', 'the full list is in the staff log') %}
+	{% if not recent %}<p style="margin-bottom:0">Nothing has been done here yet.</p>{% endif %}
+	{% for r in recent %}
+	<div class="logline">
+		<b>{{ r.by }}</b> <span class="what">{{ r.action }}</span>
+		{% if r.target %}<span>{{ r.target }}</span>{% endif %}
+		{% if r.detail %}<span class="fineprint">{{ r.detail }}</span>{% endif %}
+		<time>{{ r.at | timestamp }}</time>
+	</div>
+	{% endfor %}
+{% endcall %}
+{% endblock %}

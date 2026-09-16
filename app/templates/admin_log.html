@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% from "_ui.html" import box, title %}
+{% from "_admin.html" import adminnav, flash %}
+{% block title %}Staff · log{% endblock %}
+{% block content %}
+{{ title('Staff log', rows | length ~ ' entries') }}
+{{ adminnav('/admin/log') }}
+{{ flash(msg, bad) }}
+
+{% call box('What staff has done here', 'newest first') %}
+	{% if not rows %}<p style="margin-bottom:0">Nothing yet. Every action taken in these pages lands here.</p>{% endif %}
+	{% for r in rows %}
+	<div class="logline">
+		<b>{{ r.by }}</b> <span class="what">{{ r.action }}</span>
+		{% if r.target %}<span>{{ r.target }}</span>{% endif %}
+		{% if r.detail %}<span class="fineprint">{{ r.detail }}</span>{% endif %}
+		<time>{{ r.at | timestamp }}</time>
+	</div>
+	{% endfor %}
+	<p class="fineprint" style="margin-bottom:0">This log is written by the website only. What
+	happens in game — commands, kicks, teleports — is the server's own business and is not here.</p>
+{% endcall %}
+{% endblock %}

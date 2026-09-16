@@ -1,0 +1,122 @@
+{% extends "base.html" %}
+{% from "_ui.html" import box, title %}
+{% from "_admin.html" import adminnav, flash, premium_line %}
+{% block title %}Staff · {{ target.name }}{% endblock %}
+{% block content %}
+{{ title(target.name, 'banned' if ban else '') }}
+{{ adminnav('/admin/accounts') }}
+{{ flash(msg, bad) }}
+
+{% call box('Account') %}
+	<table class="tbl kv">
+		<tr><th>E-mail</th><td>{{ target.email }}</td></tr>
+		<tr><th>Rank</th><td>{{ types.get(target.type, target.type) }}</td></tr>
+		<tr><th>Premium</th><td>{{ premium_line(target.premium_ends_at, now) }}{% if target.premium_ends_at %} <span class="fineprint">(until {{ target.premium_ends_at | timestamp }})</span>{% endif %}</td></tr>
+		<tr><th>Coins</th><td>{{ target.coins }}{% if target.coins_transferable %} <span class="fineprint">({{ target.coins_transferable }} transferable)</span>{% endif %}</td></tr>
+		<tr><th>Joined</th><td>{{ target.creation | timestamp }}</td></tr>
+		<tr><th>Characters</th><td>{{ chars | length }}</td></tr>
+	</table>
+{% endcall %}
+
+{% if ban %}
+{% call box('This account is banned') %}
+	<table class="tbl kv">
+		<tr><th>Reason</th><td>{{ ban.reason }}</td></tr>
+		<tr><th>Banned</th><td>{{ ban.banned_at | timestamp }} by {{ ban.banned_by or 'staff' }}</td></tr>
+		<tr><th>Until</th><td>{{ 'lifted by hand' if not ban.expires_at else ban.expires_at | timestamp }}</td></tr>
+	</table>
+	<form method="post" action="/admin/account/{{ target.id }}/unban">
+		<input type="hidden" name="token" value="{{ csrf }}">
+		<button class="btn" type="submit">Lift the ban</button>
+	</form>
+{% endcall %}
+{% endif %}
+
+{% call box('Characters') %}
+	{% if not chars %}<p style="margin-bottom:0">This account has no characters yet.</p>{% endif %}
+	{% for c in chars %}
+	<div class="adminrow">
+		<div>
+			<b><a href="/character/{{ c.name }}">{{ c.name }}</a>
+				{% if c.online %}<span class="tagline-pill free">online</span>{% endif %}
+				{% if c.deletion %}<span class="tagline-pill">deleted</span>{% endif %}</b>
+			<span class="fineprint">{{ vocname(c.vocation) }} · level {{ c.level }} ·
+				last login {{ c.lastlogin | timestamp }} · {{ groups.get(c.group_id, c.group_id) }}</span>
+		</div>
+		<div class="adminacts">
+			<form method="post" action="/admin/player/{{ c.id }}/group">
+				<input type="hidden" name="token" value="{{ csrf }}">
+				<select name="group">
+					{% for gid, label in groups.items() %}<option value="{{ gid }}" {% if c.group_id == gid %}selected{% endif %}>{{ label }}</option>{% endfor %}
+				</select>
+				<button class="btn ghost" type="submit">Set group</button>
+			</form>
+		</div>
+	</div>
+	{% endfor %}
+	<p class="fineprint" style="margin-bottom:0">A character's group is what the game checks for
+	commands; the account rank above is what it checks for god-level access. A character that is
+	online cannot be changed — the server holds it in memory and writes it back on its next save.</p>
+{% endcall %}
+
+{% call box('Premium and coins') %}
+	<div class="admingrid">
+		<form method="post" action="/admin/account/{{ target.id }}/premium" class="stack">
+			<input type="hidden" name="token" value="{{ csrf }}">
+			<label>Premium days <span class="fineprint">negative takes them away, 0 clears it</span>
+				<input name="days" type="number" value="30" step="1"></label>
+			<button class="btn" type="submit">Apply</button>
+		</form>
+		<form method="post" action="/admin/account/{{ target.id }}/coins" class="stack">
+			<input type="hidden" name="token" value="{{ csrf }}">
+			<label>Store coins <span class="fineprint">negative takes them away</span>
+				<input name="coins" type="number" value="100" step="1"></label>
+			<button class="btn" type="submit">Apply</button>
+		</form>
+	</div>
+{% endcall %}
+
+{% call box('Rank, password and bans') %}
+	<div class="admingrid">
+		<form method="post" action="/admin/account/{{ target.id }}/type" class="stack">
+			<input type="hidden" name="token" value="{{ csrf }}">
+			<label>Account rank
+				<select name="type">
+					{% for tid, label in types.items() %}<option value="{{ tid }}" {% if target.type == tid %}selected{% endif %}>{{ label }}</option>{% endfor %}
+				</select></label>
+			<button class="btn" type="submit">Set rank</button>
+			{% if target.id == self_id %}<span class="fineprint">This is your own account. Your e-mail keeps staff access whatever the rank says.</span>{% endif %}
+		</form>
+		<form method="post" action="/admin/account/{{ target.id }}/password" class="stack">
+			<input type="hidden" name="token" value="{{ csrf }}">
+			<label>New password <span class="fineprint">6 to 29 characters</span>
+				<input name="password" type="text" minlength="6" maxlength="29" autocomplete="off"></label>
+			<button class="btn" type="submit">Reset password</button>
+		</form>
+	</div>
+	{% if not ban %}
+	<form method="post" action="/admin/account/{{ target.id }}/ban" class="stack"
+	      onsubmit="return confirm('Ban {{ target.name }}?')">
+		<input type="hidden" name="token" value="{{ csrf }}">
+		<label>Ban reason <input name="reason" maxlength="255" placeholder="Why this account is being banned"></label>
+		<label>For how many days <span class="fineprint">0 stays until you lift it</span>
+			<input name="days" type="number" value="7" min="0" step="1"></label>
+		<button class="btn" type="submit">Ban this account</button>
+	</form>
+	{% endif %}
+{% endcall %}
+
+{% if history %}
+{% call box('Past bans') %}
+	<table class="tbl">
+		<tr><th>Reason</th><th class="num">From</th><th class="num">Lifted</th><th>By</th></tr>
+		{% for h in history %}
+		<tr><td>{{ h.reason }}</td><td class="num">{{ h.banned_at | timestamp }}</td>
+			<td class="num">{{ h.expired_at | timestamp }}</td><td>{{ h.banned_by or 'staff' }}</td></tr>
+		{% endfor %}
+	</table>
+{% endcall %}
+{% endif %}
+
+<p class="pager"><a class="btn ghost" href="/admin/accounts">Back to accounts</a></p>
+{% endblock %}
