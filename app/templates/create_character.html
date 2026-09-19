@@ -26,11 +26,7 @@
 				<option value="0" {% if form.sex == 0 %}selected{% endif %}>Female</option>
 			</select>
 		</label>
-		<label>Home city
-			<select name="town">
-				{% for t in towns %}<option value="{{ t.id }}" {% if form.town == t.id %}selected{% endif %}>{{ t.name }}</option>{% endfor %}
-			</select>
-		</label>
+		<p class="muted">Every character starts fresh: level 1 in {% if start %}{{ start.name }}{% else %}the starting town{% endif %}, with all skills at 1.</p>
 		<input type="hidden" name="token" value="{{ csrf }}">
 		<div><button class="btn big" type="submit">Create character</button></div>
 	</form>

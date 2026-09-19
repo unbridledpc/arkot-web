@@ -438,15 +438,29 @@ def creation_worlds():
     return WORLDS.worlds if WORLDS.ok else ()
 
 
-def world_towns(world):
+# Every new character starts in one place, so the player is never asked: the
+# world's Rookgaard if it has one, and otherwise its first town, which is what
+# a world on another map (no Rookgaard in it) can offer instead.
+START_TOWN = "Rookgaard"
+
+
+def start_town(world):
+    """The row new characters spawn in, or None if that world cannot be read."""
     if not world:
-        return []
+        return None
     try:
-        return towns(world)
+        rows = q(f"SELECT id, name, posx, posy, posz FROM {world.sql}.towns ORDER BY id")
     except pymysql.MySQLError as err:
         log.warning("Character creation: could not read towns of world %r (schema %s): %s",
                     world.name, world.schema, type(err).__name__)
-        return []
+        return None
+    named = next((t for t in rows if t["name"].strip().lower() == START_TOWN.lower()), None)
+    if named:
+        return named
+    if rows:
+        log.info("Character creation: world %r has no %s; new characters start in %r.",
+                 world.name, START_TOWN, rows[0]["name"])
+    return rows[0] if rows else None
 
 
 @app.get("/character/create", response_class=HTMLResponse)
@@ -456,14 +470,13 @@ def create_char_form(request: Request, world: int = -1):
     choices = creation_worlds()
     chosen = world_or_none(world) or (choices[0] if choices else None)
     errors = [] if choices else ["Character creation is unavailable right now. Please try again later."]
-    return form_page(request, "create_character.html", errors=errors, towns=world_towns(chosen),
+    return form_page(request, "create_character.html", errors=errors, start=start_town(chosen),
                      worlds=choices, form={"world": chosen.id if chosen else None})
 
 
 @app.post("/character/create", response_class=HTMLResponse)
 def create_char(request: Request, name: str = Form(""), vocation: int = Form(1),
-                sex: int = Form(1), town: int = Form(1), world: int = Form(-1),
-                token: str = Form("")):
+                sex: int = Form(1), world: int = Form(-1), token: str = Form("")):
     acc = account_of(request)
     if not acc:
         return RedirectResponse("/login", status_code=303)
@@ -471,15 +484,9 @@ def create_char(request: Request, name: str = Form(""), vocation: int = Form(1),
     name = re.sub(r"\s+", " ", name.strip()).title()
     choices = creation_worlds()
     target = world_or_none(world)
-    town_row = None
-    if target:
-        try:
-            town_row = q(f"SELECT id, posx, posy, posz FROM {target.sql}.towns WHERE id=%s",
-                         (town,), one=True)
-        except pymysql.MySQLError as err:
-            log.warning("Character creation: could not read towns of world %r: %s",
-                        target.name, type(err).__name__)
-            errors.append("That world is unavailable right now. Please try again later.")
+    town_row = start_town(target) if target else None
+    if target and not town_row:
+        errors.append("That world is unavailable right now. Please try again later.")
     if not csrf_ok(request, token):
         errors.append("Session expired — please try again.")
     if not choices:
@@ -492,8 +499,6 @@ def create_char(request: Request, name: str = Form(""), vocation: int = Form(1),
         errors.append("Pick a vocation.")
     if sex not in (0, 1):
         errors.append("Pick a sex.")
-    if target and not errors and not town_row:
-        errors.append("Pick a town.")
     if not errors:
         # A name is refused if ANY world has it, so /character/<name> stays
         # unambiguous; the limit counts the account's characters on every
@@ -512,12 +517,15 @@ def create_char(request: Request, name: str = Form(""), vocation: int = Form(1),
             elif owned >= 10:
                 errors.append("Character limit reached (10).")
     if errors:
-        return render(request, "create_character.html", errors=errors, towns=world_towns(target),
+        return render(request, "create_character.html", errors=errors, start=start_town(target),
                       worlds=choices,
-                      form={"name": name, "vocation": vocation, "sex": sex, "town": town,
+                      form={"name": name, "vocation": vocation, "sex": sex,
                             "world": target.id if target else None})
     looktype = 128 if sex == 1 else 136
-    # Level-8 template mirrored from a Znote-created character verified in-game.
+    # Everyone starts over: level 1 in the starting town with every skill at 1 and
+    # nothing trained. Health, mana and capacity are the server's own level-1
+    # figures (config/account_manager.toml: baseHealth 150, baseMana 0,
+    # baseCapacity 400).
     with db() as conn, conn.cursor() as cur:
         cur.execute(f"""INSERT INTO {target.sql}.players
          (name, group_id, account_id, level, vocation, health, healthmax, experience,
@@ -530,12 +538,12 @@ def create_char(request: Request, name: str = Form(""), vocation: int = Form(1),
           skill_sword, skill_sword_tries, skill_axe, skill_axe_tries,
           skill_dist, skill_dist_tries, skill_shielding, skill_shielding_tries,
           skill_fishing, skill_fishing_tries)
-         VALUES (%s, 1, %s, 8, %s, 185, 185, 4200,
+         VALUES (%s, 1, %s, 1, %s, 150, 150, 0,
                  68, 76, 78, 58, %s, 0, 2,
-                 0, 90, 90, 0, 100, %s, %s, %s, %s,
-                 '', 470, %s, 0, 0, 1, 0, 0, 0,
+                 0, 0, 0, 0, 100, %s, %s, %s, %s,
+                 '', 400, %s, 0, 0, 1, 0, 0, 0,
                  0, 0, 0, 0, 43200, -1, 2520,
-                 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0)""",
+                 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0)""",
                     (name, acc["id"], vocation, looktype, town_row["id"],
                      town_row["posx"], town_row["posy"], town_row["posz"], sex))
         pid = cur.lastrowid
