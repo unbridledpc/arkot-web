@@ -520,8 +520,11 @@ def create_char(request: Request, name: str = Form(""), sex: int = Form(1),
                       form={"name": name, "sex": sex,
                             "world": target.id if target else None})
     looktype = 128 if sex == 1 else 136
-    # Everyone starts over: level 1 in the starting town with every skill at 1 and
-    # nothing trained. Health, mana and capacity are the server's own level-1
+    # Everyone starts over: level 1 in the starting town with nothing trained.
+    # Skills start at 10 because that is the engine's floor (player.h
+    # MINIMUM_SKILL_LEVEL): below it Vocation::getReqSkillTries truncates to zero
+    # and Player::addSkillAdvance reads that as a maxed skill, so a character
+    # started lower can never train at all. Health, mana and capacity are the server's own level-1
     # figures (config/account_manager.toml: baseHealth 150, baseMana 0,
     # baseCapacity 400).
     #
@@ -545,7 +548,7 @@ def create_char(request: Request, name: str = Form(""), sex: int = Form(1),
                  0, 0, 0, 0, 100, %s, %s, %s, %s,
                  '', 400, %s, 0, 0, 1, 0, 0, 0,
                  0, 0, 0, 0, 43200, -1, 2520,
-                 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0)""",
+                 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0)""",
                     (name, acc["id"], vocation, looktype, town_row["id"],
                      town_row["posx"], town_row["posy"], town_row["posz"], sex))
         pid = cur.lastrowid

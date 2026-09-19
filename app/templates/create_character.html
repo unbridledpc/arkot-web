@@ -18,7 +18,7 @@
 				<option value="0" {% if form.sex == 0 %}selected{% endif %}>Female</option>
 			</select>
 		</label>
-		<p class="muted">Every character starts fresh: level 1 in {% if start %}{{ start.name }}{% else %}the starting town{% endif %}, with all skills at 1 and no vocation. The Oracle hands those out in game.</p>
+		<p class="muted">Every character starts fresh: level 1 in {% if start %}{{ start.name }}{% else %}the starting town{% endif %}, with no vocation and nothing trained. The Oracle hands those out in game.</p>
 		<input type="hidden" name="token" value="{{ csrf }}">
 		<div><button class="btn big" type="submit">Create character</button></div>
 	</form>
