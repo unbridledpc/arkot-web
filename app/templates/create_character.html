@@ -12,21 +12,13 @@
 			</select>
 		</label>
 		<label>Name <input name="name" value="{{ form.name or '' }}" required maxlength="30"></label>
-		<label>Vocation
-			<select name="vocation">
-				<option value="1" {% if form.vocation == 1 %}selected{% endif %}>Sorcerer — raw destructive magic</option>
-				<option value="2" {% if form.vocation == 2 %}selected{% endif %}>Druid — healing and the elements</option>
-				<option value="3" {% if form.vocation == 3 %}selected{% endif %}>Paladin — deadly at a distance</option>
-				<option value="4" {% if form.vocation == 4 %}selected{% endif %}>Knight — steel in the front line</option>
-			</select>
-		</label>
 		<label>Sex
 			<select name="sex">
 				<option value="1" {% if form.sex == 1 %}selected{% endif %}>Male</option>
 				<option value="0" {% if form.sex == 0 %}selected{% endif %}>Female</option>
 			</select>
 		</label>
-		<p class="muted">Every character starts fresh: level 1 in {% if start %}{{ start.name }}{% else %}the starting town{% endif %}, with all skills at 1.</p>
+		<p class="muted">Every character starts fresh: level 1 in {% if start %}{{ start.name }}{% else %}the starting town{% endif %}, with all skills at 1 and no vocation. The Oracle hands those out in game.</p>
 		<input type="hidden" name="token" value="{{ csrf }}">
 		<div><button class="btn big" type="submit">Create character</button></div>
 	</form>

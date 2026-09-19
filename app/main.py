@@ -475,8 +475,8 @@ def create_char_form(request: Request, world: int = -1):
 
 
 @app.post("/character/create", response_class=HTMLResponse)
-def create_char(request: Request, name: str = Form(""), vocation: int = Form(1),
-                sex: int = Form(1), world: int = Form(-1), token: str = Form("")):
+def create_char(request: Request, name: str = Form(""), sex: int = Form(1),
+                world: int = Form(-1), token: str = Form("")):
     acc = account_of(request)
     if not acc:
         return RedirectResponse("/login", status_code=303)
@@ -495,8 +495,6 @@ def create_char(request: Request, name: str = Form(""), vocation: int = Form(1),
         errors.append("Pick a world.")
     if not re.fullmatch(r"[a-zA-Z][a-zA-Z ]{1,28}[a-zA-Z]", name):
         errors.append("Name must be 3–30 letters (spaces allowed in the middle).")
-    if vocation not in (1, 2, 3, 4):
-        errors.append("Pick a vocation.")
     if sex not in (0, 1):
         errors.append("Pick a sex.")
     if not errors:
@@ -519,13 +517,17 @@ def create_char(request: Request, name: str = Form(""), vocation: int = Form(1),
     if errors:
         return render(request, "create_character.html", errors=errors, start=start_town(target),
                       worlds=choices,
-                      form={"name": name, "vocation": vocation, "sex": sex,
+                      form={"name": name, "sex": sex,
                             "world": target.id if target else None})
     looktype = 128 if sex == 1 else 136
     # Everyone starts over: level 1 in the starting town with every skill at 1 and
     # nothing trained. Health, mana and capacity are the server's own level-1
     # figures (config/account_manager.toml: baseHealth 150, baseMana 0,
     # baseCapacity 400).
+    #
+    # Vocation 0 is no vocation at all: the Oracle gives one out in Rookgaard, so
+    # the site never asks and never writes one.
+    vocation = 0
     with db() as conn, conn.cursor() as cur:
         cur.execute(f"""INSERT INTO {target.sql}.players
          (name, group_id, account_id, level, vocation, health, healthmax, experience,
